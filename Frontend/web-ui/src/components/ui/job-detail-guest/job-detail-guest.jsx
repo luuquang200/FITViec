@@ -4,9 +4,8 @@ import ApplyJobSection from "@/components/ui/job-detail-guest/apply-section";
 import CompanyInfo from "@/components/ui/job-detail-guest/company-info";
 import JobDetailsSection from "@/components/ui/job-detail-guest/job-details-section";
 import BasicInfo from "@/components/ui/job-detail-guest/basic-info";
+import JobCardSimilar from "@/components/ui/job-detail-guest/job-card";
 
-
-const LOGO_COMPANY_IMG = "https://itviec.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBMS9LSnc9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--f77c1653cf49260705bf77be3846954d9b817b70/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBPZ2wzWldKd09oSnlaWE5wZW1WZmRHOWZabWwwV3dkcEFhb3ciLCJleHAiOm51bGwsInB1ciI6InZhcmlhdGlvbiJ9fQ==--bb0ebae071595ab1791dc0ad640ef70a76504047/logo.jpg"
 const JobDetailGuestPage = () => {
   const [isSticky, setIsSticky] = useState(true);
 
@@ -60,39 +59,40 @@ const JobDetailGuestPage = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-              <JobCard
-                date="April 12, 2024"
+              <JobCardSimilar
+                labels={["Android", "Kotlin", "Flutter"]}
+                time="Đăng 5 ngày trước"
+                companyLogo="https://cdn.builder.io/api/v1/image/assets/TEMP/d5cef94958a49fc66e4384dee5b730d0cb3317ed17f0641d763a3b0d3ae906be?apiKey=1293b2add2d347908b4e11760098fdbe&"
+                companyName="FuelCloud"
+                salary="Đăng nhập để xem mức lương"
+                position="Tại văn phòng"
+                location="Hồ Chí Minh"
                 tag="Hot"
-                jobTitle="Frontend Developer"
-                companyLogo={LOGO_COMPANY_IMG}
-                companyName="ABC Company"
-                salary="$60,000 - $80,000"
-                position="Full-time"
-                location="New York"
-                labels={["React", "JavaScript", "HTML", "CSS"]}
+                jobTitle="Senior Android Developer (Kotlin, Flutter)"
               />
-              <JobCard
-                date="April 12, 2024"
-                tag=""
-                jobTitle="Frontend Developer"
-                companyLogo={LOGO_COMPANY_IMG}
-                companyName="NAB"
-                salary="$60,000 - $80,000"
-                position="Full-time"
-                location="New York"
-                labels={["React", "JavaScript", "HTML"]}
+              <JobCardSimilar
+                labels={["Android", "Kotlin", "Flutter"]}
+                time="Đăng 5 ngày trước"
+                companyLogo="https://cdn.builder.io/api/v1/image/assets/TEMP/d5cef94958a49fc66e4384dee5b730d0cb3317ed17f0641d763a3b0d3ae906be?apiKey=1293b2add2d347908b4e11760098fdbe&"
+                companyName="FuelCloud"
+                salary="Đăng nhập để xem mức lương"
+                position="Tại văn phòng"
+                location="Hồ Chí Minh"
+                tag="Hot"
+                jobTitle="Senior Android Developer (Kotlin, Flutter)"
               />
-              <JobCard
-                date="April 12, 2024"
-                tag="NEW FOR YOU"
-                jobTitle="Frontend Developer iajsbd asdoiua snd( asdoiasdj )"
-                companyLogo={LOGO_COMPANY_IMG}
-                companyName="ABC Company"
-                salary="$60,000 - $80,000"
-                position="Full-time"
-                location="New York"
-                labels={["React", "JavaScript", "HTML"]}
+              <JobCardSimilar
+                labels={["Android", "Kotlin", "Flutter"]}
+                time="Đăng 5 ngày trước"
+                companyLogo="https://cdn.builder.io/api/v1/image/assets/TEMP/d5cef94958a49fc66e4384dee5b730d0cb3317ed17f0641d763a3b0d3ae906be?apiKey=1293b2add2d347908b4e11760098fdbe&"
+                companyName="FuelCloud"
+                salary="Đăng nhập để xem mức lương"
+                position="Tại văn phòng"
+                location="Hồ Chí Minh"
+                tag="Hot"
+                jobTitle="Senior Android Developer (Kotlin, Flutter)"
               />
+
 
             </div>
 
