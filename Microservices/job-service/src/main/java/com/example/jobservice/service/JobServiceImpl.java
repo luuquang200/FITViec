@@ -1,46 +1,74 @@
 package com.example.jobservice.service;
 
 import com.example.jobservice.dto.CUJobDto;
+import com.example.jobservice.dto.UpdateResponse;
 import com.example.jobservice.repository.JobRepository;
 import com.example.jobservice.repository.dao.Job;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class JobServiceImpl {
+public class JobServiceImpl implements JobService {
   private final JobRepository repository;
 
-  public void Create(CUJobDto data) {
-    Job newJob = this.CloneData(data);
+  @Override
+  public Job Create(CUJobDto data) {
+    Job newJob = new Job();
+    this.CopyData(data, newJob);
     newJob.setJobId(this.CreateJobId());
-    this.repository.save(newJob);
+    return this.repository.save(newJob);
   }
+  @Override
   public Job GetOne(String jobId) {
     return this.repository.findById(jobId).orElse(null);
   }
-  public void Update(CUJobDto data) {
-
+  @Override
+  public UpdateResponse Update(String employerId, String jobId, CUJobDto data) {
+    Job job = this.repository.findById(jobId).orElse(null);
+    if (job == null) {
+      return new UpdateResponse(HttpStatus.NOT_FOUND.toString(), "Job not found", null);
+    } else if (job.getEmployerId().equals(employerId)) {
+      this.CopyData(data, job);
+      this.repository.save(job);
+      return new UpdateResponse(HttpStatus.OK.toString(), "OK", job);
+    } else {
+      return new UpdateResponse(HttpStatus.FORBIDDEN.toString(), "Forbidden", null);
+    }
+  }
+  @Override
+  public UpdateResponse Delete(String employerId, String jobId) {
+    Job job = this.repository.findById(jobId).orElse(null);
+    if (job == null) {
+      return new UpdateResponse(HttpStatus.NOT_FOUND.toString(), "Job not found", null);
+    } else if (job.getEmployerId().equals(employerId)) {
+      this.repository.delete(job);
+      return new UpdateResponse(HttpStatus.OK.toString(), "OK", job);
+    } else {
+      return new UpdateResponse(HttpStatus.FORBIDDEN.toString(), "Forbidden", null);
+    }
+  }
+  @Override
+  public List<Job> GetJobsByEmployer(String employerId) {
+    return this.repository.findAllByEmployerId(employerId);
   }
 
   private String CreateJobId() {
     return UUID.randomUUID().toString();
   }
-  private Job CloneData(CUJobDto data) {
-    Job cloneJob = new Job();
-    cloneJob.setJobId("");
-    cloneJob.setEmployerId(data.employerId);
-    cloneJob.setJobTitle(data.jobTitle);
-    cloneJob.setJobDescription(data.jobDescription);
-    cloneJob.setJobLocation(data.jobLocation);
-    cloneJob.setJobType(data.jobType);
-    cloneJob.setJobCategory(data.jobCategory);
-    cloneJob.setJobSalary(data.jobSalary);
-    cloneJob.setPostedAt(data.postedAt);
-    cloneJob.setClosingAt(data.closingAt);
-    return cloneJob;
+  private void CopyData(CUJobDto data, Job job) {
+    job.setEmployerId(data.employerId);
+    job.setJobTitle(data.jobTitle);
+    job.setJobDescription(data.jobDescription);
+    job.setJobLocation(data.jobLocation);
+    job.setJobType(data.jobType);
+    job.setJobCategory(data.jobCategory);
+    job.setJobSalary(data.jobSalary);
+    job.setPostedAt(data.postedAt);
+    job.setClosingAt(data.closingAt);
   }
 }
