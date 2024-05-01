@@ -45,7 +45,10 @@ const Header = () => {
             className={`fixed z-10 flex w-full items-center justify-between border-b-2 border-muted-foreground bg-linear-gradient px-8 2xl:px-40 ${isActive ? "h-[60px]" : "h-[88px]"}`}
         >
             <div className="flex space-x-6">
-                <img src={Logo} alt="Logo" className="w-[108px]" />
+                <a href="/">
+                    <img src={Logo} alt="Logo" className="w-[108px]" />
+                </a>
+
                 <div className="flex items-center text-lg text-background">
                     Navigation menu
                 </div>
