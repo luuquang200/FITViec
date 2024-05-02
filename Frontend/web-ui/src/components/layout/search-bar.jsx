@@ -33,6 +33,12 @@ const SearchBar = ({inputCity, inputQuery}) => {
         window.location.href = `/search?keyword=${keyword}&city=${city}`;
     };
 
+    const onInputKeyDown = (e) => {
+        if (e.key === "Enter") {
+            openSearchPage();
+        }
+    }
+
     const [city, setCity] = React.useState(inputCity || "all");
 
     return (
@@ -62,6 +68,7 @@ const SearchBar = ({inputCity, inputQuery}) => {
                 placeholder="Enter keyword skill (Java, iOS,...), job title, company,..."
                 className="col-span-3"
                 defaultValue={inputQuery}
+                onKeyDown={onInputKeyDown}
             />
 
             <Button onClick={openSearchPage}>
