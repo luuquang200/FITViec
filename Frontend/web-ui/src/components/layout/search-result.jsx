@@ -23,8 +23,8 @@ const SearchResult = () => {
     const city_label = cities.find((c) => c.value === city)?.label;
     const keyword = searchParams.get("keyword").toLowerCase();
 
-    let [jobs, setJobs] = React.useState([]);
-    let [selectedJob, setSelectedJob] = React.useState(null);
+    const [jobs, setJobs] = React.useState([]);
+    const [selectedJob, setSelectedJob] = React.useState(null);
 
     // Get Jobs from API: https://demo-restful-api-itviec.vercel.app/api/jobs
 
@@ -41,7 +41,8 @@ const SearchResult = () => {
                 }
 
                 setJobs(data);
-                setSelectedJob(data[0]);
+                if (!selectedJob && data.length > 0)
+                    setSelectedJob(data[0]);
             })
             .catch(error => {
                 console.error(error);
@@ -123,13 +124,18 @@ const JobDetailInSearchResult = ({ job }) => {
     // May use the same component for JobDetail in JobDetail page
     // But for now, we just show the title, company name, and salary
     return (
-        <div className="p-6 bg-white rounded-lg">
-            <div>
+        <div className="p-6 bg-white rounded-lg sticky top-[100px]">
+            <div className="flex-col space-y-3">
                 <h2 className="text-3xl font-bold">{job.title ?? ""}</h2>
                 <p className="text-xl">{job.company?.name ?? ""}</p>
                 <p className="text-base text-green-600 flex space-x-1">
                     <CircleDollarSign />
                     <div>{job.salary}</div>
+                </p>
+                <hr />
+                <p>
+                    <h2 className="text-2xl font-bold">Description</h2>
+                    <p className="text-base">{job.description}</p>
                 </p>
             </div>
         </div>
