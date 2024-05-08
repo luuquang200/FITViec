@@ -1,5 +1,7 @@
 package com.example.jobservice.listener;
 
+import com.example.jobservice.dto.JobEvent;
+import com.example.jobservice.kafka.JobProducer;
 import com.example.jobservice.repository.dao.Job;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.PostRemove;
@@ -7,14 +9,17 @@ import jakarta.persistence.PostUpdate;
 import lombok.AllArgsConstructor;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
 
 @AllArgsConstructor
 public class JobListener {
   private static final Log log = LogFactory.getLog(JobListener.class);
-  private final WebClient webClient;
-  private final String JOB_SEARCH_BASE_URL = "http://localhost:1001/job-elastic/";
+  private JobProducer producer;
+
+    private static class JobEventAction {
+    public static String INSERT = "insert";
+    public static String UPDATE = "update";
+    public static String DELETE = "delete";
+  }
 
   @PostPersist
   private void afterInsert(Job job) {
@@ -30,20 +35,25 @@ public class JobListener {
   @PostRemove
   private void afterRemove(Job job) {
     System.out.println("After remove: " + job.getJobId());
-    this.RemoveJobFromElastic(job.getJobId());
+    this.RemoveJobFromElastic(job);
   }
 
   private void InsertJobIntoElastic(Job job) {
-    Job result = this.webClient.post().uri(JOB_SEARCH_BASE_URL + "insert")
-        .body(BodyInserters.fromValue(job)).retrieve().bodyToMono(Job.class).block();
-    System.out.println(result);
+    JobEvent jobEvent = new JobEvent();
+    jobEvent.setAction(JobEventAction.INSERT);
+    jobEvent.setJob(job);
+    this.producer.sendJobEvent(jobEvent);
   }
   private void UpdateJobIntoElastic(Job job) {
-    Job result = this.webClient.post().uri(JOB_SEARCH_BASE_URL + "update")
-        .body(BodyInserters.fromValue(job)).retrieve().bodyToMono(Job.class).block();
-    System.out.println(result);
+    JobEvent jobEvent = new JobEvent();
+    jobEvent.setAction(JobEventAction.UPDATE);
+    jobEvent.setJob(job);
+    this.producer.sendJobEvent(jobEvent);
   }
-  private void RemoveJobFromElastic(String jobId) {
-    this.webClient.delete().uri(JOB_SEARCH_BASE_URL + "delete/" + jobId).retrieve().bodyToMono(Job.class).block();
+  private void RemoveJobFromElastic(Job job) {
+    JobEvent jobEvent = new JobEvent();
+    jobEvent.setAction(JobEventAction.DELETE);
+    jobEvent.setJob(job);
+    this.producer.sendJobEvent(jobEvent);
   }
 }

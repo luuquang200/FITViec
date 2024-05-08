@@ -17,22 +17,6 @@ import java.util.List;
 public class JobController {
   private final JobSearchService service;
 
-  @GetMapping("/{job-id}")
-  public ResponseEntity<Job> GetOneJob(@PathVariable("job-id") String jobId) {
-    return ResponseEntity.ok(this.service.GetOne(jobId));
-  }
-  @PostMapping("/insert")
-  public ResponseEntity<Job> InsertJob(@RequestBody Job job) {
-    return ResponseEntity.ok(this.service.Insert(job));
-  }
-  @PostMapping("/update")
-  public ResponseEntity<UpdateResponse> UpdateJob(@RequestBody Job job) {
-    return ResponseEntity.ok(this.service.Update(job));
-  }
-  @DeleteMapping("/delete/{job-id}")
-  public ResponseEntity<UpdateResponse> DeleteJob(@PathVariable("job-id") String jobId) {
-    return ResponseEntity.ok(this.service.Delete(jobId));
-  }
   @GetMapping("/search")
   public ResponseEntity<List<Job>> SearchJob(@RequestBody SearchRequest request) throws IOException {
     System.out.println(request.query);
