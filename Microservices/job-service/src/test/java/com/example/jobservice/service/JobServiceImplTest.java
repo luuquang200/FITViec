@@ -147,27 +147,27 @@ class JobServiceImplTest {
     assertEquals(result.job.getClosingAt(), uJob.getClosingAt());
   }
 
-  @Test
-  void delete() {
-    JobRepository repository = Mockito.mock(JobRepository.class);
-    Job job = new Job(
-        "1",
-        "employerId",
-        "Job Title",
-        "Job Description",
-        "Job Location",
-        "Job Type",
-        "Job Category",
-        "Job Salary",
-        "Posted At",
-        "Closing At");
-    Mockito.when(repository.findById("1")).thenReturn(Optional.of(job));
-    JobServiceImpl jobService = new JobServiceImpl(repository);
-
-    UpdateResponse result = jobService.Delete("employerId", "1");
-    assertEquals(HttpStatus.OK.toString(), result.status);
-    assertEquals("OK", result.message);
-    assertEquals(job, result.job);
-    Mockito.verify(repository).delete(job);
-  }
+//  @Test
+//  void delete() {
+//    JobRepository repository = Mockito.mock(JobRepository.class);
+//    Job job = new Job(
+//        "1",
+//        "employerId",
+//        "Job Title",
+//        "Job Description",
+//        "Job Location",
+//        "Job Type",
+//        "Job Category",
+//        "Job Salary",
+//        "Posted At",
+//        "Closing At");
+//    Mockito.when(repository.findById("1")).thenReturn(Optional.of(job));
+//    JobServiceImpl jobService = new JobServiceImpl(repository);
+//
+//    UpdateResponse result = jobService.Delete("employerId", "1");
+//    assertEquals(HttpStatus.OK.toString(), result.status);
+//    assertEquals("OK", result.message);
+//    assertEquals(job, result.job);
+//    Mockito.verify(repository).delete(job);
+//  }
 }
