@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 // Assets
 import Logo from "../../assets/logo-itviec.webp";
@@ -13,12 +14,17 @@ import {
     MenubarTrigger,
     MenubarContent,
     MenubarItem,
-    MenubarMenu,
+  MenubarMenu,
+  MenubarSub,
+  MenubarSubTrigger,
+  MenubarSeparator,
+  MenubarSubContent,
 } from "../ui/menubar";
 
 // Icons
 import {
-    ChevronDown,
+  ChevronDown,
+  ChevronRight,
     User,
     Briefcase,
     Inbox,
@@ -26,6 +32,54 @@ import {
     Settings,
     LogOut,
 } from "lucide-react";
+
+const menuContent = [{
+  title: "All Jobs",
+  items: [
+    {
+      title: "Jobs by Skill",
+      href: "/test",
+      items: [
+        {
+          title: "Email link",
+          href: "/test1",
+        },
+        {
+          title: "Messages",
+          href: "test2",
+        },
+        {
+          title: "Notes",
+          href: "test3",
+        },
+        {
+          title: "Email link",
+          href: "/test1",
+        },
+        {
+          title: "Messages",
+          href: "test2",
+        },
+        {
+          title: "Notes",
+          href: "test3",
+        },
+        {
+          title: "Email link",
+          href: "/test1",
+        },
+        {
+          title: "Messages",
+          href: "test2",
+        },
+        {
+          title: "Notes",
+          href: "test3",
+        },
+      ],
+    },
+  ],
+}]
 
 const Header = () => {
     const [isActive, setIsActive] = useState(false);
@@ -49,9 +103,51 @@ const Header = () => {
                     <img src={Logo} alt="Logo" className="w-[108px]" />
                 </a>
 
-                <div className="flex items-center text-lg text-background">
-                    Navigation menu
-                </div>
+          <div className="flex items-center text-lg"> 
+          <Menubar>
+            {menuContent && menuContent.map((menu) => { 
+              return (
+                  <MenubarMenu key={menu.title}>
+                  <MenubarTrigger>
+                      <span className="text-base text-gray-300">{menu.title}</span>
+                      <ChevronDown className="mr-1 h-5 w-5 text-muted-foreground" />
+                    </MenubarTrigger>
+                    <MenubarContent className="rounded-none border-none bg-[#121212] text-[#a6a6a6] p-0">
+                      {menu.items.map((item) => {
+                        return (
+                          <MenubarSub key={item.title} className="relative">
+                            <MenubarSubTrigger className="rounded-none p-3 focus:bg-[#414042] data-[state=open]:bg-[#414042] data-[state=open]:text-white focus:text-white">
+                              <Link to={item.href}>
+                                {item.title}
+                              </Link>
+                            </MenubarSubTrigger>
+                            <MenubarSubContent className="absolute rounded-none border-none bg-[#121212] text-muted-foreground p-0">
+                              <ul className="grid w-[400px] md:w-[500px] md:grid-cols-4 lg:w-[600px] ">
+                                {item.items.map((subItem) => {
+                                  return (
+                                    <MenubarItem key={subItem.title} className="rounded-none focus:bg-[#414042] data-[state=open]:bg-[#414042] data-[state=open]:text-white focus:text-white">
+                                      <Link to={subItem.href}>
+                                        {subItem.title}
+                                      </Link>
+                                    </MenubarItem>
+                                  );
+                                })}
+                              </ul>
+                              <MenubarSeparator className="m-0" />
+                              <MenubarItem className="rounded-none focus:bg-[#414042] data-[state=open]:bg-[#414042] data-[state=open]:text-white focus:text-white flex justify-center">
+                                <Link to={item.href}>View all { item.title }</Link>
+                                <ChevronRight className="mr-1 h-5 w-5 text-muted-foreground" />
+                              </MenubarItem>
+                            </MenubarSubContent>
+                          </MenubarSub>
+                        );
+                      })}
+                    </MenubarContent>
+                  </MenubarMenu>
+              );
+            }) }
+            </Menubar>
+                  </div>
             </div>
             <ul className="flex items-center space-x-6">
                 <li>
