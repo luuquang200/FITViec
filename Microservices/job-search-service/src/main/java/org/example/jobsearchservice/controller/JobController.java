@@ -17,6 +17,10 @@ import java.util.List;
 public class JobController {
   private final JobSearchService service;
 
+  @GetMapping("")
+  public String service() {
+    return "Hello job-search service";
+  }
   @GetMapping("/search")
   public ResponseEntity<List<Job>> SearchJob(@RequestBody SearchRequest request) throws IOException {
     System.out.println(request.query);

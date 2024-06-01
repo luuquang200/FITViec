@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class JobEvent {
-    private String action;
-    private Job job;
+  private String action;
+  private Job job;
 }
