@@ -16,6 +16,10 @@ import java.util.List;
 public class JobController {
   private final JobService service;
 
+  @GetMapping("")
+  public String service() {
+    return "Hello job service";
+  }
   @PostMapping("/create")
   public ResponseEntity<Job> CreateJob(@RequestBody CUJobDto data) {
     return ResponseEntity.ok(this.service.Create(data));

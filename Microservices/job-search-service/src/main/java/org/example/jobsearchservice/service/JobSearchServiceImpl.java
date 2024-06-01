@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Supplier;
 
 @Service
@@ -60,7 +61,7 @@ public class JobSearchServiceImpl implements JobSearchService {
   public List<Job> Search(org.example.jobsearchservice.dto.SearchRequest request) throws IOException {
     List<String> fields = this.GetListFieldsForSearching();
     Query multiMatchQuery = new MultiMatchQuery.Builder().query(request.query).fields(fields).build()._toQuery();
-    Query filterLocation = new MatchQuery.Builder().query(request.jobLocation).field("jobLocation").build()._toQuery();
+    Query filterLocation = this.GetQueryForJobLocation(request.jobLocation);
     BoolQuery boolQuery = QueryBuilders.bool().must(multiMatchQuery, filterLocation).build();
     Supplier<Query> supplier = () -> Query.of(_q -> _q.bool(boolQuery));
     SearchRequest searchRequest = SearchRequest.of(s -> s.index(indexName).query(supplier.get()));
@@ -73,6 +74,20 @@ public class JobSearchServiceImpl implements JobSearchService {
     return jobs;
   }
 
+  private Query GetQueryForJobLocation(String jobLocation) {
+    switch (jobLocation.toLowerCase(Locale.ROOT)) {
+      case "":
+        return new MatchAllQuery.Builder().build()._toQuery();
+      case "ho chi minh", "ha noi", "da nang":
+        return new MatchQuery.Builder().query(jobLocation).field("jobLocation").build()._toQuery();
+      case "others":
+        Query qHcm = new MatchQuery.Builder().query("ho chi minh").field("jobLocation").build()._toQuery();
+        Query qHn = new MatchQuery.Builder().query("ha noi").field("jobLocation").build()._toQuery();
+        Query qDn = new MatchQuery.Builder().query("da nang").field("jobLocation").build()._toQuery();
+        return new BoolQuery.Builder().mustNot(qHcm, qHn, qDn).build()._toQuery();
+    };
+    return null;
+  }
   private void CopyData(Job data, Job job) {
     job.setJobId(data.getJobId());
     job.setEmployerId(data.getEmployerId());

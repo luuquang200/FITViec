@@ -12,17 +12,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JobProducer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JobProducer.class);
-    private final NewTopic topic;
-    private final KafkaTemplate<String, JobEvent> kafkaTemplate;
+  private static final Logger LOGGER = LoggerFactory.getLogger(JobProducer.class);
+  private final NewTopic topic;
+  private final KafkaTemplate<String, JobEvent> kafkaTemplate;
 
-    public JobProducer(NewTopic topic, KafkaTemplate<String, JobEvent> kafkaTemplate) {
-        this.topic = topic;
-        this.kafkaTemplate = kafkaTemplate;
-    }
-    public void sendJobEvent(JobEvent jobEvent) {
-        LOGGER.info(String.format("Sending job event => %s", jobEvent.toString()));
-        Message<JobEvent> message = MessageBuilder.withPayload(jobEvent).setHeader(KafkaHeaders.TOPIC, topic.name()).build();
-        kafkaTemplate.send(message);
-    }
+  public JobProducer(NewTopic topic, KafkaTemplate<String, JobEvent> kafkaTemplate) {
+    this.topic = topic;
+    this.kafkaTemplate = kafkaTemplate;
+  }
+  public void sendJobEvent(JobEvent jobEvent) {
+    LOGGER.info(String.format("Sending job event => %s", jobEvent.toString()));
+    Message<JobEvent> message = MessageBuilder.withPayload(jobEvent).setHeader(KafkaHeaders.TOPIC, topic.name()).build();
+    kafkaTemplate.send(message);
+  }
 }
