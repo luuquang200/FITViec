@@ -4,18 +4,41 @@ import { Check } from "lucide-react";
 import { Eye } from "lucide-react";
 import { EyeOff } from "lucide-react";
 
+import {
+    doSignInWithEmailAndPassword,
+    doSignInWithGoogle,
+} from "@/firebase/auth";
+import { useAuth } from "../../contexts/authContext";
+import { Navigate } from "react-router-dom";
+
 const SignIn = () => {
+    const { userLoggedIn } = useAuth();
+
+    console.log(userLoggedIn);
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
 
+    const [isSigningIn, setisSigningIn] = useState(false);
+
     const handleSignIn = async (e) => {
         e.preventDefault();
-        try {
-            console.log("sign in success");
-        } catch (error) {
-            // handle error
+
+        if (!isSigningIn) {
+            setisSigningIn(true);
+            await doSignInWithEmailAndPassword(email, password);
+        }
+    };
+
+    const onGoogleSignIn = (e) => {
+        e.preventDefault();
+        if (!isSigningIn) {
+            setisSigningIn(true);
+            doSignInWithGoogle().catch((err) => {
+                setisSigningIn(false);
+            });
         }
     };
 
@@ -42,6 +65,7 @@ const SignIn = () => {
 
     return (
         <Container className="py-16 pt-8">
+            {/* {userLoggedIn && <Navigate to={"/home"} replace={true} />} */}
             <div className="mb-4 flex gap-x-3">
                 <h3 className="text-xl font-bold">Welcome to</h3>
                 <img
