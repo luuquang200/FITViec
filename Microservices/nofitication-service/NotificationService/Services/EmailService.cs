@@ -5,7 +5,6 @@ using NotificationService.Protos;
 using NotificationService.Config;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
-using RazorLight;
 
 namespace NotificationService.Services
 {
