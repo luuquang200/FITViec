@@ -78,6 +78,9 @@ module.exports = {
                 "linear-gradient":
                     "linear-gradient(269.85deg, #54151C 0%, #121212 54.89%)",
             },
+            height: {
+                "vh-main": "calc(100vh - 417px)",
+            },
         },
     },
     plugins: [require("tailwindcss-animate")],

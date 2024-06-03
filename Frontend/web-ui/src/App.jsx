@@ -13,10 +13,14 @@ import SignIn from "./components/layout/signin";
 import SignUp from "./components/layout/signup";
 
 import { AuthProvider } from "./contexts/authContext";
+import ToastContainerNotification from "./components/Notifications/ToastContainerNotification";
+import VerifyEmail from "./components/layout/verify-email";
+import ProtectedRouteVerify from "./lib/protect-verify-email";
 
 function App() {
     return (
         <AuthProvider>
+            <ToastContainerNotification />
             <Header />
             <div className="h-[88px]" />
             <Routes>
@@ -38,6 +42,14 @@ function App() {
                 />
                 <Route path="/profile-cv" element={<ProfileManagement />} />
                 <Route path="/profile-cv" element={<ProfileManagement />} />
+                <Route
+                    path="/verify_email"
+                    element={
+                        <ProtectedRouteVerify>
+                            <VerifyEmail />
+                        </ProtectedRouteVerify>
+                    }
+                />
             </Routes>
             <Footer />
         </AuthProvider>

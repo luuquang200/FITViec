@@ -1,7 +1,5 @@
 import {
-    createUserWithEmailAndPassword,
     GoogleAuthProvider,
-    sendEmailVerification,
     sendPasswordResetEmail,
     signInWithEmailAndPassword,
     signInWithPopup,
@@ -9,23 +7,6 @@ import {
 } from "firebase/auth";
 import { auth, db } from "./firebase";
 import { setDoc, doc } from "firebase/firestore";
-
-export const doCreateUserWithEmailAndPassword = async (
-    email,
-    password,
-    username,
-) => {
-    const result = await createUserWithEmailAndPassword(auth, email, password);
-    const user = auth.currentUser;
-    console.log(user);
-    if (user) {
-        await setDoc(doc(db, "Users", user.uid), {
-            email: email,
-            username: username,
-        });
-    }
-    return result;
-};
 
 export const doSignInWithEmailAndPassword = async (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
@@ -49,10 +30,4 @@ export const doSignOut = () => {
 
 // export const doPasswordChange = (password) => {
 //     return updatePassword(auth.currentUser, password);
-// }
-
-// export const doSendEmailVerification = () => {
-//     return sendEmailVerification(auth.currentUser, {
-//         url: `${window.location.origin}/home`
-//     })
 // }

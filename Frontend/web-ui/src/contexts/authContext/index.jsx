@@ -15,6 +15,7 @@ export function AuthProvider({ children }) {
     const [isEmailUser, setIsEmailUser] = useState(false);
     const [isGoogleUser, setIsGoogleUser] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [isRegistered, setIsRegistered] = useState(false);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, initializeUser);
@@ -23,21 +24,19 @@ export function AuthProvider({ children }) {
 
     async function initializeUser(user) {
         if (user) {
-            setCurrentUser({ ...user });
+            if (user.emailVerified) {
+                setCurrentUser({ ...user });
 
-            // check if provider is email and password login
-            const isEmail = user.providerData.some(
-                (provider) => provider.providerId === "password",
-            );
-            setIsEmailUser(isEmail);
+                const isEmail = user.providerData.some(
+                    (provider) => provider.providerId === "password",
+                );
+                setIsEmailUser(isEmail);
 
-            // check if the auth provider is google or not
-            //   const isGoogle = user.providerData.some(
-            //     (provider) => provider.providerId === GoogleAuthProvider.PROVIDER_ID
-            //   );
-            //   setIsGoogleUser(isGoogle);
-
-            setUserLoggedIn(true);
+                setUserLoggedIn(true);
+            } else {
+                // If email is not verified, sign out the user and prompt verification
+                await auth.signOut();
+            }
         } else {
             setCurrentUser(null);
             setUserLoggedIn(false);
@@ -52,6 +51,8 @@ export function AuthProvider({ children }) {
         isGoogleUser,
         currentUser,
         setCurrentUser,
+        isRegistered,
+        setIsRegistered,
     };
 
     return (

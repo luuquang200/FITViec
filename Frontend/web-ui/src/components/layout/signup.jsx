@@ -4,12 +4,23 @@ import { Check } from "lucide-react";
 import { Eye } from "lucide-react";
 import { EyeOff } from "lucide-react";
 
-import { doCreateUserWithEmailAndPassword, doSignOut } from "@/firebase/auth";
+import { doSignOut } from "@/firebase/auth";
 import { useAuth } from "../../contexts/authContext";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import {
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
+} from "firebase/auth";
+import { auth, db } from "../../firebase/firebase";
 
 const SignUp = () => {
-    const { userLoggedIn, currentUser } = useAuth();
+    const { userLoggedIn, currentUser, setIsRegistered } = useAuth();
+
+    const navigate = useNavigate();
+
+    console.log(currentUser);
 
     const [userName, setUserName] = useState("");
     const [email, setEmail] = useState("");
@@ -19,7 +30,7 @@ const SignUp = () => {
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
 
-    const [isRegistering, setIsRegistering] = useState(null);
+    const [isRegistering, setIsRegistering] = useState(false);
 
     const [showPassword, setShowPassword] = useState(false);
     const [checkGoogle, setCheckGoogle] = useState(false);
@@ -30,9 +41,46 @@ const SignUp = () => {
 
         if (!isRegistering) {
             setIsRegistering(true);
-            doCreateUserWithEmailAndPassword(email, password, userName);
-            setIsRegistering(null);
-            console.log("register success");
+            try {
+                await createUserWithEmailAndPassword(
+                    auth,
+                    email,
+                    password,
+                ).then(async (userCred) => {
+                    const user = userCred.user;
+                    await sendEmailVerification(user);
+                });
+                setIsRegistered(true);
+                toast.success(
+                    "Registration successful! Please check your email to verify your account.",
+                );
+                // Điều hướng tới trang verify_email sau khi đăng ký thành công
+                navigate(`/verify_email?email=${email}`);
+            } catch (error) {
+                handleAuthError(error);
+            } finally {
+                setIsRegistering(false);
+            }
+        }
+    };
+
+    const handleAuthError = (error) => {
+        switch (error.code) {
+            case "auth/email-already-in-use":
+                toast.error("Email is already in use.");
+                break;
+            case "auth/invalid-email":
+                toast.error("Invalid email address.");
+                break;
+            case "auth/operation-not-allowed":
+                toast.error("Operation not allowed.");
+                break;
+            case "auth/weak-password":
+                toast.error("Password is too weak.");
+                break;
+            default:
+                toast.error(`Registration failed: ${error.message}`);
+                break;
         }
     };
 
@@ -361,7 +409,7 @@ const SignUp = () => {
                         </div>
                     </div>
                     <button
-                        className={`mb-6 flex h-12 w-full items-center justify-center gap-0 rounded-sm bg-red-500 py-2 font-bold text-white ${
+                        className={`mb-6 flex h-12 w-full items-center justify-center gap-0 rounded-sm  py-2 font-bold text-white ${
                             userNameError ||
                             emailError ||
                             passwordError ||
@@ -371,7 +419,7 @@ const SignUp = () => {
                             !checkEmail ||
                             isRegistering
                                 ? "bg-gray-400 "
-                                : "hover:bg-red-700"
+                                : "bg-red-500 hover:bg-red-700"
                         }`}
                         onClick={handleSignIn}
                         disabled={
