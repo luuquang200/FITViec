@@ -5,12 +5,7 @@ import {
     signInWithPopup,
     updatePassword,
 } from "firebase/auth";
-import { auth, db } from "./firebase";
-import { setDoc, doc } from "firebase/firestore";
-
-export const doSignInWithEmailAndPassword = async (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
-};
+import { auth } from "./firebase";
 
 export const doSignInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();

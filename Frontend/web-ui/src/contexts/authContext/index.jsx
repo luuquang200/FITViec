@@ -17,6 +17,8 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
     const [isRegistered, setIsRegistered] = useState(false);
 
+    const [inSingUpInPage, setInSingUpInPage] = useState(false);
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, initializeUser);
         return unsubscribe;
@@ -41,7 +43,6 @@ export function AuthProvider({ children }) {
             setCurrentUser(null);
             setUserLoggedIn(false);
         }
-
         setLoading(false);
     }
 
@@ -53,6 +54,8 @@ export function AuthProvider({ children }) {
         setCurrentUser,
         isRegistered,
         setIsRegistered,
+        inSingUpInPage,
+        setInSingUpInPage,
     };
 
     return (

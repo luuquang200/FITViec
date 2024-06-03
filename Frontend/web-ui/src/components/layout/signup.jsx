@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Container from "@/components/layout/container";
 import { Check } from "lucide-react";
 import { Eye } from "lucide-react";
@@ -6,7 +6,7 @@ import { EyeOff } from "lucide-react";
 
 import { doSignOut } from "@/firebase/auth";
 import { useAuth } from "../../contexts/authContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import {
@@ -16,11 +16,9 @@ import {
 import { auth, db } from "../../firebase/firebase";
 
 const SignUp = () => {
-    const { userLoggedIn, currentUser, setIsRegistered } = useAuth();
+    const { userLoggedIn, setIsRegistered, setInSingUpInPage } = useAuth();
 
     const navigate = useNavigate();
-
-    console.log(currentUser);
 
     const [userName, setUserName] = useState("");
     const [email, setEmail] = useState("");
@@ -35,6 +33,10 @@ const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [checkGoogle, setCheckGoogle] = useState(false);
     const [checkEmail, setCheckEmail] = useState(false);
+
+    useEffect(() => {
+        setInSingUpInPage(true);
+    }, []);
 
     const handleSignIn = async (e) => {
         e.preventDefault();
@@ -131,7 +133,7 @@ const SignUp = () => {
 
     return (
         <Container className="py-16 pt-8">
-            {/* {userLoggedIn && <Navigate to={"/home"} replace={true} />} */}
+            {userLoggedIn && <Navigate to={"/"} replace={true} />}
             <div className="mb-4 flex gap-x-3">
                 <h3 className="text-xl font-bold">Welcome to</h3>
                 <img
@@ -211,19 +213,6 @@ const SignUp = () => {
                             className="h-8 w-8"
                         />
                         <span className="pl-2">Sign Up with Google</span>
-                    </button>
-                    <button
-                        className="flex h-12 w-full items-center justify-center gap-0 rounded-sm border border-red-500 py-2 font-bold text-red-500 hover:bg-red-50"
-                        onClick={() => {
-                            doSignOut();
-                        }}
-                    >
-                        <img
-                            src="https://itviec.com/assets/google_logo-af373a5e64715e7d4fcdea711f96995f7fd7a49725b3dd8910d4749b74742cb2.svg"
-                            alt="Google Logo"
-                            className="h-8 w-8"
-                        />
-                        <span className="pl-2">Logout</span>
                     </button>
                     <div className="flex items-center py-4">
                         <div className="flex-grow border-t border-solid border-gray-300"></div>
