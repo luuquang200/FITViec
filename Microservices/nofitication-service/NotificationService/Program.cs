@@ -11,6 +11,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOptions<EmailSettings>().Bind(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddGrpc();
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+	options.ListenAnyIP(8080);
+	options.ListenAnyIP(8585, listenOptions =>
+	{
+		listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
+	});
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
