@@ -91,7 +91,7 @@ const menuContent = [
 const Header = () => {
     const [isActive, setIsActive] = useState(false);
 
-    const { currentUser, inSingUpInPage } = useAuth();
+    const { currentUser, inSingUpInPage, isGoogleUser } = useAuth();
 
     const navigate = useNavigate();
 
@@ -101,6 +101,13 @@ const Header = () => {
             window.scrollY > 60 ? setIsActive(true) : setIsActive(false);
         });
     });
+
+    const defaultAvt =
+        "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png";
+
+    const capitalized = (letter) => {
+        return letter.charAt(0).toUpperCase() + letter.slice(1);
+    };
 
     return (
         <motion.div
@@ -218,16 +225,18 @@ const Header = () => {
                                             <div className="overflow-hidden rounded-full border-2 border-white">
                                                 <img
                                                     src={
-                                                        currentUser?.picture
-                                                            ? currentUser.picture
-                                                            : "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png"
+                                                        currentUser.photoURL
+                                                            ? currentUser?.photoURL
+                                                            : defaultAvt
                                                     }
                                                     alt="Avatar"
                                                     className="h-8 w-8"
                                                 />
                                             </div>
                                             <div className="text-white">
-                                                {currentUser?.nickname}
+                                                {capitalized(
+                                                    currentUser?.displayName,
+                                                )}
                                             </div>
                                             <ChevronDown className="mr-1 h-5 w-5 text-muted-foreground" />
                                         </div>
@@ -276,7 +285,7 @@ const Header = () => {
                                 variant="link"
                                 className="h-min p-0 text-white hover:no-underline"
                                 onClick={() => {
-                                    navigate("/signin");
+                                    navigate("/sign_in");
                                 }}
                             >
                                 Sign in/Sign up
