@@ -6,13 +6,13 @@ import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBTfjTv2Lvpm5brYeQxSr2R5Uqy-HE2CCs",
-    authDomain: "auth-service-ba5b4.firebaseapp.com",
-    projectId: "auth-service-ba5b4",
-    storageBucket: "auth-service-ba5b4.appspot.com",
-    messagingSenderId: "745854117246",
-    appId: "1:745854117246:web:1d4af43389ef803adbff2f",
-    measurementId: "G-QTBMGJ5H0Q",
+    apiKey: "AIzaSyDfeDep6iCA7GyLLdfj34epJB9jRGsIISw",
+    authDomain: "fit-viec.firebaseapp.com",
+    projectId: "fit-viec",
+    storageBucket: "fit-viec.appspot.com",
+    messagingSenderId: "396433078827",
+    appId: "1:396433078827:web:50be5aa49e9e8d0e5d086e",
+    measurementId: "G-9KN4X6VCVL",
 };
 
 // Initialize Firebase

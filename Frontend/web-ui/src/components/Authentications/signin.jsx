@@ -5,11 +5,9 @@ import { Eye } from "lucide-react";
 import { EyeOff } from "lucide-react";
 
 import { useAuth } from "../../contexts/authContext";
-import {
-    GoogleAuthProvider,
-    signInWithEmailAndPassword,
-    signInWithPopup,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
+import { doSignInWithGoogle } from "../../firebase/auth";
 import { auth } from "../../firebase/firebase";
 
 import { useNavigate, Navigate } from "react-router-dom";
@@ -36,7 +34,8 @@ const SignIn = () => {
 
     useEffect(() => {
         setInSingUpInPage(true);
-    }, []);
+        return () => setInSingUpInPage(false); // Reset the state when the component is unmounted
+    }, [setInSingUpInPage]);
 
     const handleSignIn = async (e) => {
         e.preventDefault();
@@ -65,16 +64,6 @@ const SignIn = () => {
             } finally {
                 setisSigningIn(false);
             }
-        }
-    };
-
-    const onGoogleSignIn = (e) => {
-        e.preventDefault();
-        if (!isSigningIn) {
-            setisSigningIn(true);
-            doSignInWithGoogle().catch((err) => {
-                setisSigningIn(false);
-            });
         }
     };
 
@@ -116,19 +105,29 @@ const SignIn = () => {
         console.error("Sign-in error:", error);
         switch (error.code) {
             case "auth/user-not-found":
-                toast.error("No user found with this email.");
+                toast.error(
+                    "Oops! This email address doesn't exist, please try again",
+                );
                 break;
             case "auth/wrong-password":
-                toast.error("Incorrect password.");
+                toast.error(
+                    "Oops! This account incorrect password , please try again ",
+                );
                 break;
             case "auth/invalid-email":
-                toast.error("Invalid email address.");
+                toast.error(
+                    "Oops! This email address invalid, please try again",
+                );
                 break;
             case "auth/user-disabled":
-                toast.error("User account is disabled.");
+                toast.error(
+                    "Oops! This user account is disabled, please try again",
+                );
                 break;
             case "auth/invalid-credential":
-                toast.error("Invalid credentials provided.");
+                toast.error(
+                    "Oops! Invalid credentials provided., please try again ",
+                );
                 break;
             default:
                 toast.error(`Sign-in failed: ${error.message}`);
@@ -168,7 +167,10 @@ const SignIn = () => {
                         </a>{" "}
                         in relation to your privacy information.
                     </div>
-                    <button className="flex h-12 w-full items-center justify-center gap-0 rounded-sm border border-red-500 py-2 font-bold text-red-500 hover:bg-red-50">
+                    <button
+                        className="flex h-12 w-full items-center justify-center gap-0 rounded-sm border border-red-500 py-2 font-bold text-red-500 hover:bg-red-50"
+                        onClick={() => doSignInWithGoogle()}
+                    >
                         <img
                             src="https://itviec.com/assets/google_logo-af373a5e64715e7d4fcdea711f96995f7fd7a49725b3dd8910d4749b74742cb2.svg"
                             alt="Google Logo"
@@ -220,7 +222,7 @@ const SignIn = () => {
                                 <abbr className="text-red-500">*</abbr>
                             </label>
                             <a
-                                href="#"
+                                href="/forgot_password"
                                 target="_blank"
                                 className="text-blue-700 hover:text-blue-900"
                             >
@@ -303,7 +305,7 @@ const SignIn = () => {
                     <div className="mb-6 text-center text-gray-600">
                         Do not have an account?{" "}
                         <a
-                            href="/signup"
+                            href="/sign_up"
                             target="_blank"
                             className="text-blue-700 hover:text-blue-900"
                         >

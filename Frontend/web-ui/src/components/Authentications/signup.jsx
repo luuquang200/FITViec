@@ -4,7 +4,6 @@ import { Check } from "lucide-react";
 import { Eye } from "lucide-react";
 import { EyeOff } from "lucide-react";
 
-import { doSignOut } from "@/firebase/auth";
 import { useAuth } from "../../contexts/authContext";
 import { useNavigate, Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -12,7 +11,9 @@ import { toast } from "react-toastify";
 import {
     createUserWithEmailAndPassword,
     sendEmailVerification,
+    updateProfile,
 } from "firebase/auth";
+import { doSignInWithGoogle } from "../../firebase/auth";
 import { auth, db } from "../../firebase/firebase";
 
 const SignUp = () => {
@@ -50,7 +51,10 @@ const SignUp = () => {
                     password,
                 ).then(async (userCred) => {
                     const user = userCred.user;
-                    await sendEmailVerification(user);
+                    await updateProfile(user, { displayName: userName });
+                    await sendEmailVerification(user, {
+                        url: "http://localhost:5173/sign_in",
+                    });
                 });
                 setIsRegistered(true);
                 toast.success(
@@ -69,16 +73,22 @@ const SignUp = () => {
     const handleAuthError = (error) => {
         switch (error.code) {
             case "auth/email-already-in-use":
-                toast.error("Email is already in use.");
+                toast.error(
+                    "Oops! This email address is already in sue, please try again",
+                );
                 break;
             case "auth/invalid-email":
-                toast.error("Invalid email address.");
+                toast.error(
+                    "Oops! This email address invalid, please try again",
+                );
                 break;
             case "auth/operation-not-allowed":
-                toast.error("Operation not allowed.");
+                toast.error("Oops! Operation not allowed, please try again");
                 break;
             case "auth/weak-password":
-                toast.error("Password is too weak.");
+                toast.error(
+                    "Oops! This password is too weak, please try again",
+                );
                 break;
             default:
                 toast.error(`Registration failed: ${error.message}`);
@@ -205,6 +215,7 @@ const SignUp = () => {
                                 ? "border-gray-400 text-gray-400 "
                                 : "border-red-500 text-red-500 hover:bg-red-50"
                         }`}
+                        onClick={() => doSignInWithGoogle()}
                         disabled={!checkGoogle}
                     >
                         <img
@@ -432,7 +443,7 @@ const SignUp = () => {
                     <div className="mb-10 text-center text-gray-600">
                         Already have an account?{" "}
                         <a
-                            href="/signin"
+                            href="/sign_in"
                             target="_blank"
                             className="text-blue-700 hover:text-blue-900"
                         >

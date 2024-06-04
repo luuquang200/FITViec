@@ -1,3 +1,4 @@
+import { Routes, Route } from "react-router-dom";
 // Components
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
@@ -8,13 +9,14 @@ import SearchResult from "./components/layout/search-result";
 import JobDetailGuestPage from "./components/ui/job-detail-guest/job-detail-guest";
 import ProfileManagement from "./components/profile/profile-management";
 
-import { Routes, Route } from "react-router-dom";
-import SignIn from "./components/layout/signin";
-import SignUp from "./components/layout/signup";
+import SignIn from "./components/Authentications/signin";
+import SignUp from "./components/Authentications/signup";
+import VerifyEmail from "./components/Authentications/verify-email";
+import ForgotPassword from "./components/Authentications/forgot-password";
+import ResetPassword from "./components/Authentications/reset-password";
 
 import { AuthProvider } from "./contexts/authContext";
 import ToastContainerNotification from "./components/Notifications/ToastContainerNotification";
-import VerifyEmail from "./components/layout/verify-email";
 import ProtectedRouteVerify from "./lib/protect-verify-email";
 
 function App() {
@@ -24,8 +26,8 @@ function App() {
             <Header />
             <div className="h-[88px]" />
             <Routes>
-                <Route path="/signin" element={<SignIn />} />
-                <Route path="/signup" element={<SignUp />} />
+                <Route path="/sign_in" element={<SignIn />} />
+                <Route path="/sign_up" element={<SignUp />} />
                 <Route
                     path="/"
                     element={
@@ -50,6 +52,8 @@ function App() {
                         </ProtectedRouteVerify>
                     }
                 />
+                <Route path="/forgot_password" element={<ForgotPassword />} />
+                <Route path="/reset_password" element={<ResetPassword />} />
             </Routes>
             <Footer />
         </AuthProvider>
