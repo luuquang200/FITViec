@@ -4,44 +4,141 @@ import { Check } from "lucide-react";
 import { Eye } from "lucide-react";
 import { EyeOff } from "lucide-react";
 
+import { useAuth } from "../../contexts/authContext";
+import {
+    GoogleAuthProvider,
+    signInWithEmailAndPassword,
+    signInWithPopup,
+} from "firebase/auth";
+import { auth } from "../../firebase/firebase";
+
+import { useNavigate, Navigate } from "react-router-dom";
+
+import { toast } from "react-toastify";
+import { useEffect } from "react";
+
 const SignIn = () => {
+    const { userLoggedIn, setInSingUpInPage } = useAuth();
+
+    // console.log(userLoggedIn, isEmailUser, currentUser);
+
+    const navigate = useNavigate();
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
 
+    const [isSigningIn, setisSigningIn] = useState(false);
+
+    const [showPassword, setShowPassword] = useState(false);
+
+    useEffect(() => {
+        setInSingUpInPage(true);
+    }, []);
+
     const handleSignIn = async (e) => {
         e.preventDefault();
-        try {
-            console.log("sign in success");
-        } catch (error) {
-            // handle error
+
+        if (!isSigningIn) {
+            setisSigningIn(true);
+            try {
+                await signInWithEmailAndPassword(auth, email, password).then(
+                    async (userCred) => {
+                        const user = userCred.user;
+                        if (user.emailVerified) {
+                            toast.success(
+                                "Successfully authenticated from Email & Password account.",
+                            );
+                            // Điều hướng tới home sau khi đăng nhập  thành công
+                            navigate(`/`);
+                        } else {
+                            toast.error(
+                                "Please verify your email before login ",
+                            );
+                        }
+                    },
+                );
+            } catch (error) {
+                handleAuthError(error);
+            } finally {
+                setisSigningIn(false);
+            }
         }
     };
 
-    const validateEmail = () => {
+    const onGoogleSignIn = (e) => {
+        e.preventDefault();
+        if (!isSigningIn) {
+            setisSigningIn(true);
+            doSignInWithGoogle().catch((err) => {
+                setisSigningIn(false);
+            });
+        }
+    };
+
+    const validateEmail = (email) => {
         if (!email) {
             setEmailError("Can't be blank");
-            return;
+            return false;
         } else {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            setEmailError(
-                !emailRegex.test(email) ? "Please check your email" : false,
-            );
-            return;
+            if (!emailRegex.test(email)) {
+                setEmailError("Please check your email");
+                return false;
+            } else {
+                setEmailError("");
+                return true;
+            }
         }
     };
 
-    const validatePassword = () => {
+    const validatePassword = (password) => {
         if (!password) {
             setPasswordError("Can't be blank");
-            return;
+            return false;
+        } else {
+            const passwordRegex =
+                /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{12,}$/;
+            if (!passwordRegex.test(password)) {
+                setPasswordError(
+                    "Password must be at least 12 characters long, include a number, an uppercase letter, a special character, no space and a lowercase letter.",
+                );
+                return false;
+            } else {
+                setPasswordError("");
+                return true;
+            }
         }
-        setPasswordError(false);
+    };
+    const handleAuthError = (error) => {
+        console.error("Sign-in error:", error);
+        switch (error.code) {
+            case "auth/user-not-found":
+                toast.error("No user found with this email.");
+                break;
+            case "auth/wrong-password":
+                toast.error("Incorrect password.");
+                break;
+            case "auth/invalid-email":
+                toast.error("Invalid email address.");
+                break;
+            case "auth/user-disabled":
+                toast.error("User account is disabled.");
+                break;
+            case "auth/invalid-credential":
+                toast.error("Invalid credentials provided.");
+                break;
+            default:
+                toast.error(`Sign-in failed: ${error.message}`);
+                break;
+        }
     };
 
     return (
         <Container className="py-16 pt-8">
+            {userLoggedIn && <Navigate to={"/"} replace={true} />}
             <div className="mb-4 flex gap-x-3">
                 <h3 className="text-xl font-bold">Welcome to</h3>
                 <img
@@ -90,15 +187,26 @@ const SignIn = () => {
                             <abbr className="text-red-500">*</abbr>
                         </label>
                         <input
-                            className={`form-input h-12 w-full rounded-sm border ${!emailError && email ? "border-green-500" : emailError ? "border-red-500" : "border-gray-300"} px-4 py-2`}
+                            className={`form-input h-12 w-full rounded-sm border ${
+                                !emailError && email
+                                    ? "border-green-500"
+                                    : emailError
+                                      ? "border-red-500"
+                                      : "border-gray-300"
+                            } px-4 py-2`}
                             type="email"
                             placeholder="Email"
                             value={email}
                             onChange={(e) => {
                                 setEmail(e.target.value);
-                                setEmailError(false);
+                                validateEmail(e.target.value);
                             }}
-                            onBlur={validateEmail}
+                            onBlur={() => {
+                                if (!email) {
+                                    // Kiểm tra nếu ô input trống sau khi mất focus
+                                    setEmailError("Can't be blank");
+                                }
+                            }}
                             required
                         />
                         {emailError && (
@@ -119,25 +227,77 @@ const SignIn = () => {
                                 Forgot password?
                             </a>
                         </div>
-                        <input
-                            type="password"
-                            className={`form-input h-12 w-full rounded-sm border ${!passwordError && password ? "border-green-500" : passwordError ? "border-red-500" : "border-gray-300"} px-4 py-2`}
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => {
-                                setPassword(e.target.value);
-                                setPasswordError(false);
-                            }}
-                            onBlur={validatePassword}
-                            required
-                        />
+                        <div className="relative mb-1">
+                            <span className="absolute bottom-0 right-0 translate-x-[-50%] translate-y-[-50%] transform cursor-pointer ">
+                                {showPassword ? (
+                                    <Eye
+                                        onClick={() =>
+                                            setShowPassword(
+                                                (prevShowPassword) =>
+                                                    !prevShowPassword,
+                                            )
+                                        }
+                                    />
+                                ) : (
+                                    <EyeOff
+                                        onClick={() =>
+                                            setShowPassword(
+                                                (prevShowPassword) =>
+                                                    !prevShowPassword,
+                                            )
+                                        }
+                                    />
+                                )}
+                            </span>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                className={`form-input h-12 w-full rounded-sm border ${
+                                    !passwordError && password
+                                        ? "border-green-500"
+                                        : passwordError
+                                          ? "border-red-500"
+                                          : "border-gray-300"
+                                } px-4 py-2`}
+                                placeholder="Password"
+                                value={password}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                    validatePassword(e.target.value);
+                                }}
+                                onBlur={() => {
+                                    if (!password) {
+                                        // Kiểm tra nếu ô input trống sau khi mất focus
+                                        setPasswordError("Can't be blank");
+                                    }
+                                }}
+                                required
+                            />
+                        </div>
                         {passwordError && (
                             <span className="text-red-500">
                                 {passwordError}
                             </span>
                         )}
                     </div>
-                    <button className="mb-6 flex h-12 w-full items-center justify-center gap-0 rounded-sm bg-red-500 py-2 font-bold text-white hover:bg-red-700">
+                    <button
+                        className={`mb-6 flex h-12 w-full items-center justify-center gap-0 rounded-sm  py-2 font-bold text-white ${
+                            emailError ||
+                            passwordError ||
+                            !email ||
+                            !password ||
+                            isSigningIn
+                                ? "bg-gray-400 "
+                                : "bg-red-500 hover:bg-red-700"
+                        }`}
+                        onClick={handleSignIn}
+                        disabled={
+                            emailError ||
+                            passwordError ||
+                            !email ||
+                            !password ||
+                            isSigningIn
+                        }
+                    >
                         <span>Sign In with Email</span>
                     </button>
                     <div className="mb-6 text-center text-gray-600">

@@ -1,57 +1,139 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Container from "@/components/layout/container";
 import { Check } from "lucide-react";
 import { Eye } from "lucide-react";
 import { EyeOff } from "lucide-react";
 
+import { doSignOut } from "@/firebase/auth";
+import { useAuth } from "../../contexts/authContext";
+import { useNavigate, Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import {
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
+} from "firebase/auth";
+import { auth, db } from "../../firebase/firebase";
+
 const SignUp = () => {
-    const [name, setName] = useState("");
+    const { userLoggedIn, setIsRegistered, setInSingUpInPage } = useAuth();
+
+    const navigate = useNavigate();
+
+    const [userName, setUserName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [nameError, setNameError] = useState(false);
+
+    const [userNameError, setUserNameError] = useState(false);
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
 
+    const [isRegistering, setIsRegistering] = useState(false);
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [checkGoogle, setCheckGoogle] = useState(false);
+    const [checkEmail, setCheckEmail] = useState(false);
+
+    useEffect(() => {
+        setInSingUpInPage(true);
+    }, []);
+
     const handleSignIn = async (e) => {
         e.preventDefault();
-        try {
-            console.log("sign in success");
-        } catch (error) {
-            // handle error
+
+        if (!isRegistering) {
+            setIsRegistering(true);
+            try {
+                await createUserWithEmailAndPassword(
+                    auth,
+                    email,
+                    password,
+                ).then(async (userCred) => {
+                    const user = userCred.user;
+                    await sendEmailVerification(user);
+                });
+                setIsRegistered(true);
+                toast.success(
+                    "Registration successful! Please check your email to verify your account.",
+                );
+                // Điều hướng tới trang verify_email sau khi đăng ký thành công
+                navigate(`/verify_email?email=${email}`);
+            } catch (error) {
+                handleAuthError(error);
+            } finally {
+                setIsRegistering(false);
+            }
         }
     };
 
-    const validateName = () => {
+    const handleAuthError = (error) => {
+        switch (error.code) {
+            case "auth/email-already-in-use":
+                toast.error("Email is already in use.");
+                break;
+            case "auth/invalid-email":
+                toast.error("Invalid email address.");
+                break;
+            case "auth/operation-not-allowed":
+                toast.error("Operation not allowed.");
+                break;
+            case "auth/weak-password":
+                toast.error("Password is too weak.");
+                break;
+            default:
+                toast.error(`Registration failed: ${error.message}`);
+                break;
+        }
+    };
+
+    const validateName = (name) => {
         if (!name) {
-            setNameError("Can't be blank");
-            return;
+            setUserNameError("Can't be blank");
+            return false;
+        } else {
+            setUserNameError("");
+            return true;
         }
-        setNameError(false);
     };
 
-    const validateEmail = () => {
+    const validateEmail = (email) => {
         if (!email) {
             setEmailError("Can't be blank");
-            return;
+            return false;
         } else {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            setEmailError(
-                !emailRegex.test(email) ? "Please check your email" : false,
-            );
-            return;
+            if (!emailRegex.test(email)) {
+                setEmailError("Please check your email");
+                return false;
+            } else {
+                setEmailError("");
+                return true;
+            }
         }
     };
 
-    const validatePassword = () => {
+    const validatePassword = (password) => {
         if (!password) {
             setPasswordError("Can't be blank");
-            return;
+            return false;
+        } else {
+            const passwordRegex =
+                /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{12,}$/;
+            if (!passwordRegex.test(password)) {
+                setPasswordError(
+                    "Password must be at least 12 characters long, include a number, an uppercase letter, a special character, no space and a lowercase letter.",
+                );
+                return false;
+            } else {
+                setPasswordError("");
+                return true;
+            }
         }
-        setPasswordError(false);
     };
 
     return (
         <Container className="py-16 pt-8">
+            {userLoggedIn && <Navigate to={"/"} replace={true} />}
             <div className="mb-4 flex gap-x-3">
                 <h3 className="text-xl font-bold">Welcome to</h3>
                 <img
@@ -73,6 +155,11 @@ const SignUp = () => {
                                     type="checkbox"
                                     className="before:content[''] border-blue-gray-200 before:bg-blue-gray-500 peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border transition-all before:absolute before:left-2/4 before:top-2/4 before:block before:h-12 before:w-12 before:-translate-x-2/4 before:-translate-y-2/4 before:rounded-full before:opacity-0 before:transition-opacity checked:border-red-500 checked:bg-red-500 checked:before:bg-red-500 hover:before:opacity-10"
                                     id="check"
+                                    onChange={() =>
+                                        setCheckGoogle(
+                                            (prevState) => !prevState,
+                                        )
+                                    }
                                 />
                                 <span className="pointer-events-none absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100">
                                     <svg
@@ -112,7 +199,14 @@ const SignUp = () => {
                             in relation to your privacy information.
                         </div>
                     </div>
-                    <button className="flex h-12 w-full items-center justify-center gap-0 rounded-sm border border-red-500 py-2 font-bold text-red-500 hover:bg-red-50">
+                    <button
+                        className={`flex h-12 w-full items-center justify-center gap-0 rounded-sm border  py-2 font-bold     ${
+                            !checkGoogle
+                                ? "border-gray-400 text-gray-400 "
+                                : "border-red-500 text-red-500 hover:bg-red-50"
+                        }`}
+                        disabled={!checkGoogle}
+                    >
                         <img
                             src="https://itviec.com/assets/google_logo-af373a5e64715e7d4fcdea711f96995f7fd7a49725b3dd8910d4749b74742cb2.svg"
                             alt="Google Logo"
@@ -127,23 +221,36 @@ const SignUp = () => {
                     </div>
                     <div className="mb-3">
                         <label className="mb-1 block">
-                            <span className="text-gray-900">Email </span>
+                            <span className="text-gray-900">Username </span>
                             <abbr className="text-red-500">*</abbr>
                         </label>
                         <input
-                            className={`form-input h-12 w-full rounded-sm border ${!nameError && name ? "border-green-500" : nameError ? "border-red-500" : "border-gray-300"} px-4 py-2`}
+                            className={`form-input h-12 w-full rounded-sm border ${
+                                !userNameError && userName
+                                    ? "border-green-500"
+                                    : userNameError
+                                      ? "border-red-500"
+                                      : "border-gray-300"
+                            } px-4 py-2`}
                             type="text"
-                            placeholder="Name"
-                            value={name}
+                            placeholder="userName"
+                            value={userName}
                             onChange={(e) => {
-                                setName(e.target.value);
-                                setNameError(false);
+                                setUserName(e.target.value);
+                                validateName(e.target.value);
                             }}
-                            onBlur={validateName}
+                            onBlur={() => {
+                                if (!userName) {
+                                    // Kiểm tra nếu ô input trống sau khi mất focus
+                                    setUserNameError("Can't be blank");
+                                }
+                            }}
                             required
                         />
-                        {nameError && (
-                            <span className="text-red-500">{nameError}</span>
+                        {userNameError && (
+                            <span className="text-red-500">
+                                {userNameError}
+                            </span>
                         )}
                     </div>
                     <div className="mb-3">
@@ -152,40 +259,86 @@ const SignUp = () => {
                             <abbr className="text-red-500">*</abbr>
                         </label>
                         <input
-                            className={`form-input h-12 w-full rounded-sm border ${!emailError && email ? "border-green-500" : emailError ? "border-red-500" : "border-gray-300"} px-4 py-2`}
+                            className={`form-input h-12 w-full rounded-sm border ${
+                                !emailError && email
+                                    ? "border-green-500"
+                                    : emailError
+                                      ? "border-red-500"
+                                      : "border-gray-300"
+                            } px-4 py-2`}
                             type="email"
                             placeholder="Email"
                             value={email}
                             onChange={(e) => {
                                 setEmail(e.target.value);
-                                setEmailError(false);
+                                validateEmail(e.target.value);
                             }}
-                            onBlur={validateEmail}
+                            onBlur={() => {
+                                if (!email) {
+                                    // Kiểm tra nếu ô input trống sau khi mất focus
+                                    setEmailError("Can't be blank");
+                                }
+                            }}
                             required
                         />
                         {emailError && (
                             <span className="text-red-500">{emailError}</span>
                         )}
                     </div>
-                    <div className="mb-6">
+                    <div className="mb-6 ">
                         <div className="mb-1 flex justify-between">
                             <label className="mb-1 block">
                                 <span className="text-gray-900">Password </span>
                                 <abbr className="text-red-500">*</abbr>
                             </label>
                         </div>
-                        <input
-                            type="password"
-                            className={`form-input h-12 w-full rounded-sm border ${!passwordError && password ? "border-green-500" : passwordError ? "border-red-500" : "border-gray-300"} px-4 py-2`}
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => {
-                                setPassword(e.target.value);
-                                setPasswordError(false);
-                            }}
-                            onBlur={validatePassword}
-                            required
-                        />
+                        <div className="relative mb-1">
+                            <span className="absolute bottom-0 right-0 translate-x-[-50%] translate-y-[-50%] transform cursor-pointer ">
+                                {showPassword ? (
+                                    <Eye
+                                        onClick={() =>
+                                            setShowPassword(
+                                                (prevShowPassword) =>
+                                                    !prevShowPassword,
+                                            )
+                                        }
+                                    />
+                                ) : (
+                                    <EyeOff
+                                        onClick={() =>
+                                            setShowPassword(
+                                                (prevShowPassword) =>
+                                                    !prevShowPassword,
+                                            )
+                                        }
+                                    />
+                                )}
+                            </span>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                className={`form-input h-12 w-full rounded-sm border ${
+                                    !passwordError && password
+                                        ? "border-green-500"
+                                        : passwordError
+                                          ? "border-red-500"
+                                          : "border-gray-300"
+                                } px-4 py-2`}
+                                placeholder="Password"
+                                value={password}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                    validatePassword(e.target.value);
+                                }}
+                                onBlur={() => {
+                                    if (!password) {
+                                        // Kiểm tra nếu ô input trống sau khi mất focus
+                                        setPasswordError("Can't be blank");
+                                    }
+                                }}
+                                required
+                            />
+                        </div>
+
                         {passwordError && (
                             <span className="text-red-500">
                                 {passwordError}
@@ -202,6 +355,9 @@ const SignUp = () => {
                                     type="checkbox"
                                     className="before:content[''] border-blue-gray-200 before:bg-blue-gray-500 peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border transition-all before:absolute before:left-2/4 before:top-2/4 before:block before:h-12 before:w-12 before:-translate-x-2/4 before:-translate-y-2/4 before:rounded-full before:opacity-0 before:transition-opacity checked:border-red-500 checked:bg-red-500 checked:before:bg-red-500 hover:before:opacity-10"
                                     id="check"
+                                    onChange={() =>
+                                        setCheckEmail((prevState) => !prevState)
+                                    }
                                 />
                                 <span className="pointer-events-none absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100">
                                     <svg
@@ -241,8 +397,37 @@ const SignUp = () => {
                             in relation to your privacy information.
                         </div>
                     </div>
-                    <button className="mb-6 flex h-12 w-full items-center justify-center gap-0 rounded-sm bg-red-500 py-2 font-bold text-white hover:bg-red-700">
-                        <span>Sign Up with Email</span>
+                    <button
+                        className={`mb-6 flex h-12 w-full items-center justify-center gap-0 rounded-sm  py-2 font-bold text-white ${
+                            userNameError ||
+                            emailError ||
+                            passwordError ||
+                            !userName ||
+                            !email ||
+                            !password ||
+                            !checkEmail ||
+                            isRegistering
+                                ? "bg-gray-400 "
+                                : "bg-red-500 hover:bg-red-700"
+                        }`}
+                        onClick={handleSignIn}
+                        disabled={
+                            userNameError ||
+                            emailError ||
+                            passwordError ||
+                            !userName ||
+                            !email ||
+                            !password ||
+                            !checkEmail ||
+                            isRegistering
+                        }
+                    >
+                        <span>
+                            {" "}
+                            {isRegistering
+                                ? "Loading..."
+                                : "Sign Up with Email"}
+                        </span>
                     </button>
                     <div className="mb-10 text-center text-gray-600">
                         Already have an account?{" "}
