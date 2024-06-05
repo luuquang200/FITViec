@@ -16,7 +16,12 @@ const AccountAction = () => {
     const [verificationInProgress, setVerificationInProgress] = useState(false);
 
     useEffect(() => {
-        if (!mode || !oobCode) {
+        if (
+            !mode ||
+            !oobCode ||
+            (mode !== "resetPassword" && mode !== "verifyEmail")
+        ) {
+            // Nếu mode hoặc oobCode không tồn tại, hoặc mode không hợp lệ, thì redirect về trang chính
             navigate("/");
         }
     }, [mode, oobCode, navigate]);
