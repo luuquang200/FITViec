@@ -32,7 +32,7 @@ const AccountAction = () => {
             try {
                 await doApplyActionCode(oobCode);
                 toast.success(
-                    "Verified your account successfully. Welcome to FitViec!",
+                    "Verified your account successfully. Welcome to FITViec!",
                 );
                 navigate("/sign_in");
             } catch (error) {

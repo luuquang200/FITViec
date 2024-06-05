@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 // Assets
-import Logo from "../../assets/logo-itviec.webp";
+import Logo from "../../assets/logo-fitviec.webp";
 
 // Components
 import { Button } from "@/components/ui/button";

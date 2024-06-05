@@ -1,7 +1,7 @@
 // Components
 import { useState } from "react";
 import {Link} from "react-router-dom"
-import Logo from "../../assets/logo-itviec.webp";
+import Logo from "../../assets/logo-fitviec.webp";
 
 import { ChevronLeft, Eye } from "lucide-react";
 

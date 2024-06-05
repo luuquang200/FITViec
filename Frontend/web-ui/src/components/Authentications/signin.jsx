@@ -149,7 +149,7 @@ const SignIn = () => {
             <div className="flex gap-x-32">
                 <div className="leftside w-5/12">
                     <div className="mb-6 text-sm text-gray-600">
-                        By signing in, you agree to ITviec’s{" "}
+                        By signing in, you agree to FITviec’s{" "}
                         <a
                             href="#"
                             target="_blank"
