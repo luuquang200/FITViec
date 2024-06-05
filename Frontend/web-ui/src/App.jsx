@@ -13,11 +13,11 @@ import SignIn from "./components/Authentications/signin";
 import SignUp from "./components/Authentications/signup";
 import VerifyEmail from "./components/Authentications/verify-email";
 import ForgotPassword from "./components/Authentications/forgot-password";
-import ResetPassword from "./components/Authentications/reset-password";
 
 import { AuthProvider } from "./contexts/authContext";
 import ToastContainerNotification from "./components/Notifications/ToastContainerNotification";
 import ProtectedRouteVerify from "./lib/protect-verify-email";
+import AccountAction from "./components/Authentications/account-action";
 
 function App() {
     return (
@@ -53,7 +53,7 @@ function App() {
                     }
                 />
                 <Route path="/forgot_password" element={<ForgotPassword />} />
-                <Route path="/reset_password" element={<ResetPassword />} />
+                <Route path="/account_action" element={<AccountAction />} />
             </Routes>
             <Footer />
         </AuthProvider>

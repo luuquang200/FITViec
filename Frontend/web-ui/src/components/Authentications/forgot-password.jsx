@@ -135,7 +135,7 @@ const ForgotPassword = () => {
                                 : "bg-red-500 hover:bg-red-700"
                         }`}
                         onClick={handleSignIn}
-                        disabled={emailError || isReseting}
+                        disabled={emailError || isReseting || !email}
                     >
                         <span>
                             {" "}
