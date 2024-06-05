@@ -4,6 +4,7 @@ import {
     signInWithPopup,
     updatePassword,
     confirmPasswordReset,
+    applyActionCode,
 } from "firebase/auth";
 import { auth } from "./firebase";
 
@@ -15,6 +16,10 @@ export const doSignInWithGoogle = async () => {
 
 export const doSignOut = () => {
     return auth.signOut();
+};
+
+export const doApplyActionCode = (oobCode) => {
+    return applyActionCode(auth, oobCode);
 };
 
 // Gửi email ResetPassWord

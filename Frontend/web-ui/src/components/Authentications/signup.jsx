@@ -52,9 +52,9 @@ const SignUp = () => {
                 ).then(async (userCred) => {
                     const user = userCred.user;
                     await updateProfile(user, { displayName: userName });
-                    await sendEmailVerification(user, {
-                        url: "http://localhost:5173/sign_in",
-                    });
+                    // Send email verify email
+                    const result = await sendEmailVerification(user);
+                    console.log(result);
                 });
                 setIsRegistered(true);
                 toast.success(
