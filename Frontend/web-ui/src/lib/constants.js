@@ -33,9 +33,9 @@ export const ARTICLES = [
     {
         bigCover: true,
         image: "/article/itviec-it-salary-report-2023-2024.webp",
-        title: "ITviec releases “IT Salary Report 2023-2024: Data-driven for better decision making”",
+        title: "FITviec releases “IT Salary Report 2023-2024: Data-driven for better decision making”",
         description:
-            "Đọc bản tiếng Việt tại đây. ITviec is excited to announce the launch of our IT salary report: “Salary & Job Expectation of IT Professionals...",
+            "Đọc bản tiếng Việt tại đây. FITviec is excited to announce the launch of our IT salary report: “Salary & Job Expectation of IT Professionals...",
     },
     {
         bigCover: false,

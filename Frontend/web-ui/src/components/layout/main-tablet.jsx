@@ -72,7 +72,7 @@ const MainTablet = () => {
                 </div>
                 <div className=" border-dotted border-gray-400 border-b-2 mt-6  pb-6">
                     <h2 className="text-2xl font-bold my-4">Job description</h2>
-                    <div className="text-md font-bold italic "> By applying for the above position, you accept and agree that your personal data and any information stated in the attached curriculum vitae (CV) will be used and processed by ITViec and NAB Vietnam for recruitment purposes. The storage and processing of such information will comply with the applicable laws of Vietnam, and the policies and procedures of ITViec and NAB Vietnam regarding personal data, as amended from time to time.</div>
+                    <div className="text-md font-bold italic "> By applying for the above position, you accept and agree that your personal data and any information stated in the attached curriculum vitae (CV) will be used and processed by FITViec and NAB Vietnam for recruitment purposes. The storage and processing of such information will comply with the applicable laws of Vietnam, and the policies and procedures of FITViec and NAB Vietnam regarding personal data, as amended from time to time.</div>
                     <div className="">
                         <h2 className="text-md font-bold mt-6 ">YOUR RESPONSIBILITIES: </h2>
                         <ol className="leading-8"  start={1}>

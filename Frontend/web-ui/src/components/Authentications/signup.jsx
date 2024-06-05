@@ -389,7 +389,7 @@ const SignUp = () => {
                             </label>
                         </div>
                         <div className="text-sm text-gray-600">
-                            I have read and agree to ITviec’s{" "}
+                            I have read and agree to FITviec’s{" "}
                             <a
                                 href="#"
                                 target="_blank"

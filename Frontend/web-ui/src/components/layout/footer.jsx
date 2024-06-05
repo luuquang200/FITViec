@@ -4,7 +4,7 @@ import Container from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
 
 // Assets
-import Logo from "../../assets/logo-itviec.webp";
+import Logo from "../../assets/logo-fitviec.webp";
 import FooterImg from "../../assets/footer-image.svg";
 import {
     Linkedin,
@@ -120,7 +120,7 @@ const Footer = () => {
 
                         <li>
                             <Mail className="mr-2 inline" />
-                            Email: love@itviec.com
+                            Email: love@fitviec.com
                         </li>
 
                         <li>
