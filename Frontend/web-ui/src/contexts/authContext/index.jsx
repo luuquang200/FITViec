@@ -1,7 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
-import { auth } from "../../firebase/firebase";
+import { auth, db } from "../../firebase/firebase";
 import { GoogleAuthProvider } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 const AuthContext = React.createContext();
 
@@ -33,8 +34,13 @@ export function AuthProvider({ children }) {
             );
             setIsGoogleUser(isGoogle);
             if (user.emailVerified) {
-                setCurrentUser({ ...user });
-
+                // Fetch the user's role from Firestore
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                let role = "user";
+                if (userDoc.exists()) {
+                    role = userDoc.data().role;
+                }
+                setCurrentUser({ ...user, role });
                 const isEmail = user.providerData.some(
                     (provider) => provider.providerId === "password",
                 );
