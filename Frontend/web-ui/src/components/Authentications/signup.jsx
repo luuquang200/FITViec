@@ -15,6 +15,7 @@ import {
 } from "firebase/auth";
 import { doSignInWithGoogle } from "../../firebase/auth";
 import { auth, db } from "../../firebase/firebase";
+import { setDoc, doc } from "firebase/firestore";
 
 const SignUp = () => {
     const { userLoggedIn, setIsRegistered, setInSingUpInPage } = useAuth();
@@ -45,22 +46,33 @@ const SignUp = () => {
         if (!isRegistering) {
             setIsRegistering(true);
             try {
-                await createUserWithEmailAndPassword(
+                const userCred = await createUserWithEmailAndPassword(
                     auth,
                     email,
                     password,
-                ).then(async (userCred) => {
-                    const user = userCred.user;
-                    await updateProfile(user, { displayName: userName });
-                    // Send email verify email
-                    const result = await sendEmailVerification(user);
-                    console.log(result);
+                );
+                const user = userCred.user;
+
+                // Update the user's profile
+                await updateProfile(user, {
+                    displayName: userName,
                 });
+
+                // Store user role in Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    displayName: userName,
+                    email: user.email,
+                    role: "user", // Default role
+                });
+
+                // Send email verification
+                await sendEmailVerification(user);
+
                 setIsRegistered(true);
                 toast.success(
                     "Registration successful! Please check your email to verify your account.",
                 );
-                // Điều hướng tới trang verify_email sau khi đăng ký thành công
+                // Redirect to verify_email page after successful registration
                 navigate(`/verify_email?email=${email}`);
             } catch (error) {
                 handleAuthError(error);
