@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import MainTablet from "@/components/layout/main-tablet";
+import FormApplyJob from "@/components/layout/form-apply-job";
 import SearchSection from "@/components/layout/search-section";
 import TopEmployerSection from "@/components/layout/top-employer-section";
 import SearchResult from "./components/layout/search-result";
@@ -37,6 +38,7 @@ function App() {
                     }
                 />
                 <Route path="/job-detail" element={<MainTablet />} />
+                <Route path="/form-apply-job" element ={<FormApplyJob/>} ></Route>
                 <Route path="/search" element={<SearchResult />} />
                 <Route
                     path="/job-detail-guest"

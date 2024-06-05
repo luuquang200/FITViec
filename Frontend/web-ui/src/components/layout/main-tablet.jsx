@@ -1,21 +1,12 @@
 // Components
 import { useEffect, useState } from "react";
-import Container from "@/components/layout/container";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { Link} from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import JobCard from "@/components/ui/job-card";
 import Gallery from "@/components/ui/gallery";
 
-import { Search, MapPin, Heart, CircleDollarSign, ExternalLink, Joystick, Clock, Bell } from "lucide-react";
+import { Heart, CircleDollarSign, ExternalLink, Bell } from "lucide-react";
+
 
 const images = [
     'https://admin.netlawman.com/uploads/article/original/types-uk-company.jpg',
@@ -24,12 +15,11 @@ const images = [
     'https://admin.netlawman.com/uploads/article/original/types-uk-company.jpg',
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRev3s4mzwXq3Wty6-qbpzemBfABDHjTQRqK1bfU0u1gA&s',
     'https://admin.netlawman.com/uploads/article/original/types-uk-company.jpg',
-    // Thêm các URL hình ảnh khác vào đây
   ];
 const LOGO_COMPANY_IMG = "https://itviec.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBMS9LSnc9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--f77c1653cf49260705bf77be3846954d9b817b70/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBPZ2wzWldKd09oSnlaWE5wZW1WZmRHOWZabWwwV3dkcEFhb3ciLCJleHAiOm51bGwsInB1ciI6InZhcmlhdGlvbiJ9fQ==--bb0ebae071595ab1791dc0ad640ef70a76504047/logo.jpg"
 const MainTablet = () => {
     const [isSticky, setIsSticky] = useState(true);
-    
+    const [isClickedHeart, setIsClickedHeart] = useState(false);
     useEffect(() => {
         const handleScroll = () => {
             if(window.scrollY > 800){
@@ -47,7 +37,6 @@ const MainTablet = () => {
         };
     }, []);
     
-    
 
     return (
         <div className=" p-[30px]  bg-gray-200 bg-opacity-50">
@@ -64,8 +53,8 @@ const MainTablet = () => {
                     <div className="my-4"> Employer Name</div>
                     <div className="flex space-x-2 text-green-500 font-bold" > <CircleDollarSign /> <span>Salary </span></div>
                     <div className="flex justify-between mt-[24px]">
-                        <Button className="w-11/12 h-[48px]"> Apply Now</Button>
-                        <Heart className="w-1/12 m-auto text-primary h-[32px]"/>
+                        <Link className="w-11/12 h-[48px]" to={"/form-apply-job"}><Button className="w-full h-[48px]" > Apply Now</Button></Link>
+                        <Heart onClick={() => setIsClickedHeart(!isClickedHeart)} className={`w-1/12 m-auto h-[32px] text-primary cursor-pointer ${isClickedHeart ? ' fill-primary' : '' }`}/>
                     </div>
                 </div>
 
@@ -100,7 +89,7 @@ const MainTablet = () => {
                     <h2 className="text-2xl font-bold my-4">Your skills and experience</h2>
                     <ul className=" list-inside list-disc leading-8">
                         <li>
-                        5+ years of experience in coding and scripting in latest programming languages (Python, Bash etc.)/ Applicatoon Security 
+                        `5+ years of experience in coding and scripting in latest programming languages (Python, Bash etc.)/ Applicatoon Security 
                         Hands on with coding: Scripting using Python- DevOps/DevSecops Background 
                         Experience of modern secure software development practices & mentoring teams to improve their practices.
                         Building CI/CD pipeline automation, tooling (GitHub, Jenkins, Artifactory, Docker, Ansible and Bamboo) and Compliance as code.
@@ -110,7 +99,7 @@ const MainTablet = () => {
                         Good understanding of security concepts related to container security, supply chain and cloud.
                         Technical understanding to assist asset teams triage vulnerabilities and drive prioritisation
                         Proven ability to work both individually and within a team environment (at times with little guidance), build strong relationships and maintain rapport with internal NAB stakeholders and 3rd party service providers
-                        Why you'll love working here
+                        Why youll love working here
                         </li>
 
                     </ul>
@@ -152,22 +141,9 @@ const MainTablet = () => {
                     NAB is a place where colleagues of all genders, sexualities and ages, carers and colleagues with disability, and colleagues from all cultures, races and religions have the opportunity to thrive, connect and grow. 
                     </div>
                     <div className="font-bold mt-8">
-                    If this excites you, let's have a chat over a cup of coffee!
+                    If this excites you, lets have a chat over a cup of coffee!
                     </div>
                 </div>
-
-                
-                
-                
-
-                
-
-                    
-
-                
-
-
-                
                 </div>
                     
                 {/* More jobs for you */}
@@ -280,8 +256,9 @@ const MainTablet = () => {
                 
             </div>
         </div>
+       
 
-
+        
         </div>
     );
 };
