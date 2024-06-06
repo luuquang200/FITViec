@@ -3,13 +3,13 @@ name: Build and deploy Notification Service to Cloud Run
 on:
   push:
     branches:
-    - master
+    - feature/notification-service
 
 env:
   GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 6.0.x
-  WORKING_DIRECTORY: ./NotificationService
+  WORKING_DIRECTORY: ./Microservices/notification-service
 
 jobs:
   build-and-deploy:
