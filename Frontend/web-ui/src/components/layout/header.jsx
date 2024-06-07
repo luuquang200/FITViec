@@ -208,9 +208,9 @@ const Header = () => {
                     <li>
                         <Button
                             variant="link"
-                            onClick={() => {
-                                navigate("/employer");
-                            }}
+                            // onClick={() => {
+                            //     navigate("/employer");
+                            // }}
                             className="h-min p-0 text-white hover:no-underline"
                             onClick={() => navigate("/for-employers")}
                         >

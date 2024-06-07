@@ -23,12 +23,14 @@ import HomeEmployer from "./components/Employers/home-employer";
 
 import EmployerContainer from "./components/Employer/employer-container";
 import CVViewer from "./components/Employer/cv-detail";
+import CustomerLogin from "./components/Employers/customer-login";
+import CustomerRegister from "./components/Employers/customer-register";
 
 function App() {
     return (
         <AuthProvider>
             <ToastContainerNotification />
-            
+
             <Header />
             <div className="h-[88px]" />
             <Routes>
@@ -67,6 +69,11 @@ function App() {
                 <Route path="/forgot_password" element={<ForgotPassword />} />
                 <Route path="/account_action" element={<AccountAction />} />
                 <Route path="/for-employers" element={<HomeEmployer />} />
+                <Route path="/customer/login" element={<CustomerLogin />} />
+                <Route
+                    path="/customer/register"
+                    element={<CustomerRegister />}
+                />
             </Routes>
             <Footer />
         </AuthProvider>
