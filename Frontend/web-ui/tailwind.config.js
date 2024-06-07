@@ -89,6 +89,8 @@ module.exports = {
                     " linear-gradient(90deg, #FFE0E0 0%, rgba(255, 192, 192, 0) 100%);",
                 "itviec-top-emp":
                     "url('https://itviec.com/assets/employer_landing/top-employer-bg-164b5f70bc68259732cfb92075898a08aee0c77e38f24cb689d68fb33b3c80f6.svg')",
+                "linear-gradient-logo":
+                    "linear-gradient(161deg, #54151C 0%, #121212 100%)",
             },
             backgroundPosition: {
                 bottom: "bottom",

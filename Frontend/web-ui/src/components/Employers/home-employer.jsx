@@ -1,7 +1,10 @@
 import React from "react";
 import Container from "@/components/layout/container";
+import { useNavigate } from "react-router-dom";
 
 const HomeEmployer = () => {
+    const navigate = useNavigate();
+
     return (
         <div className="vh-main flex flex-col">
             <div className="grow">
