@@ -20,13 +20,19 @@ import ToastContainerNotification from "./components/Notifications/ToastContaine
 import ProtectedRouteVerify from "./lib/protect-verify-email";
 import AccountAction from "./components/Authentications/account-action";
 
+import EmployerContainer from "./components/Employer/employer-container";
+import CVViewer from "./components/Employer/cv-detail";
+
 function App() {
     return (
         <AuthProvider>
             <ToastContainerNotification />
+            
             <Header />
             <div className="h-[88px]" />
             <Routes>
+                <Route path="/employer" element={<EmployerContainer />} />
+                <Route path="/cv-detail" element={<CVViewer />} />
                 <Route path="/sign_in" element={<SignIn />} />
                 <Route path="/sign_up" element={<SignUp />} />
                 <Route
