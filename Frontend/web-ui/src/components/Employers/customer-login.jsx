@@ -132,18 +132,18 @@ const CustomerLogin = () => {
     };
 
     return (
-        <Container className="w-100 max-w-full">
-            <div className="w-100 h-100 grid grid-cols-2 xl:grid-rows-1">
+        <Container className="h-vh-employer-login w-full max-w-full">
+            <div className="grid h-full w-full grid-cols-2 xl:grid-rows-1">
                 {/* Left */}
-                <div className="bg-linear-gradient-logo h-100 flex items-center justify-center text-center ">
+                <div className="bg-linear-gradient-logo flex h-full items-center justify-center text-center ">
                     <img
                         src="https://itviec.com/assets/customer/sign_in/logo-a2f6301beddfd012e9c6a71aed3d4cae576e2c7244fb4a41b2ff7c31bbd83f0e.png"
                         alt="logo"
-                        className="w-100"
+                        className="w-full"
                     />
                 </div>
                 {/* Right */}
-                <div className="w-100 h-100">
+                <div className="h-full w-full">
                     <div className="mx-auto mb-10 mt-[16vh]  max-w-[580px] ">
                         <div className="flex items-center gap-x-3">
                             <img

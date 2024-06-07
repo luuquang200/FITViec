@@ -6,7 +6,7 @@ const HomeEmployer = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="vh-main flex flex-col">
+        <div className="flex flex-col">
             <div className="grow">
                 <div>
                     {/* Banner */}
@@ -54,7 +54,7 @@ const HomeEmployer = () => {
                         </Container>
                     </section>
                     {/* Different */}
-                    <section className="lg:pt-30 mt-5 bg-linear-gradient-different px-5 pt-16 lg:px-0">
+                    <section className="mt-2 bg-linear-gradient-different px-5 pt-10 lg:px-0 lg:pt-12">
                         <Container className="py-16 pt-8">
                             <div className="text-center">
                                 <div className="text-2xl font-bold lg:text-3xl">
@@ -213,7 +213,7 @@ const HomeEmployer = () => {
                         </Container>
                     </section>
                     {/* Top-Employer-container */}
-                    <section className="bg-itviec-top-emp mb-20 mt-5 px-5 pt-12 lg:px-0 lg:pt-16">
+                    <section className="bg-itviec-top-emp mb-20 mt-2 px-5 pt-12 lg:px-0 lg:pt-12">
                         <Container className="py-16 pt-8">
                             <div className="text-center">
                                 <div className="text-2xl font-bold lg:text-3xl">
@@ -228,112 +228,112 @@ const HomeEmployer = () => {
                             <div className="grid grid-flow-col grid-cols-8 grid-rows-2 gap-8">
                                 <div className="flex h-[160px] items-center justify-center rounded-lg bg-white shadow-xl">
                                     <img
-                                        className="h-100 w-[80px]"
+                                        className=" w-[80px]"
                                         src="https://inkythuatso.com/uploads/images/2021/12/logo-abbank-inkythuatso-07-15-01-34.jpg"
                                         alt="company1"
                                     />
                                 </div>
                                 <div className="flex h-[160px] items-center justify-center rounded-lg bg-white shadow-xl">
                                     <img
-                                        className="h-100 w-[80px]"
+                                        className=" w-[80px]"
                                         src="https://itviec.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBOVVIRFE9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--1ae7acc317bfb2f261c8b580725af2d56ae34b7e/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJY0c1bkJqb0dSVlE2RkhKbGMybDZaVjkwYjE5c2FXMXBkRnNIYVFJc0FXa0NMQUU9IiwiZXhwIjpudWxsLCJwdXIiOiJ2YXJpYXRpb24ifX0=--15c3f2f3e11927673ae52b71712c1f66a7a1b7bd/money-forward-vi-t-nam-logo.png"
                                         alt="company2"
                                     />
                                 </div>
                                 <div className="flex h-[160px] items-center justify-center rounded-lg bg-white shadow-xl">
                                     <img
-                                        className="h-100 w-[80px]"
+                                        className=" w-[80px]"
                                         src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Bosch_logo.png"
                                         alt="company3"
                                     />
                                 </div>
                                 <div className="flex h-[160px] items-center justify-center rounded-lg bg-white shadow-xl">
                                     <img
-                                        className="h-100 w-[80px]"
+                                        className=" w-[80px]"
                                         src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Logo-Sacombank-new.png"
                                         alt="company4"
                                     />
                                 </div>
                                 <div className="flex h-[160px] items-center justify-center rounded-lg bg-white shadow-xl">
                                     <img
-                                        className="h-100 w-[80px]"
+                                        className=" w-[80px]"
                                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/LG_logo_%282014%29.svg/600px-LG_logo_%282014%29.svg.png"
                                         alt="company5"
                                     />
                                 </div>
                                 <div className="flex h-[160px] items-center justify-center rounded-lg bg-white shadow-xl">
                                     <img
-                                        className="h-100 w-[80px]"
+                                        className=" w-[80px]"
                                         src="https://upload.wikimedia.org/wikipedia/commons/e/ed/HRS_GROUP_Color_sRGB.png"
                                         alt="company6"
                                     />
                                 </div>
                                 <div className="flex h-[160px] items-center justify-center rounded-lg bg-white shadow-xl">
                                     <img
-                                        className="h-100 w-[80px]"
+                                        className=" w-[80px]"
                                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjOKq8yXU9PEZMWbyz7EnbgOg9EGmzvdA2K6qbk_SwFTvL8503-xAzZ1irolgBXseOwzE&usqp=CAU"
                                         alt="company7"
                                     />
                                 </div>
                                 <div className="flex h-[160px] items-center justify-center rounded-lg bg-white shadow-xl">
                                     <img
-                                        className="h-100 w-[80px]"
+                                        className=" w-[80px]"
                                         src="https://upload.wikimedia.org/wikipedia/commons/f/f9/TMA-Solutions-Logo.png"
                                         alt="company8"
                                     />
                                 </div>
                                 <div className="flex h-[160px] items-center justify-center rounded-lg bg-white shadow-xl">
                                     <img
-                                        className="h-100 w-[80px]"
+                                        className=" w-[80px]"
                                         src="https://inkythuatso.com/uploads/thumbnails/800/2021/11/logo-fpt-inkythuatso-1-01-01-14-33-35.jpg"
                                         alt="company9"
                                     />
                                 </div>
                                 <div className="flex h-[160px] items-center justify-center rounded-lg bg-white shadow-xl">
                                     <img
-                                        className="h-100 w-[80px]"
+                                        className=" w-[80px]"
                                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/STi_logo.svg/1280px-STi_logo.svg.png"
                                         alt="company10"
                                     />
                                 </div>
                                 <div className="flex h-[160px] items-center justify-center rounded-lg bg-white shadow-xl">
                                     <img
-                                        className="h-100 w-[80px]"
+                                        className=" w-[80px]"
                                         src="https://seeklogo.com/images/N/nab-logo-85681BB8AE-seeklogo.com.png"
                                         alt="company11"
                                     />
                                 </div>
                                 <div className="flex h-[160px] items-center justify-center rounded-lg bg-white shadow-xl">
                                     <img
-                                        className="h-100 w-[80px]"
+                                        className=" w-[80px]"
                                         src="https://itviec.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBK0xPTEE9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--e622a8382b21b032819f520d792bef976ace053e/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJY0c1bkJqb0dSVlE2RkhKbGMybDZaVjkwYjE5c2FXMXBkRnNIYVFJc0FXa0NMQUU9IiwiZXhwIjpudWxsLCJwdXIiOiJ2YXJpYXRpb24ifX0=--15c3f2f3e11927673ae52b71712c1f66a7a1b7bd/TX_RGB_Primary_onWhite.png"
                                         alt="company12"
                                     />
                                 </div>
                                 <div className="flex h-[160px] items-center justify-center rounded-lg bg-white shadow-xl">
                                     <img
-                                        className="h-100 w-[80px]"
+                                        className=" w-[80px]"
                                         src="https://png.pngtree.com/templates/20181023/technology-logo-template-png_37582.jpg"
                                         alt="company13"
                                     />
                                 </div>
                                 <div className="flex h-[160px] items-center justify-center rounded-lg bg-white shadow-xl">
                                     <img
-                                        className="h-100 w-[80px]"
+                                        className=" w-[80px]"
                                         src="https://itviec.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBenZhT2c9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--78256eff185961a6e10697371a0cdb77a0c699c9/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJY0c1bkJqb0dSVlE2RkhKbGMybDZaVjkwYjE5c2FXMXBkRnNIYVFJc0FXa0NMQUU9IiwiZXhwIjpudWxsLCJwdXIiOiJ2YXJpYXRpb24ifX0=--15c3f2f3e11927673ae52b71712c1f66a7a1b7bd/Blue%20Illustrated%20Pool%20Party%20Instagram%20Post.png"
                                         alt="company14"
                                     />
                                 </div>
                                 <div className="flex h-[160px] items-center justify-center rounded-lg bg-white shadow-xl">
                                     <img
-                                        className="h-100 w-[80px]"
+                                        className=" w-[80px]"
                                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Absolute_Software_logo.svg/1280px-Absolute_Software_logo.svg.png"
                                         alt="company15"
                                     />
                                 </div>
                                 <div className="flex h-[160px] items-center justify-center rounded-lg bg-white shadow-xl">
                                     <img
-                                        className="h-100 w-[80px]"
+                                        className=" w-[80px]"
                                         src="https://pbs.twimg.com/profile_images/1692450915247419392/PiRV6Pl__400x400.jpg"
                                         alt="company16"
                                     />
