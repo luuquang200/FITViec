@@ -19,6 +19,7 @@ import { AuthProvider } from "./contexts/authContext";
 import ToastContainerNotification from "./components/Notifications/ToastContainerNotification";
 import ProtectedRouteVerify from "./lib/protect-verify-email";
 import AccountAction from "./components/Authentications/account-action";
+import HomeEmployer from "./components/Employers/home-employer";
 
 function App() {
     return (
@@ -38,7 +39,10 @@ function App() {
                     }
                 />
                 <Route path="/job-detail" element={<MainTablet />} />
-                <Route path="/form-apply-job" element ={<FormApplyJob/>} ></Route>
+                <Route
+                    path="/form-apply-job"
+                    element={<FormApplyJob />}
+                ></Route>
                 <Route path="/search" element={<SearchResult />} />
                 <Route
                     path="/job-detail-guest"
@@ -56,6 +60,7 @@ function App() {
                 />
                 <Route path="/forgot_password" element={<ForgotPassword />} />
                 <Route path="/account_action" element={<AccountAction />} />
+                <Route path="/for-employers" element={<HomeEmployer />} />
             </Routes>
             <Footer />
         </AuthProvider>

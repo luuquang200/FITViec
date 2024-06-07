@@ -209,6 +209,7 @@ const Header = () => {
                         <Button
                             variant="link"
                             className="h-min p-0 text-white hover:no-underline"
+                            onClick={() => navigate("/for-employers")}
                         >
                             For Employers
                         </Button>
