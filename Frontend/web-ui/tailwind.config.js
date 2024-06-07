@@ -77,10 +77,31 @@ module.exports = {
             backgroundImage: {
                 "linear-gradient":
                     "linear-gradient(269.85deg, #54151C 0%, #121212 54.89%)",
+                "linear-gradient-different":
+                    "linear-gradient(180deg, rgba(255, 223, 223, 0) 29.86%, #FFF6F6 100%)",
+                "itviec-different":
+                    "url('https://itviec.com/assets/employer_landing/round-7b576a08f59ea555667c691a6bb1de728b3bd9d8c2f9b137a24976fbc3825aa9.svg')",
+                "linear-gradient-hight-value":
+                    "linear-gradient(180deg, #680000 25.23%, #121212 100%)",
+                "linear-gradient-content":
+                    " linear-gradient(180deg, #FFE0E0 0%, rgba(255, 192, 192, 0) 100%);",
+                "linear-gradient-content-x":
+                    " linear-gradient(90deg, #FFE0E0 0%, rgba(255, 192, 192, 0) 100%);",
+                "itviec-top-emp":
+                    "url('https://itviec.com/assets/employer_landing/top-employer-bg-164b5f70bc68259732cfb92075898a08aee0c77e38f24cb689d68fb33b3c80f6.svg')",
+            },
+            backgroundPosition: {
+                bottom: "bottom",
+                "center-center": "center center",
             },
             height: {
                 "vh-main": "calc(100vh - 417px)",
             },
+        },
+    },
+    variants: {
+        extend: {
+            backgroundPosition: ["responsive"],
         },
     },
     plugins: [require("tailwindcss-animate")],
