@@ -22,6 +22,7 @@ public class JobConsumer {
     System.out.println(jobEvent.getAction());
     switch (jobEvent.getAction().toLowerCase()) {
       case "insert":
+        System.out.println("Insert job: " + jobEvent.getJob().getJobId());
         this.service.Insert(jobEvent.getJob());
         break;
       case "update":
