@@ -26,6 +26,7 @@ import CVViewer from "./components/Employer/cv-detail";
 import CustomerLogin from "./components/Employers/customer-login";
 import CustomerRegister from "./components/Employers/customer-register";
 import VerifyEmployer from "./components/Employers/verify-employer";
+import AdminDashboard from "./components/Admin/admin-dashboard";
 
 function App() {
     return (
@@ -82,6 +83,10 @@ function App() {
                         <VerifyEmployer />
                         // </ProtectedRouteVerify>
                     }
+                />
+                <Route
+                    path="/admin"
+                    element={<AdminDashboard />}
                 />
             </Routes>
             <Footer />
