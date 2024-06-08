@@ -271,7 +271,7 @@ const SignUp = () => {
                             required
                         />
                         {userNameError && (
-                            <span className="text-red-500">
+                            <span className="font-semibold text-red-500">
                                 {userNameError}
                             </span>
                         )}
@@ -305,7 +305,9 @@ const SignUp = () => {
                             required
                         />
                         {emailError && (
-                            <span className="text-red-500">{emailError}</span>
+                            <span className="font-semibold text-red-500">
+                                {emailError}
+                            </span>
                         )}
                     </div>
                     <div className="mb-6 ">
@@ -363,7 +365,7 @@ const SignUp = () => {
                         </div>
 
                         {passwordError && (
-                            <span className="text-red-500">
+                            <span className="font-semibold text-red-500">
                                 {passwordError}
                             </span>
                         )}

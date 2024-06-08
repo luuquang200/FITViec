@@ -1,6 +1,21 @@
 import React, { useState } from "react";
 import Container from "@/components/layout/container";
-import { Eye, EyeOff, ChevronDown, ChevronUp, PhoneCall } from "lucide-react";
+import {
+    Eye,
+    EyeOff,
+    ChevronDown,
+    ChevronUp,
+    PhoneCall,
+    Mail,
+    Lock,
+    User,
+    Phone,
+    Building,
+    MapPin,
+} from "lucide-react";
+
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { useAuth } from "../../contexts/authContext";
 import { useNavigate, Navigate } from "react-router-dom";
@@ -9,18 +24,141 @@ import { useEffect } from "react";
 const CustomerRegister = () => {
     const { userLoggedIn, setInSingUpInPage } = useAuth();
 
+    // state
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [showPolicy, setShowPolicy] = useState(true);
+    const [showPassword, setShowPassword] = useState(false);
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [fullName, setFullName] = useState("");
+    const [phone, setPhone] = useState("");
+    const [companyName, setCompanyName] = useState("");
+    const [workLocation, setWorkLocation] = useState("");
+    const [checkEmail, setCheckEmail] = useState(false);
+    // error
+    const [emailError, setEmailError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
+    const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+    const [fullNameError, setFullNameError] = useState(false);
+    const [phoneError, setPhoneError] = useState(false);
+    const [companyNameError, setCompanyNameError] = useState(false);
+    const [workLocationError, setWorkLocationError] = useState(false);
+
     useEffect(() => {
         setInSingUpInPage(true);
         return () => setInSingUpInPage(false); // Reset the state when the component is unmounted
     }, [setInSingUpInPage]);
 
-    const [showPolicy, setShowPolicy] = useState(true);
+    // validate
+
+    const validateEmail = (email) => {
+        if (!email) {
+            setEmailError("Can't be blank");
+            return false;
+        } else {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                setEmailError("Please check your email");
+                return false;
+            } else {
+                setEmailError("");
+                return true;
+            }
+        }
+    };
+
+    const validatePassword = (password) => {
+        if (!password) {
+            setPasswordError("Can't be blank");
+            return false;
+        } else {
+            const passwordRegex =
+                /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{12,}$/;
+            if (!passwordRegex.test(password)) {
+                setPasswordError(
+                    "Password must be at least 12 characters long, include a number, an uppercase letter, a special character, no space and a lowercase letter.",
+                );
+                return false;
+            } else {
+                setPasswordError("");
+                return true;
+            }
+        }
+    };
+
+    const validateConfirmPassword = (pw) => {
+        if (!pw) {
+            setConfirmPasswordError("Can't be blank");
+            return false;
+        } else {
+            const passwordRegex =
+                /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{12,}$/;
+            if (!passwordRegex.test(pw)) {
+                setConfirmPasswordError(
+                    "Password must be at least 12 characters long, include a number, an uppercase letter, a special character, no space and a lowercase letter.",
+                );
+                return false;
+            } else if (pw !== password) {
+                setConfirmPasswordError(
+                    "ConfirmPassword do not match NewPassword",
+                );
+                return false;
+            } else {
+                setConfirmPasswordError("");
+                return true;
+            }
+        }
+    };
+
+    const validateName = (name) => {
+        if (!name) {
+            setFullNameError("Can't be blank");
+            return false;
+        } else {
+            setFullNameError("");
+            return true;
+        }
+    };
+
+    const validatePhone = (phone) => {
+        if (!phone) {
+            setPhoneError("Can't be blank");
+            return false;
+        } else if (phone.length < 10 || phone.length > 11) {
+            setPhoneError("Phone number must be between 10 and 11 characters");
+            return false;
+        } else {
+            setPhoneError(""); // Assuming you meant setPhoneError here
+            return true;
+        }
+    };
+
+    const validateCompanyName = (name) => {
+        if (!name) {
+            setCompanyNameError("Can't be blank");
+            return false;
+        } else {
+            setCompanyNameError("");
+            return true;
+        }
+    };
+
+    const validateLocation = (location) => {
+        if (!location) {
+            setWorkLocationError("Can't be blank");
+            return false;
+        } else {
+            setWorkLocationError("");
+            return true;
+        }
+    };
 
     return (
         <Container className="w-full max-w-full">
             <div className="grid h-full w-full grid-cols-3 xl:grid-rows-1">
                 {/* Left */}
-                <div className="bg-itviec-register-employer bg-content col-span-2 h-full w-full bg-bottom bg-no-repeat">
+                <div className="bg-content col-span-2 h-full w-full bg-itviec-register-employer bg-bottom bg-no-repeat">
                     {/* Header */}
                     <div className="mx-auto mb-8 mt-[6vh] max-w-[1000px] ">
                         <div className="flex items-center gap-x-3">
@@ -43,7 +181,7 @@ const CustomerRegister = () => {
                         </span>
                     </div>
                     {/* Regulations */}
-                    <div className="mx-auto mb-8 max-w-[1000px] rounded-lg border-2 border-red-500 p-4">
+                    <div className="mx-auto mb-8 max-w-[1000px] rounded-lg border-2 border-blue-700 p-4">
                         <div
                             className="flex cursor-pointer items-center justify-between"
                             onClick={() =>
@@ -96,8 +234,8 @@ const CustomerRegister = () => {
                                         contact Customer Service Hotline :
                                     </span>
                                 </div>
-                                <div className="text-xl font-semibold">
-                                    <PhoneCall className="mr-4 inline h-8 w-8 rounded-full border-2 border-gray-700 bg-white p-[5px]" />
+                                <div className="text-xl font-semibold text-blue-700">
+                                    <PhoneCall className="mr-4 inline h-8 w-8 rounded-full border-2 border-blue-700 bg-white p-[5px] text-blue-700" />
                                     (+84) 123 345 567
                                 </div>
                             </div>
@@ -107,14 +245,530 @@ const CustomerRegister = () => {
                     <div className="mx-auto mb-8 max-w-[1000px] ">
                         {/* Account Information */}
                         <div>
-                            <h1 className="mb-2 mt-6 text-2xl font-semibold ">
+                            <h1 className="mb-3 mt-6 text-2xl font-bold ">
                                 Account
                             </h1>
+                            {/* Email */}
+                            <div className="mb-5 ">
+                                <div className="mb-1 flex justify-between">
+                                    <label className="mb-1 block">
+                                        <span className="font-semibold text-gray-900">
+                                            Email login{" "}
+                                        </span>
+                                        <abbr className="text-red-500">*</abbr>
+                                    </label>
+                                </div>
+                                <div className="relative mb-1">
+                                    <span className="absolute bottom-0 left-0 translate-x-[60%] translate-y-[-50%] transform cursor-pointer ">
+                                        <Mail className=" text-blue-700" />
+                                    </span>
+                                    <input
+                                        type="text"
+                                        className={`form-input h-12 w-full rounded-sm border ${
+                                            !emailError && email
+                                                ? "border-green-500"
+                                                : emailError
+                                                  ? "border-red-500"
+                                                  : "border-gray-300"
+                                        } py-2 pl-12 pr-4`}
+                                        placeholder="Email"
+                                        value={email}
+                                        onChange={(e) => {
+                                            setEmail(e.target.value);
+                                            validateEmail(e.target.value);
+                                        }}
+                                        onBlur={() => {
+                                            if (!email) {
+                                                // Kiểm tra nếu ô input trống sau khi mất focus
+                                                setEmailError("Can't be blank");
+                                            }
+                                        }}
+                                        required
+                                    />
+                                </div>
+
+                                {emailError && (
+                                    <span className="font-semibold text-red-500">
+                                        {emailError}
+                                    </span>
+                                )}
+                                <span className="block text-sm font-light text-red-500">
+                                    In case you register an account with an
+                                    email other than your company domain email,
+                                    some services on the account may have
+                                    limited purchasing or use rights.
+                                </span>
+                            </div>
+                            {/* Password */}
+                            <div className="mb-5 ">
+                                <div className="mb-1 flex justify-between">
+                                    <label className="mb-1 block">
+                                        <span className="font-semibold text-gray-900">
+                                            Password{" "}
+                                        </span>
+                                        <abbr className="text-red-500">*</abbr>
+                                    </label>
+                                </div>
+                                <div className="relative mb-1">
+                                    <span className="absolute bottom-0 left-0 translate-x-[60%] translate-y-[-50%] transform cursor-pointer ">
+                                        <Lock className=" text-blue-700" />
+                                    </span>
+                                    <span className="absolute bottom-0 right-0 translate-x-[-50%] translate-y-[-50%] transform cursor-pointer ">
+                                        {showPassword ? (
+                                            <Eye
+                                                onClick={() =>
+                                                    setShowPassword(
+                                                        (prevShowPassword) =>
+                                                            !prevShowPassword,
+                                                    )
+                                                }
+                                            />
+                                        ) : (
+                                            <EyeOff
+                                                onClick={() =>
+                                                    setShowPassword(
+                                                        (prevShowPassword) =>
+                                                            !prevShowPassword,
+                                                    )
+                                                }
+                                            />
+                                        )}
+                                    </span>
+                                    <input
+                                        type={
+                                            showPassword ? "text" : "password"
+                                        }
+                                        className={`form-input h-12 w-full rounded-sm border ${
+                                            !passwordError && password
+                                                ? "border-green-500"
+                                                : passwordError
+                                                  ? "border-red-500"
+                                                  : "border-gray-300"
+                                        }py-2 pl-12 pr-4`}
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={(e) => {
+                                            setPassword(e.target.value);
+                                            validatePassword(e.target.value);
+                                        }}
+                                        onBlur={() => {
+                                            if (!password) {
+                                                // Kiểm tra nếu ô input trống sau khi mất focus
+                                                setPasswordError(
+                                                    "Can't be blank",
+                                                );
+                                            }
+                                        }}
+                                        required
+                                    />
+                                </div>
+
+                                {passwordError && (
+                                    <span className="font-semibold text-red-500">
+                                        {passwordError}
+                                    </span>
+                                )}
+                            </div>
+                            {/* ConfirmPassword */}
+                            <div className="mb-6 ">
+                                <div className="mb-1 flex justify-between">
+                                    <label className="mb-1 block">
+                                        <span className="font-semibold text-gray-900">
+                                            Confirm the password{" "}
+                                        </span>
+                                        <abbr className="text-red-500">*</abbr>
+                                    </label>
+                                </div>
+                                <div className="relative mb-1">
+                                    <span className="absolute bottom-0 left-0 translate-x-[60%] translate-y-[-50%] transform cursor-pointer ">
+                                        <Lock className=" text-blue-700" />
+                                    </span>
+                                    <span className="absolute bottom-0 right-0 translate-x-[-50%] translate-y-[-50%] transform cursor-pointer ">
+                                        {showConfirmPassword ? (
+                                            <Eye
+                                                onClick={() =>
+                                                    setShowConfirmPassword(
+                                                        (
+                                                            prevShowConfirmPassword,
+                                                        ) =>
+                                                            !prevShowConfirmPassword,
+                                                    )
+                                                }
+                                            />
+                                        ) : (
+                                            <EyeOff
+                                                onClick={() =>
+                                                    setShowConfirmPassword(
+                                                        (
+                                                            prevShowConfirmPassword,
+                                                        ) =>
+                                                            !prevShowConfirmPassword,
+                                                    )
+                                                }
+                                            />
+                                        )}
+                                    </span>
+                                    <input
+                                        type={
+                                            showConfirmPassword
+                                                ? "text"
+                                                : "password"
+                                        }
+                                        className={`form-input h-12 w-full rounded-sm border ${
+                                            !confirmPasswordError &&
+                                            confirmPassword
+                                                ? "border-green-500"
+                                                : confirmPasswordError
+                                                  ? "border-red-500"
+                                                  : "border-gray-300"
+                                        }py-2 pl-12 pr-4`}
+                                        placeholder="Password"
+                                        value={confirmPassword}
+                                        onChange={(e) => {
+                                            setConfirmPassword(e.target.value);
+                                            validateConfirmPassword(
+                                                e.target.value,
+                                            );
+                                        }}
+                                        onBlur={() => {
+                                            if (!confirmPassword) {
+                                                // Kiểm tra nếu ô input trống sau khi mất focus
+                                                setConfirmPasswordError(
+                                                    "Can't be blank",
+                                                );
+                                            }
+                                        }}
+                                        required
+                                    />
+                                </div>
+
+                                {confirmPasswordError && (
+                                    <span className="font-semibold text-red-500">
+                                        {confirmPasswordError}
+                                    </span>
+                                )}
+                            </div>
                         </div>
+                        {/* Employer information */}
+                        <div>
+                            <h1 className="mb-3 mt-6 text-2xl font-bold ">
+                                Employer information
+                            </h1>
+                            {/* Name & Gender */}
+                            <div className="mb-5 flex">
+                                <div className=" w-1/2">
+                                    <div className="mb-1 flex justify-between">
+                                        <label className="mb-1 block">
+                                            <span className="font-semibold text-gray-900">
+                                                First and last name{" "}
+                                            </span>
+                                            <abbr className="text-red-500">
+                                                *
+                                            </abbr>
+                                        </label>
+                                    </div>
+                                    <div className="relative mb-1">
+                                        <span className="absolute bottom-0 left-0 translate-x-[60%] translate-y-[-50%] transform cursor-pointer ">
+                                            <User className=" text-blue-700" />
+                                        </span>
+                                        <input
+                                            type="text"
+                                            className={`form-input h-12 w-full rounded-sm border ${
+                                                !fullNameError && fullName
+                                                    ? "border-green-500"
+                                                    : fullNameError
+                                                      ? "border-red-500"
+                                                      : "border-gray-300"
+                                            } py-2 pl-12 pr-4`}
+                                            placeholder="First and last name"
+                                            value={fullName}
+                                            onChange={(e) => {
+                                                setFullName(e.target.value);
+                                                validateName(e.target.value);
+                                            }}
+                                            onBlur={() => {
+                                                if (!fullName) {
+                                                    // Kiểm tra nếu ô input trống sau khi mất focus
+                                                    setFullNameError(
+                                                        "Can't be blank",
+                                                    );
+                                                }
+                                            }}
+                                            required
+                                        />
+                                    </div>
+                                    {fullNameError && (
+                                        <span className="font-semibold text-red-500">
+                                            {fullNameError}
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="w-1/4"></div>
+                                <div className="w-1/4">
+                                    <div className="mb-1 flex justify-between">
+                                        <label className="mb-1 block">
+                                            <span className="font-semibold text-gray-900">
+                                                Gender:{" "}
+                                            </span>
+                                            <abbr className="text-red-500">
+                                                *
+                                            </abbr>
+                                        </label>
+                                    </div>
+                                    <RadioGroup
+                                        defaultValue="option-one"
+                                        className="flex gap-4"
+                                    >
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem
+                                                value="option-one"
+                                                id="option-one"
+                                                className="border-gray-700 text-blue-700"
+                                            />
+                                            <Label htmlFor="option-one">
+                                                Male
+                                            </Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem
+                                                value="option-two"
+                                                id="option-two"
+                                                className="border-gray-700 text-blue-700"
+                                            />
+                                            <Label htmlFor="option-two">
+                                                Female
+                                            </Label>
+                                        </div>
+                                    </RadioGroup>
+                                </div>
+                            </div>
+                            {/* Personal phone number */}
+                            <div className="mb-5 ">
+                                <div className="mb-1 flex justify-between">
+                                    <label className="mb-1 block">
+                                        <span className="font-semibold text-gray-900">
+                                            Personal phone number{" "}
+                                        </span>
+                                        <abbr className="text-red-500">*</abbr>
+                                    </label>
+                                </div>
+                                <div className="relative mb-1">
+                                    <span className="absolute bottom-0 left-0 translate-x-[60%] translate-y-[-50%] transform cursor-pointer ">
+                                        <Phone className=" text-blue-700" />
+                                    </span>
+                                    <input
+                                        type="text"
+                                        className={`form-input h-12 w-full rounded-sm border ${
+                                            !phoneError && phone
+                                                ? "border-green-500"
+                                                : phoneError
+                                                  ? "border-red-500"
+                                                  : "border-gray-300"
+                                        } py-2 pl-12 pr-4`}
+                                        maxLength="11"
+                                        placeholder="Personal phone number"
+                                        value={phone}
+                                        onChange={(e) => {
+                                            setPhone(e.target.value);
+                                            validatePhone(e.target.value);
+                                        }}
+                                        onBlur={() => {
+                                            if (!phone) {
+                                                // Kiểm tra nếu ô input trống sau khi mất focus
+                                                setPhoneError("Can't be blank");
+                                            }
+                                        }}
+                                        onKeyPress={(e) => {
+                                            const charCode = e.charCode;
+                                            if (
+                                                charCode < 48 ||
+                                                charCode > 57
+                                            ) {
+                                                e.preventDefault();
+                                            }
+                                        }}
+                                        required
+                                    />
+                                </div>
+
+                                {phoneError && (
+                                    <span className="font-semibold text-red-500">
+                                        {phoneError}
+                                    </span>
+                                )}
+                            </div>
+                            {/* Company */}
+                            <div className="mb-5 ">
+                                <div className="mb-1 flex justify-between">
+                                    <label className="mb-1 block">
+                                        <span className="font-semibold text-gray-900">
+                                            Company{" "}
+                                        </span>
+                                        <abbr className="text-red-500">*</abbr>
+                                    </label>
+                                </div>
+                                <div className="relative mb-1">
+                                    <span className="absolute bottom-0 left-0 translate-x-[60%] translate-y-[-50%] transform cursor-pointer ">
+                                        <Building className=" text-blue-700" />
+                                    </span>
+                                    <input
+                                        type="text"
+                                        className={`form-input h-12 w-full rounded-sm border ${
+                                            !companyNameError && companyName
+                                                ? "border-green-500"
+                                                : companyNameError
+                                                  ? "border-red-500"
+                                                  : "border-gray-300"
+                                        } py-2 pl-12 pr-4`}
+                                        placeholder="Company name"
+                                        value={companyName}
+                                        onChange={(e) => {
+                                            setCompanyName(e.target.value);
+                                            validateCompanyName(e.target.value);
+                                        }}
+                                        onBlur={() => {
+                                            if (!companyName) {
+                                                // Kiểm tra nếu ô input trống sau khi mất focus
+                                                setCompanyNameError(
+                                                    "Can't be blank",
+                                                );
+                                            }
+                                        }}
+                                        required
+                                    />
+                                </div>
+                                {companyNameError && (
+                                    <span className="font-semibold text-red-500">
+                                        {companyNameError}
+                                    </span>
+                                )}
+                            </div>
+                            {/* Work location */}
+                            <div className="mb-6 ">
+                                <div className="mb-1 flex justify-between">
+                                    <label className="mb-1 block">
+                                        <span className="font-semibold text-gray-900">
+                                            Work location{" "}
+                                        </span>
+                                        <abbr className="text-red-500">*</abbr>
+                                    </label>
+                                </div>
+                                <div className="relative mb-1">
+                                    <span className="absolute bottom-0 left-0 translate-x-[60%] translate-y-[-50%] transform cursor-pointer ">
+                                        <MapPin className=" text-blue-700" />
+                                    </span>
+                                    <input
+                                        type="text"
+                                        className={`form-input h-12 w-full rounded-sm border ${
+                                            !workLocationError && workLocation
+                                                ? "border-green-500"
+                                                : workLocationError
+                                                  ? "border-red-500"
+                                                  : "border-gray-300"
+                                        } py-2 pl-12 pr-4`}
+                                        placeholder="Work location (province, city, district, ward, street...)"
+                                        value={workLocation}
+                                        onChange={(e) => {
+                                            setWorkLocation(e.target.value);
+                                            validateLocation(e.target.value);
+                                        }}
+                                        onBlur={() => {
+                                            if (!workLocation) {
+                                                // Kiểm tra nếu ô input trống sau khi mất focus
+                                                setWorkLocationError(
+                                                    "Can't be blank",
+                                                );
+                                            }
+                                        }}
+                                        required
+                                    />
+                                </div>
+                                {workLocationError && (
+                                    <span className="font-semibold text-red-500">
+                                        {workLocationError}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    {/* Policy & button */}
+                    <div className="mx-auto mb-8 max-w-[1000px] ">
+                        <div className="mb-6 flex items-center ">
+                            <div className="inline-flex items-center">
+                                <label
+                                    className="relative flex cursor-pointer items-center rounded-full p-3"
+                                    htmlFor="check"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        className="before:content[''] border-blue-gray-200 before:bg-blue-gray-500 peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border transition-all before:absolute before:left-2/4 before:top-2/4 before:block before:h-12 before:w-12 before:-translate-x-2/4 before:-translate-y-2/4 before:rounded-full before:opacity-0 before:transition-opacity checked:border-red-500 checked:bg-red-500 checked:before:bg-red-500 hover:before:opacity-10"
+                                        id="check"
+                                        onChange={() =>
+                                            setCheckEmail(
+                                                (prevState) => !prevState,
+                                            )
+                                        }
+                                    />
+                                    <span className="pointer-events-none absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-3.5 w-3.5"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                            stroke="currentColor"
+                                            strokeWidth="1"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                clipRule="evenodd"
+                                            ></path>
+                                        </svg>
+                                    </span>
+                                </label>
+                            </div>
+                            <div className="text-sm text-gray-600">
+                                I have read and agree to FITviec’s{" "}
+                                <a
+                                    href="#"
+                                    target="_blank"
+                                    className="text-blue-700 hover:text-blue-900"
+                                >
+                                    Terms & Conditions
+                                </a>{" "}
+                                and{" "}
+                                <a
+                                    href="#"
+                                    target="_blank"
+                                    className="text-blue-700 hover:text-blue-900"
+                                >
+                                    Privacy Policy
+                                </a>{" "}
+                                in relation to your privacy information.
+                            </div>
+                        </div>
+                        <button
+                            className={`mb-6 flex h-12 w-full items-center justify-center gap-0 rounded-sm  py-2 font-bold text-white ${
+                                emailError ||
+                                passwordError ||
+                                !email ||
+                                !password
+                                    ? "bg-gray-400 "
+                                    : "bg-red-500 hover:bg-red-700"
+                            }`}
+                            disabled={
+                                emailError ||
+                                passwordError ||
+                                !email ||
+                                !password
+                            }
+                        >
+                            <span>Register</span>
+                        </button>
                     </div>
                 </div>
                 {/* Right */}
-                <div className="bg-linear-gradient-logo flex h-full items-center justify-center text-center ">
+                <div className="flex h-full items-center justify-center bg-linear-gradient-logo text-center ">
                     <img
                         src="https://itviec.com/assets/customer/sign_in/logo-a2f6301beddfd012e9c6a71aed3d4cae576e2c7244fb4a41b2ff7c31bbd83f0e.png"
                         alt="logo"
