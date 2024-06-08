@@ -17,12 +17,15 @@ public class Job {
   @Id
   String jobId;
   String employerId;
+  String jobSalary;
   String jobTitle;
-  String jobDescription;
   String jobLocation;
   String jobType;
-  String jobCategory;
-  String jobSalary;
   String postedAt;
-  String closingAt;
+  String jobSkills;
+  String jobTopReasons;
+  String jobDescription;
+  String jobResponsibility;
+  String jobRequirement;
+  String jobBenefit;
 }
