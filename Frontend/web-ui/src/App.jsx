@@ -19,14 +19,23 @@ import { AuthProvider } from "./contexts/authContext";
 import ToastContainerNotification from "./components/Notifications/ToastContainerNotification";
 import ProtectedRouteVerify from "./lib/protect-verify-email";
 import AccountAction from "./components/Authentications/account-action";
+import HomeEmployer from "./components/Employers/home-employer";
+
+import EmployerContainer from "./components/Employer/employer-container";
+import CVViewer from "./components/Employer/cv-detail";
+import CustomerLogin from "./components/Employers/customer-login";
+import CustomerRegister from "./components/Employers/customer-register";
 
 function App() {
     return (
         <AuthProvider>
             <ToastContainerNotification />
+
             <Header />
             <div className="h-[88px]" />
             <Routes>
+                <Route path="/employer" element={<EmployerContainer />} />
+                <Route path="/cv-detail" element={<CVViewer />} />
                 <Route path="/sign_in" element={<SignIn />} />
                 <Route path="/sign_up" element={<SignUp />} />
                 <Route
@@ -38,7 +47,10 @@ function App() {
                     }
                 />
                 <Route path="/job-detail" element={<MainTablet />} />
-                <Route path="/form-apply-job" element ={<FormApplyJob/>} ></Route>
+                <Route
+                    path="/form-apply-job"
+                    element={<FormApplyJob />}
+                ></Route>
                 <Route path="/search" element={<SearchResult />} />
                 <Route
                     path="/job-detail-guest"
@@ -56,6 +68,12 @@ function App() {
                 />
                 <Route path="/forgot_password" element={<ForgotPassword />} />
                 <Route path="/account_action" element={<AccountAction />} />
+                <Route path="/for-employers" element={<HomeEmployer />} />
+                <Route path="/customer/login" element={<CustomerLogin />} />
+                <Route
+                    path="/customer/register"
+                    element={<CustomerRegister />}
+                />
             </Routes>
             <Footer />
         </AuthProvider>

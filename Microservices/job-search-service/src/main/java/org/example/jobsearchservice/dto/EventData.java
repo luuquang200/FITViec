@@ -1,20 +1,15 @@
-package com.example.jobservice.repository.dao;
+package org.example.jobsearchservice.dto;
 
-import com.example.jobservice.listener.JobListener;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Id;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Entity
-@EntityListeners(JobListener.class)
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Job {
-  @Id
+public class EventData {
   String jobId;
   String employerId;
   String jobSalary;

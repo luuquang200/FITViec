@@ -202,7 +202,7 @@ const SignUp = () => {
                             </label>
                         </div>
                         <div className="text-sm text-gray-600">
-                            By signing up with Google, I agree to ITviec’s{" "}
+                            By signing up with Google, I agree to FITviec’s{" "}
                             <a
                                 href="#"
                                 target="_blank"
