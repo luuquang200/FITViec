@@ -135,7 +135,7 @@ const CustomerLogin = () => {
         <Container className="h-vh-employer-login w-full max-w-full">
             <div className="grid h-full w-full grid-cols-2 xl:grid-rows-1">
                 {/* Left */}
-                <div className="bg-linear-gradient-logo flex h-full items-center justify-center text-center ">
+                <div className="flex h-full items-center justify-center bg-linear-gradient-logo text-center ">
                     <img
                         src="https://itviec.com/assets/customer/sign_in/logo-a2f6301beddfd012e9c6a71aed3d4cae576e2c7244fb4a41b2ff7c31bbd83f0e.png"
                         alt="logo"
@@ -187,7 +187,7 @@ const CustomerLogin = () => {
                                 required
                             />
                             {emailError && (
-                                <span className="text-red-500">
+                                <span className="font-semibold text-red-500">
                                     {emailError}
                                 </span>
                             )}
@@ -255,7 +255,7 @@ const CustomerLogin = () => {
                                 />
                             </div>
                             {passwordError && (
-                                <span className="text-red-500">
+                                <span className="font-semibold text-red-500">
                                     {passwordError}
                                 </span>
                             )}
@@ -306,7 +306,7 @@ const CustomerLogin = () => {
                                     target="_blank"
                                     className="text-blue-700 hover:text-blue-900"
                                 >
-                                    Contact now
+                                    Register now
                                 </a>
                             </div>
                             <div className="my-4 flex items-center py-4">

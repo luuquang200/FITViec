@@ -32,8 +32,13 @@ const HomeEmployer = () => {
                                             can help you reach and hire the best
                                             IT candidates.
                                         </p>
-                                        <button className="mb-6 flex h-12 w-52 items-center justify-center gap-0 rounded-sm  bg-red-600 py-2 font-bold text-white hover:bg-red-800">
-                                            Contact now
+                                        <button
+                                            className="mb-6 flex h-12 w-52 items-center justify-center gap-0 rounded-sm  bg-red-600 py-2 font-bold text-white hover:bg-red-800"
+                                            onClick={() =>
+                                                navigate("/customer/register")
+                                            }
+                                        >
+                                            Register
                                         </button>
                                         <div className="mt-8 flex flex-col items-center lg:flex-row">
                                             <p className="mb-2 text-gray-300 lg:mb-0 lg:mr-1">
@@ -45,7 +50,7 @@ const HomeEmployer = () => {
                                                 target="_blank"
                                                 href="/customer/login"
                                             >
-                                                Sign in
+                                                Login
                                             </a>
                                         </div>
                                     </div>
@@ -132,7 +137,7 @@ const HomeEmployer = () => {
                                             support, powerful tools.
                                         </p>
                                         <div className="mt-8 lg:flex">
-                                            <div className="bg-linear-gradient-content mb-4 flex w-full items-center  p-5 lg:mb-0 lg:mr-4 lg:w-1/2">
+                                            <div className="mb-4 flex w-full items-center bg-linear-gradient-content  p-5 lg:mb-0 lg:mr-4 lg:w-1/2">
                                                 <img src="https://itviec.com/assets/employer_landing/opportunities-a53edbeb973cfeaa459e920b7a4562354aa02a1c83a53150cf8ebf17aaa7ce57.svg" />
                                                 <p className="ml-4 mt-4 text-sm lg:mt-0 ">
                                                     Better opportunities to
@@ -140,7 +145,7 @@ const HomeEmployer = () => {
                                                     from FITviec
                                                 </p>
                                             </div>
-                                            <div className="bg-linear-gradient-content flex w-full items-center p-5 lg:w-1/2">
+                                            <div className="flex w-full items-center bg-linear-gradient-content p-5 lg:w-1/2">
                                                 <img src="https://itviec.com/assets/employer_landing/right-skill-be1892ff9d11b80aeab90527abe6b19cfb855ab95fbcc9b7bc75c89184353bfd.svg" />
                                                 <p className="ml-4 mt-4 text-sm lg:mt-0 ">
                                                     Attract the right candidates
@@ -172,7 +177,7 @@ const HomeEmployer = () => {
                                             candidates.
                                         </p>
                                         <div className="mt-8 lg:flex lg:flex-col lg:gap-4">
-                                            <div className="bg-linear-gradient-content-x mb-4 flex w-full items-center  p-5 lg:mb-0 lg:mr-4 ">
+                                            <div className="mb-4 flex w-full items-center bg-linear-gradient-content-x  p-5 lg:mb-0 lg:mr-4 ">
                                                 <img src="https://itviec.com/assets/employer_landing/first-employer-branding-974416a3d60028453bad0cad115f6ab42ea0736b117aba05e0816b1d49caf93b.svg" />
                                                 <p className="ml-4 mt-4 text-sm leading-6 lg:mt-0">
                                                     <span className="font-semibold">
@@ -184,7 +189,7 @@ const HomeEmployer = () => {
                                                     Vietnam
                                                 </p>
                                             </div>
-                                            <div className="bg-linear-gradient-content-x mb-4 flex w-full items-center  p-5 lg:mb-0 lg:mr-4 ">
+                                            <div className="mb-4 flex w-full items-center bg-linear-gradient-content-x  p-5 lg:mb-0 lg:mr-4 ">
                                                 <img src="https://itviec.com/assets/employer_landing/second-employer-branding-970e0278afc18f58c8c7952e73f33e2288e18f92cf9a7709d8fddccd5749bbe8.svg" />
                                                 <p className="ml-4 mt-4 text-sm leading-6  lg:mt-0 ">
                                                     <span className="font-semibold">
@@ -205,15 +210,20 @@ const HomeEmployer = () => {
                                     Experience FITviec's service today
                                 </h3>
                                 <div className="flex justify-center">
-                                    <button className="mb-6 flex h-12 w-52 items-center justify-center gap-0 rounded-sm  bg-red-600 py-2 font-bold text-white hover:bg-red-800">
-                                        Contact now
+                                    <button
+                                        className="mb-6 flex h-12 w-52 items-center justify-center gap-0 rounded-sm  bg-red-600 py-2 font-bold text-white hover:bg-red-800"
+                                        onClick={() =>
+                                            navigate("/customer/register")
+                                        }
+                                    >
+                                        Register
                                     </button>
                                 </div>
                             </div>
                         </Container>
                     </section>
                     {/* Top-Employer-container */}
-                    <section className="bg-itviec-top-emp mb-20 mt-2 px-5 pt-12 lg:px-0 lg:pt-12">
+                    <section className="mb-20 mt-2 bg-itviec-top-emp px-5 pt-12 lg:px-0 lg:pt-12">
                         <Container className="py-16 pt-8">
                             <div className="text-center">
                                 <div className="text-2xl font-bold lg:text-3xl">
