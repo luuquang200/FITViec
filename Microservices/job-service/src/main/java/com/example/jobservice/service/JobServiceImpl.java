@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -22,10 +22,6 @@ public class JobServiceImpl implements JobService {
     this.CopyData(data, newJob);
     newJob.setJobId(this.CreateJobId());
     return this.repository.save(newJob);
-  }
-  @Override
-  public Job GetOne(String jobId) {
-    return this.repository.findById(jobId).orElse(null);
   }
   @Override
   public UpdateResponse Update(String employerId, String jobId, CUJobDto data) {
@@ -52,23 +48,26 @@ public class JobServiceImpl implements JobService {
       return new UpdateResponse(HttpStatus.FORBIDDEN.toString(), "Forbidden", null);
     }
   }
-  @Override
-  public List<Job> GetJobsByEmployer(String employerId) {
-    return this.repository.findAllByEmployerId(employerId);
-  }
 
   private String CreateJobId() {
     return UUID.randomUUID().toString();
   }
   private void CopyData(CUJobDto data, Job job) {
     job.setEmployerId(data.employerId);
+    job.setJobSalary(data.jobSalary);
     job.setJobTitle(data.jobTitle);
-    job.setJobDescription(data.jobDescription);
     job.setJobLocation(data.jobLocation);
     job.setJobType(data.jobType);
-    job.setJobCategory(data.jobCategory);
-    job.setJobSalary(data.jobSalary);
-    job.setPostedAt(data.postedAt);
-    job.setClosingAt(data.closingAt);
+    job.setPostedAt(this.CreatePostedDate());
+    job.setJobSkills(data.jobSkills);
+    job.setJobTopReasons(data.jobTopReasons);
+    job.setJobDescription(data.jobDescription);
+    job.setJobResponsibility(data.jobResponsibility);
+    job.setJobRequirement(data.jobRequirement);
+    job.setJobBenefit(data.jobBenefit);
+  }
+  private String CreatePostedDate() {
+    LocalDateTime now = LocalDateTime.now();
+    return now.toString();
   }
 }
