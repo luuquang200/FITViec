@@ -10,7 +10,6 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 6.0.x
   WORKING_DIRECTORY: ./Microservices/employer-service/EmployerService/EmployerService
-  WORKING_DIRECTORY_FOR_DOCKERFILE: ./Microservices/employer-service/EmployerService
 
 jobs:
   build-and-deploy:
@@ -44,7 +43,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          cd ${{ env.WORKING_DIRECTORY_FOR_DOCKERFILE }}
+          cd ${{ env.WORKING_DIRECTORY }}
           IMAGE_NAME=gcr.io/${{ env.GCP_PROJECT }}/employer-service
           gcloud builds submit --tag $IMAGE_NAME .
 
