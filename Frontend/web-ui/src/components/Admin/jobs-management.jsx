@@ -5,8 +5,6 @@ import {
     ChevronLeftIcon,
     ChevronRightIcon,
     EyeIcon,
-    CheckIcon,
-    XIcon,
 } from "@heroicons/react/solid";
 import { jobData } from "./data";
 import Modal from "./modal";
@@ -36,6 +34,7 @@ const JobManagement = () => {
             {
                 Header: "Status",
                 accessor: "status",
+                Filter: SelectColumnFilter, // Sử dụng bộ lọc Select cho Status
             },
             {
                 Header: "Action",
@@ -101,13 +100,22 @@ const JobManagement = () => {
                     Job Posts Management
                 </h3>
             </div>
-            <div className="mb-4">
+            <div className="mb-4 flex space-x-4">
                 <input
                     value={filterInput}
                     onChange={handleFilterChange}
                     placeholder={"Search by Recruiter"}
                     className="w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+                <select
+                    onChange={(e) => setFilter("status", e.target.value)}
+                    className="w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                    <option value="">All Statuses</option>
+                    <option value="approved">Approved</option>
+                    <option value="pending">Pending</option>
+                    <option value="rejected">Rejected</option>
+                </select>
             </div>
             <table
                 {...getTableProps()}
@@ -229,12 +237,39 @@ function ColumnFilter({
     return (
         <input
             value={filterValue || ""}
-            onChange={(e) => {
-                setFilter(e.target.value || undefined);
-            }}
+            onChange={(e) => setFilter(e.target.value || undefined)}
             placeholder={`Search ${count} records...`}
             className="w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+    );
+}
+
+function SelectColumnFilter({
+    column: { filterValue, setFilter, preFilteredRows, id },
+}) {
+    const options = useMemo(() => {
+        const optionsSet = new Set();
+        preFilteredRows.forEach((row) => {
+            optionsSet.add(row.values[id]);
+        });
+        return [...optionsSet.values()];
+    }, [id, preFilteredRows]);
+
+    return (
+        <select
+            value={filterValue}
+            onChange={(e) => {
+                setFilter(e.target.value || undefined);
+            }}
+            className="w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+            <option value="">All</option>
+            {options.map((option, i) => (
+                <option key={i} value={option}>
+                    {option}
+                </option>
+            ))}
+        </select>
     );
 }
 
