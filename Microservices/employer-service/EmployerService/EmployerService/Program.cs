@@ -25,6 +25,15 @@ builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+	options.ListenAnyIP(8080);
+	options.ListenAnyIP(8585, listenOptions =>
+	{
+		listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
+	});
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
