@@ -4,7 +4,7 @@ namespace EmployerService.Domain.Entities
 {
 	public class Company
 	{
-		public Guid CompanyId { get; set; }
+		public string CompanyId { get; set; }
 		public string EmployerId { get; set; }
 		public string CompanyName { get; set; }
 		public string? CompanyType { get; set; }

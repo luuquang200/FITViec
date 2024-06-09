@@ -2,8 +2,8 @@ namespace EmployerService.Domain.Entities
 {
 	public class CompanyImage
 	{
-		public Guid ImageId { get; set; }
-		public Guid CompanyId { get; set; }
+		public string ImageId { get; set; }
+		public string CompanyId { get; set; }
 		public string ImageUrl { get; set; }
 
 		// Navigation property

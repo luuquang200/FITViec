@@ -77,5 +77,61 @@ namespace EmployerService.Controllers
 		{
 			return Ok("Employer service is running");
 		}
+
+		// Post job with employer id
+		[Route("post-job")]
+		[HttpPost]
+		public async Task<IActionResult> PostJob(PostJobRequest request)
+		{
+			var result = await _employerService.PostJobAsync(request);
+			if (!result.IsSuccess)
+			{
+				return BadRequest(result.ErrorMessage);
+			}
+
+			return Ok(result);
+		}
+
+		// Get all jobs by employer id
+		[Route("get-all-jobs")]
+		[HttpGet]
+		public async Task<IActionResult> GetListJobByEmployerId(string employerId)
+		{
+			var result = await _employerService.GetListJobByEmployerIdAsync(employerId);
+			if (!result.IsSuccess)
+			{
+				return BadRequest(result.ErrorMessage);
+			}
+
+			return Ok(result);
+		}
+
+		// Update job by employer id
+		[Route("update-job")]
+		[HttpPut]
+		public async Task<IActionResult> UpdateJob(UpdateJobRequest request)
+		{
+			var result = await _employerService.UpdateJobByEmployerIdAsync(request);
+			if (!result.IsSuccess)
+			{
+				return BadRequest(result.ErrorMessage);
+			}
+
+			return Ok(result);
+		}
+
+		// Delete job by employer id
+		[Route("delete-job")]
+		[HttpDelete]
+		public async Task<IActionResult> DeleteJob(string employerId,string jobId)
+		{
+			var result = await _employerService.DeleteJobByEmployerIdAsync(employerId, jobId);
+			if (!result.IsSuccess)
+			{
+				return BadRequest(result.ErrorMessage);
+			}
+
+			return Ok(result);
+		}
 	}
 }

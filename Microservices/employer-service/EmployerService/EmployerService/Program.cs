@@ -22,6 +22,7 @@ builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 // Register the service
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddHttpClient();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

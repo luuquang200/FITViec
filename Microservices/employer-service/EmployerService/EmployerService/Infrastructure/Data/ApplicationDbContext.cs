@@ -27,5 +27,16 @@ namespace EmployerService.Infrastructure.Data
 			modelBuilder.Entity<CompanyImage>()
 				.HasKey(i => i.ImageId); 
 		}
+
+		//protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		//{
+		//	var con = Environment.GetEnvironmentVariable("ConnectionString");
+		//	if (string.IsNullOrEmpty(con))
+		//	{
+		//		throw new Exception("Connection string is not set");	
+		//	}
+
+		//	optionsBuilder.UseSqlServer(con);
+		//}
 	}
 }

@@ -5,7 +5,8 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ConnectionString": "Server=35.239.142.227;Initial Catalog=employer-service-db;User Id=admin-dev;Password=quangluu123;"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7201;http://localhost:5210"

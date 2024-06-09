@@ -8,11 +8,11 @@ namespace EmployerService.Infrastructure.Repositories
 	public interface ICompanyRepository
 	{
 		Task AddAsync(Company company);
-		Task<Company> GetByIdAsync(Guid companyId);
+		Task<Company> GetByIdAsync(string companyId);
 		Task<Company> GetByEmployerIdAsync(string employerId);
 		Task UpdateAsync(Company company);
-		Task DeleteAsync(Guid companyId);
-		Task<CompanyDto> GetAllCompaniesAsync();
+		Task DeleteAsync(string companyId);
+		Task<List<CompanyDto>> GetAllCompaniesAsync();
 	}
 	public class CompanyRepository : ICompanyRepository
 	{
@@ -29,7 +29,7 @@ namespace EmployerService.Infrastructure.Repositories
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task<Company> GetByIdAsync(Guid companyId)
+		public async Task<Company> GetByIdAsync(string companyId)
 		{
 			return await _context.Companies
 				.Include(c => c.Images)
@@ -42,7 +42,7 @@ namespace EmployerService.Infrastructure.Repositories
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task DeleteAsync(Guid companyId)
+		public async Task DeleteAsync(string companyId)
 		{
 			var company = await GetByIdAsync(companyId);
 			if (company != null)
@@ -58,32 +58,30 @@ namespace EmployerService.Infrastructure.Repositories
 				.Include(c => c.Images)
 				.FirstOrDefaultAsync(c => c.EmployerId == employerId);
 		}
-		public async Task<CompanyDto> GetAllCompaniesAsync()
+		public async Task<List<CompanyDto>> GetAllCompaniesAsync()
 		{
-			var company = await _context.Companies
+			return await _context.Companies
 				.Include(c => c.Images)
-				.FirstOrDefaultAsync();
-
-			var companyDto = new CompanyDto
-			{
-				CompanyId = company.CompanyId.ToString(),
-				EmployerId = company.EmployerId,
-				CompanyName = company.CompanyName,
-				CompanyType = company.CompanyType,
-				CompanySize = company.CompanySize,
-				Country = company.Country,
-				WorkingDays = company.WorkingDays,
-				OvertimePolicy = company.OvertimePolicy,
-				CompanyOverview = company.CompanyOverview,
-				KeySkills = company.KeySkills,
-				WhyLoveWorkingHere = company.WhyLoveWorkingHere,
-				LogoUrl = company.LogoUrl,
-				Location = company.Location,
-				WorkType = company.WorkType,
-				Images = company.Images.Select(i => new ImageDto { ImageUrl = i.ImageUrl }).ToList()
-			};
-
-			return companyDto;
+				.Select(c => new CompanyDto
+				{
+					CompanyId = c.CompanyId,
+					EmployerId = c.EmployerId,
+					CompanyName = c.CompanyName,
+					CompanyType = c.CompanyType,
+					CompanySize = c.CompanySize,
+					Country = c.Country,
+					WorkingDays = c.WorkingDays,
+					OvertimePolicy = c.OvertimePolicy,
+					CompanyOverview = c.CompanyOverview,
+					KeySkills = c.KeySkills,
+					WhyLoveWorkingHere = c.WhyLoveWorkingHere,
+					LogoUrl = c.LogoUrl,
+					Location = c.Location,
+					WorkType = c.WorkType,
+					Images = c.Images.Select(i => new ImageDto { ImageUrl = i.ImageUrl }).ToList()
+				})
+				.ToListAsync(); 
 		}
 	}
 }
+
