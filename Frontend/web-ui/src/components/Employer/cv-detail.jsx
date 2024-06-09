@@ -52,13 +52,13 @@ const CVViewer = () => {
               <div className="text-sm text-gray-600">{candidateData.email} | {candidateData.phone}</div>
             </div>
           </div>
-          {/* <div className="mb-4">
-            <div className="font-semibold mb-2">Đánh giá CV</div>
-            <div className="flex items-center">
-              <button className="bg-green-100 text-green-700 px-3 py-1 rounded mr-2">Phù hợp</button>
-              <button className="bg-red-100 text-red-700 px-3 py-1 rounded">Không phù hợp</button>
+          <div className="mb-4">
+            <div className="font-semibold mb-2">Đổi trạng thái CV : </div>
+            <div className="flex items-center justify-between">
+              <button className="bg-green-100 text-green-700 w-1/2 py-2 rounded mr-2">Hẹn phỏng vấn</button>
+              <button className="bg-red-100 text-red-700 w-1/2 py-2 rounded">Từ chối</button>
             </div>
-          </div> */}
+          </div>
           <div className="mb-4 flex">
             <div className="font-semibold mb-2">Trạng thái CV:</div>
             <span className="text-gray-600 ml-4">{candidateData.status}</span>
