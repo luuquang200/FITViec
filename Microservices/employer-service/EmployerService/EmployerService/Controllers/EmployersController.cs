@@ -40,5 +40,13 @@ namespace EmployerService.Controllers
 
 			return Ok(result);
 		}
+
+		// api test
+		[Route("test")]
+		[HttpGet]
+		public IActionResult Test()
+		{
+			return Ok("Employer service is running");
+		}
 	}
 }
