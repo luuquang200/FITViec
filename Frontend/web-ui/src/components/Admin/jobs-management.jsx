@@ -148,24 +148,35 @@ const JobManagement = () => {
                     {...getTableBodyProps()}
                     className="divide-y divide-gray-200"
                 >
-                    {page.map((row) => {
-                        prepareRow(row);
-                        return (
-                            <tr
-                                {...row.getRowProps()}
-                                className="hover:bg-gray-50"
+                    {page.length === 0 ? (
+                        <tr>
+                            <td
+                                colSpan={columns.length}
+                                className="px-6 py-4 text-center text-sm text-gray-500"
                             >
-                                {row.cells.map((cell) => (
-                                    <td
-                                        {...cell.getCellProps()}
-                                        className="whitespace-nowrap px-6 py-4 text-sm text-gray-500"
-                                    >
-                                        {cell.render("Cell")}
-                                    </td>
-                                ))}
-                            </tr>
-                        );
-                    })}
+                                No results found
+                            </td>
+                        </tr>
+                    ) : (
+                        page.map((row) => {
+                            prepareRow(row);
+                            return (
+                                <tr
+                                    {...row.getRowProps()}
+                                    className="hover:bg-gray-50"
+                                >
+                                    {row.cells.map((cell) => (
+                                        <td
+                                            {...cell.getCellProps()}
+                                            className="whitespace-nowrap px-6 py-4 text-sm text-gray-500"
+                                        >
+                                            {cell.render("Cell")}
+                                        </td>
+                                    ))}
+                                </tr>
+                            );
+                        })
+                    )}
                 </tbody>
             </table>
             <div className="mt-4 flex items-center justify-between">
