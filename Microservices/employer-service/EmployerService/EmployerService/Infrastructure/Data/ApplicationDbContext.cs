@@ -1,6 +1,5 @@
 using EmployerService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using EmployerService.Domain.Entities;
 
 namespace EmployerService.Infrastructure.Data
 {

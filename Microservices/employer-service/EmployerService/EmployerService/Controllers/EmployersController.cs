@@ -27,5 +27,18 @@ namespace EmployerService.Controllers
 
 			return Ok(result);
 		}
+
+		[Route("update")]
+		[HttpPut]
+		public async Task<IActionResult> UpdateEmployer(UpdateEmployerRequest request)
+		{
+			var result = await _employerService.UpdateEmployerAsync(request);
+			if (!result.IsSuccess)
+			{
+				return BadRequest(result.ErrorMessage);
+			}
+
+			return Ok(result);
+		}
 	}
 }

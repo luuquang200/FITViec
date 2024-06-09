@@ -8,6 +8,7 @@ namespace EmployerService.Infrastructure.Repositories
 	{
 		Task AddAsync(Company company);
 		Task<Company> GetByIdAsync(Guid companyId);
+		Task<Company> GetByEmployerIdAsync(string employerId);
 		Task UpdateAsync(Company company);
 		Task DeleteAsync(Guid companyId);
 	}
@@ -47,6 +48,13 @@ namespace EmployerService.Infrastructure.Repositories
 				_context.Companies.Remove(company);
 				await _context.SaveChangesAsync();
 			}
+		}
+
+		public async Task<Company> GetByEmployerIdAsync(string employerId)
+		{
+			return await _context.Companies
+				.Include(c => c.Images)
+				.FirstOrDefaultAsync(c => c.EmployerId == employerId);
 		}
 	}
 }

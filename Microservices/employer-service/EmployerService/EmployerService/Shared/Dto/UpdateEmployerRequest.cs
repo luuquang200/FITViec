@@ -1,10 +1,7 @@
-using System;
-
-namespace EmployerService.Domain.Entities
+﻿namespace EmployerService.Shared.Dto
 {
-	public class Company
+	public class UpdateEmployerRequest
 	{
-		public Guid CompanyId { get; set; }
 		public string EmployerId { get; set; }
 		public string CompanyName { get; set; }
 		public string? CompanyType { get; set; }
@@ -18,6 +15,6 @@ namespace EmployerService.Domain.Entities
 		public string? LogoUrl { get; set; }
 		public string? Location { get; set; }
 		public string? WorkType { get; set; }
-		public ICollection<CompanyImage>? Images { get; set; }
+		public List<string>? Images { get; set; }
 	}
 }

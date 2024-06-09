@@ -18,6 +18,8 @@ builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 
 // Register the service
 builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddScoped<IImageService, ImageService>();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -33,6 +35,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseAuthorization();
 
