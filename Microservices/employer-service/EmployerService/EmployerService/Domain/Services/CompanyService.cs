@@ -1,4 +1,5 @@
-﻿using EmployerService.Domain.Entities;
+﻿using EmployerService.Domain.DTO;
+using EmployerService.Domain.Entities;
 using EmployerService.Infrastructure.Repositories;
 using EmployerService.Shared.Dto;
 
@@ -10,6 +11,7 @@ namespace EmployerService.Domain.Services
 		Task<UpdateEmployerResult> UpdateEmployerAsync(UpdateEmployerRequest request);
 		Task<Company> GetCompanyByEmployerIdAsync(string employerId);
 		Task DeleteCompanyAsync(Guid companyId);
+		Task<CompanyDto> GetAllCompaniesAsync();
 	}
 	public class CompanyService: ICompanyService
 	{
@@ -89,6 +91,12 @@ namespace EmployerService.Domain.Services
 		public async Task DeleteCompanyAsync(Guid companyId)
 		{
 			await _companyRepository.DeleteAsync(companyId);
+		}
+
+		// Get all companies
+		public async Task<CompanyDto> GetAllCompaniesAsync()
+		{
+			return await _companyRepository.GetAllCompaniesAsync();
 		}
 
 		// Post job by employer id

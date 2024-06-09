@@ -1,4 +1,6 @@
-﻿using EmployerService.Domain.Services;
+﻿using EmployerService.Domain.DTO;
+using EmployerService.Domain.Entities;
+using EmployerService.Domain.Services;
 using EmployerService.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,6 +41,33 @@ namespace EmployerService.Controllers
 			}
 
 			return Ok(result);
+		}
+
+		// get company by employer id
+		[Route("get")]
+		[HttpGet]
+		public async Task<IActionResult> GetCompanyByEmployerId(string employerId)
+		{
+			var company = await _employerService.GetCompanyByEmployerIdAsync(employerId);
+			if (company == null)
+			{
+				return NotFound();
+			}
+
+			return Ok(company);
+		}
+
+		//get all companies
+		[Route("get-all")]
+		[HttpGet]
+		public async Task<ApiResult> GetAllCompanies()
+		{
+			var companies = await _employerService.GetAllCompaniesAsync();
+			return new ApiResult
+			{
+				IsSuccess = true,
+				Data = companies
+			};
 		}
 
 		// api test

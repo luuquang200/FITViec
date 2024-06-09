@@ -1,4 +1,5 @@
-﻿using EmployerService.Domain.Entities;
+﻿using EmployerService.Domain.DTO;
+using EmployerService.Domain.Entities;
 using EmployerService.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,7 @@ namespace EmployerService.Infrastructure.Repositories
 		Task<Company> GetByEmployerIdAsync(string employerId);
 		Task UpdateAsync(Company company);
 		Task DeleteAsync(Guid companyId);
+		Task<CompanyDto> GetAllCompaniesAsync();
 	}
 	public class CompanyRepository : ICompanyRepository
 	{
@@ -55,6 +57,33 @@ namespace EmployerService.Infrastructure.Repositories
 			return await _context.Companies
 				.Include(c => c.Images)
 				.FirstOrDefaultAsync(c => c.EmployerId == employerId);
+		}
+		public async Task<CompanyDto> GetAllCompaniesAsync()
+		{
+			var company = await _context.Companies
+				.Include(c => c.Images)
+				.FirstOrDefaultAsync();
+
+			var companyDto = new CompanyDto
+			{
+				CompanyId = company.CompanyId.ToString(),
+				EmployerId = company.EmployerId,
+				CompanyName = company.CompanyName,
+				CompanyType = company.CompanyType,
+				CompanySize = company.CompanySize,
+				Country = company.Country,
+				WorkingDays = company.WorkingDays,
+				OvertimePolicy = company.OvertimePolicy,
+				CompanyOverview = company.CompanyOverview,
+				KeySkills = company.KeySkills,
+				WhyLoveWorkingHere = company.WhyLoveWorkingHere,
+				LogoUrl = company.LogoUrl,
+				Location = company.Location,
+				WorkType = company.WorkType,
+				Images = company.Images.Select(i => new ImageDto { ImageUrl = i.ImageUrl }).ToList()
+			};
+
+			return companyDto;
 		}
 	}
 }
