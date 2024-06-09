@@ -91,6 +91,9 @@ namespace EmployerService.Domain.Services
 			await _companyRepository.DeleteAsync(companyId);
 		}
 
+		// Post job by employer id
+
+
 
 
 
