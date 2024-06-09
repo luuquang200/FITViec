@@ -10,11 +10,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers().AddJsonOptions(x =>
-	x.JsonSerializerOptions.ReferenceHandler = null); 
+	x.JsonSerializerOptions.ReferenceHandler = null);
 
-// Configure the DbContext with SQL Server
+// Read connection string from environment variable
+var connectionString = Environment.GetEnvironmentVariable("ConnectionString");
+if (string.IsNullOrEmpty(connectionString))
+{
+	throw new Exception("Connection string is not set");
+}
+
+// Configure the DbContext with SQL Server using the connection string from environment variable
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+	options.UseSqlServer(connectionString));
 
 // Register the repository
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
