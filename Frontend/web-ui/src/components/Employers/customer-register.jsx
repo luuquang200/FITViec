@@ -21,8 +21,14 @@ import { useAuth } from "../../contexts/authContext";
 import { useNavigate, Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
+
+import { auth, db } from "../../firebase/firebase";
+import { setDoc, doc } from "firebase/firestore";
+
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+
 const CustomerRegister = () => {
-    const { userLoggedIn, setInSingUpInPage } = useAuth();
+    const { userLoggedIn, setIsRegistered, setInSingUpInPage } = useAuth();
 
     // state
     const [email, setEmail] = useState("");
@@ -36,6 +42,7 @@ const CustomerRegister = () => {
     const [companyName, setCompanyName] = useState("");
     const [workLocation, setWorkLocation] = useState("");
     const [checkEmail, setCheckEmail] = useState(false);
+    const [gender, setGender] = useState("");
     // error
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
@@ -45,12 +52,79 @@ const CustomerRegister = () => {
     const [companyNameError, setCompanyNameError] = useState(false);
     const [workLocationError, setWorkLocationError] = useState(false);
 
+    const [isRegistering, setIsRegistering] = useState(false);
+
     useEffect(() => {
         setInSingUpInPage(true);
         return () => setInSingUpInPage(false); // Reset the state when the component is unmounted
     }, [setInSingUpInPage]);
 
     // validate
+
+    const handleRegister = async (e) => {
+        e.preventDefault();
+
+        if (!isRegistering) {
+            setIsRegistering(true);
+            try {
+                const userCred = await createUserWithEmailAndPassword(
+                    auth,
+                    email,
+                    password,
+                );
+
+                const user = userCred.user;
+
+                // Update the user's profile
+                await updateProfile(user, {
+                    displayName: fullName,
+                    disabled: true,
+                });
+
+                // Store user role in Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    displayName: fullName,
+                    email: user.email,
+                    role: "employer", // role employer
+                });
+
+                setIsRegistered(true);
+                toast.success(
+                    "Registration successful! Please wait for account activation by an administrator.",
+                );
+            } catch (error) {
+                handleAuthError(error);
+            } finally {
+                setIsRegistering(false);
+            }
+        }
+    };
+
+    const handleAuthError = (error) => {
+        switch (error.code) {
+            case "auth/email-already-in-use":
+                toast.error(
+                    "Oops! This email address is already in sue, please try again",
+                );
+                break;
+            case "auth/invalid-email":
+                toast.error(
+                    "Oops! This email address invalid, please try again",
+                );
+                break;
+            case "auth/operation-not-allowed":
+                toast.error("Oops! Operation not allowed, please try again");
+                break;
+            case "auth/weak-password":
+                toast.error(
+                    "Oops! This password is too weak, please try again",
+                );
+                break;
+            default:
+                toast.error(`Registration failed: ${error.message}`);
+                break;
+        }
+    };
 
     const validateEmail = (email) => {
         if (!email) {
@@ -516,26 +590,27 @@ const CustomerRegister = () => {
                                         </label>
                                     </div>
                                     <RadioGroup
-                                        defaultValue="option-one"
+                                        value={gender}
+                                        onValueChange={(value) => {
+                                            setGender(value);
+                                        }}
                                         className="flex gap-4"
                                     >
                                         <div className="flex items-center space-x-2">
                                             <RadioGroupItem
-                                                value="option-one"
-                                                id="option-one"
+                                                value="male"
+                                                id="male"
                                                 className="border-gray-700 text-blue-700"
                                             />
-                                            <Label htmlFor="option-one">
-                                                Male
-                                            </Label>
+                                            <Label htmlFor="male">Male</Label>
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <RadioGroupItem
-                                                value="option-two"
-                                                id="option-two"
+                                                value="female"
+                                                id="female"
                                                 className="border-gray-700 text-blue-700"
                                             />
-                                            <Label htmlFor="option-two">
+                                            <Label htmlFor="female">
                                                 Female
                                             </Label>
                                         </div>
@@ -752,7 +827,20 @@ const CustomerRegister = () => {
                                 emailError ||
                                 passwordError ||
                                 !email ||
-                                !password
+                                !password ||
+                                !confirmPassword ||
+                                !fullName ||
+                                !phone ||
+                                !companyName ||
+                                !workLocation ||
+                                !gender ||
+                                confirmPasswordError ||
+                                fullNameError ||
+                                phoneError ||
+                                companyNameError ||
+                                workLocationError ||
+                                !checkEmail ||
+                                isRegistering
                                     ? "bg-gray-400 "
                                     : "bg-red-500 hover:bg-red-700"
                             }`}
@@ -760,10 +848,29 @@ const CustomerRegister = () => {
                                 emailError ||
                                 passwordError ||
                                 !email ||
-                                !password
+                                !password ||
+                                !confirmPassword ||
+                                !fullName ||
+                                !phone ||
+                                !companyName ||
+                                !workLocation ||
+                                !gender ||
+                                confirmPasswordError ||
+                                fullNameError ||
+                                phoneError ||
+                                companyNameError ||
+                                workLocationError ||
+                                !checkEmail ||
+                                isRegistering
                             }
+                            onClick={handleRegister}
                         >
-                            <span>Register</span>
+                            <span>
+                                {" "}
+                                {isRegistering
+                                    ? "Loading..."
+                                    : "Register Employer"}
+                            </span>
                         </button>
                     </div>
                 </div>

@@ -26,6 +26,7 @@ export function AuthProvider({ children }) {
     }, []);
 
     async function initializeUser(user) {
+        console.log(user);
         if (user) {
             // check if the auth provider is google or not
             const isGoogle = user.providerData.some(

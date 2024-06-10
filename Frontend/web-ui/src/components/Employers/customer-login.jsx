@@ -306,7 +306,7 @@ const CustomerLogin = () => {
                                     target="_blank"
                                     className="text-blue-700 hover:text-blue-900"
                                 >
-                                    Register now
+                                    Register Employer Now
                                 </a>
                             </div>
                             <div className="my-4 flex items-center py-4">
