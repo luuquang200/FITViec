@@ -7,12 +7,14 @@ import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import lombok.AllArgsConstructor;
 import org.example.jobsearchservice.constant.FilterBy;
+import org.example.jobsearchservice.constant.JobStatus;
 import org.example.jobsearchservice.dto.EmployerInfo;
 import org.example.jobsearchservice.dto.EventData;
 import org.example.jobsearchservice.dto.UpdateResponse;
 import org.example.jobsearchservice.repository.JobRepository;
 import org.example.jobsearchservice.repository.model.Job;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -34,20 +36,8 @@ public class JobSearchServiceImpl implements JobSearchService {
   @Override
   public Job Insert(EventData data) {
     System.out.println(data.getJobId());
-    // Call API from employer service, by job.employerId
-    EmployerInfo employerInfo = new EmployerInfo(
-        "Hansen Technologies",
-        "Hansen Technologies Limited",
-        "https://itviec.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBKzU2TWc9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--8e742bd0e69c208965fc50909defe9ab3c64c42b/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJY0c1bkJqb0dSVlE2RW5KbGMybDZaVjkwYjE5bWFYUmJCMmtCcWpBPSIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--79eee5883893a012786006950460867831e6f661/image_2023_02_16T04_32_21_317Z.png",
-        "IT Product",
-        "151-300 employees",
-        "Australia",
-        "Monday - Friday",
-        "No OT"
-    );
     Job job = new Job();
     this.CopyData(data, job);
-    job.setEmployerInfo(employerInfo);
     return this.repository.save(job);
   }
   @Override
@@ -80,11 +70,21 @@ public class JobSearchServiceImpl implements JobSearchService {
     return job;
   }
   @Override
+  public List<Job> GetAll() throws IOException {
+    MatchAllQuery query = new MatchAllQuery.Builder().build();
+    Supplier<Query> supplier = () -> Query.of(_q -> _q.matchAll(query));
+    SearchRequest searchRequest = SearchRequest.of(s -> s.index(indexName).query(supplier.get()));
+    SearchResponse<Job> searchResponse = this.elasticsearchClient.search(searchRequest, Job.class);
+    return this.GetSearchResponseData(searchResponse);
+  }
+
+  @Override
   public List<Job> Search(org.example.jobsearchservice.dto.SearchRequest request) throws IOException {
     List<String> fields = this.GetListFieldsForSearching();
     Query multiMatchQuery = new MultiMatchQuery.Builder().query(request.query).fields(fields).build()._toQuery();
     Query filterLocation = this.GetQueryForJobLocation(request.jobLocation);
-    BoolQuery boolQuery = QueryBuilders.bool().must(multiMatchQuery, filterLocation).build();
+    Query filterApproved = this.GetQueryForFilterApprovedJobs();
+    BoolQuery boolQuery = QueryBuilders.bool().must(multiMatchQuery, filterLocation, filterApproved).build();
     Supplier<Query> supplier = () -> Query.of(_q -> _q.bool(boolQuery));
     SearchRequest searchRequest = SearchRequest.of(s -> s.index(indexName).query(supplier.get()));
     SearchResponse<Job> searchResponse = this.elasticsearchClient.search(searchRequest, Job.class);
@@ -104,19 +104,25 @@ public class JobSearchServiceImpl implements JobSearchService {
   private Supplier<Query> CreateSupplierQueryForSearch(String fieldName, String value) {
     if (fieldName.equals(FilterBy.JOB_SKILLS) || fieldName.equals(FilterBy.JOB_TITLE)
         || fieldName.equals(FilterBy.COMPANY) || fieldName.equals(FilterBy.COPANY_ID)) {
-      MatchQuery query = new MatchQuery.Builder().query(value).field(fieldName).build();
-      return () -> Query.of(_q -> _q.match(query));
+      Query query = new MatchQuery.Builder().query(value).field(fieldName).build()._toQuery();
+      Query filterApproved = this.GetQueryForFilterApprovedJobs();
+      BoolQuery boolQuery = QueryBuilders.bool().must(query, filterApproved).build();
+      return () -> Query.of(_q -> _q.bool(boolQuery));
     } else if (fieldName.equals(FilterBy.LOCATION)) {
       if (value.equalsIgnoreCase("ho chi minh")
           || value.toLowerCase(Locale.ROOT).equals("ha noi")
           || value.toLowerCase(Locale.ROOT).equals("da nang")) {
-        MatchQuery query = new MatchQuery.Builder().query(value).field(fieldName).build();
-        return () -> Query.of(_q -> _q.match(query));
+        Query query = new MatchQuery.Builder().query(value).field(fieldName).build()._toQuery();
+        Query filterApproved = this.GetQueryForFilterApprovedJobs();
+        BoolQuery boolQuery = QueryBuilders.bool().must(query, filterApproved).build();
+        return () -> Query.of(_q -> _q.bool(boolQuery));
       } else if (value.toLowerCase(Locale.ROOT).equals("others")) {
         Query qHcm = new MatchQuery.Builder().query("ho chi minh").field(FilterBy.LOCATION).build()._toQuery();
         Query qHn = new MatchQuery.Builder().query("ha noi").field(FilterBy.LOCATION).build()._toQuery();
         Query qDn = new MatchQuery.Builder().query("da nang").field(FilterBy.LOCATION).build()._toQuery();
-        BoolQuery boolQuery = new BoolQuery.Builder().mustNot(qHcm, qHn, qDn).build();
+        Query query = new BoolQuery.Builder().mustNot(qHcm, qHn, qDn).build()._toQuery();
+        Query filterApproved = this.GetQueryForFilterApprovedJobs();
+        BoolQuery boolQuery = QueryBuilders.bool().must(query, filterApproved).build();
         return () -> Query.of(_q -> _q.bool(boolQuery));
       }
     }
@@ -163,8 +169,12 @@ public class JobSearchServiceImpl implements JobSearchService {
     }
     return null;
   }
+  private Query GetQueryForFilterApprovedJobs() {
+    return new MatchQuery.Builder().query(JobStatus.APPROVED).field("jobStatus").build()._toQuery();
+  }
   private void CopyData(EventData data, Job job) {
     job.setJobId(data.getJobId());
+    job.setJobStatus(data.getJobStatus());
     job.setEmployerId(data.getEmployerId());
     job.setJobSalary(data.getJobSalary());
     job.setJobTitle(data.getJobTitle());
@@ -177,6 +187,7 @@ public class JobSearchServiceImpl implements JobSearchService {
     job.setJobResponsibility(data.getJobResponsibility());
     job.setJobRequirement(data.getJobRequirement());
     job.setJobBenefit(data.getJobBenefit());
+    job.setEmployerInfo(data.getEmployerInfo());
   }
   private List<String> GetListFieldsForSearching() {
     List<String> fields = new ArrayList<>();

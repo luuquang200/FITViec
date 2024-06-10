@@ -32,6 +32,7 @@ export const doSignInWithGoogle = async () => {
                 displayName: user.displayName,
             });
         }
+        console.log(user);
 
         return user;
     } catch (error) {

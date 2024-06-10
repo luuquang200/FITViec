@@ -1,5 +1,7 @@
 package com.example.jobservice.dto;
 
+import com.example.jobservice.repository.dao.EmployerInfo;
+
 public class CUJobDto {
   public String employerId;
   public String jobSalary;
@@ -12,4 +14,5 @@ public class CUJobDto {
   public String jobResponsibility;
   public String jobRequirement;
   public String jobBenefit;
+  public EmployerInfo employerInfo;
 }

@@ -57,4 +57,8 @@ public class JobController {
     System.out.println(jobLocation.value);
     return ResponseEntity.ok(this.service.GetJobsByOneField(FilterBy.LOCATION, jobLocation.value));
   }
+  @GetMapping("/admin")
+  public ResponseEntity<List<Job>> GetAllJobsForAdmin() throws IOException {
+    return ResponseEntity.ok(this.service.GetAll());
+  }
 }

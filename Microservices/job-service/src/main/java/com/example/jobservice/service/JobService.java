@@ -11,4 +11,6 @@ public interface JobService {
   Job Create(CUJobDto data);
   UpdateResponse Update(String employerId, String jobId, CUJobDto data);
   UpdateResponse Delete(String employerId, String jobId);
+  UpdateResponse ApproveJob(String jobId);
+  UpdateResponse RejectJob(String jobId);
 }
