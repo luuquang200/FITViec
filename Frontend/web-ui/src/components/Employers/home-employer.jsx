@@ -38,7 +38,7 @@ const HomeEmployer = () => {
                                                 navigate("/customer/register")
                                             }
                                         >
-                                            Register
+                                            Register Employer
                                         </button>
                                         <div className="mt-8 flex flex-col items-center lg:flex-row">
                                             <p className="mb-2 text-gray-300 lg:mb-0 lg:mr-1">
@@ -216,7 +216,7 @@ const HomeEmployer = () => {
                                             navigate("/customer/register")
                                         }
                                     >
-                                        Register
+                                        Register Employer
                                     </button>
                                 </div>
                             </div>
