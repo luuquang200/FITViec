@@ -4,17 +4,23 @@ using EmployerService.Infrastructure.Repositories;
 using EmployerService.Domain.Services;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers().AddJsonOptions(x =>
-	x.JsonSerializerOptions.ReferenceHandler = null); 
+	x.JsonSerializerOptions.ReferenceHandler = null);
 
-// Configure the DbContext with SQL Server
+// Get the path to the certificate
+var certPath = Path.Combine(builder.Environment.ContentRootPath, "certs", "DigiCertGlobalRootCA.crt.pem");
+
+// Configure the DbContext with MySQL using Pomelo
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+	var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+	options.UseMySql(connectionString.Replace("certs/DigiCertGlobalRootCA.crt.pem", certPath), new MySqlServerVersion(new Version(8, 0, 28)));
+});
 
 // Register the repository
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
@@ -28,10 +34,10 @@ builder.Services.AddHttpClient();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//builder.WebHost.ConfigureKestrel(options =>
-//{
-//	options.ListenAnyIP(8080);
-//});
+builder.WebHost.ConfigureKestrel(options =>
+{
+	options.ListenAnyIP(8080);
+});
 
 var app = builder.Build();
 

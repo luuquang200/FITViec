@@ -60,27 +60,43 @@ namespace EmployerService.Infrastructure.Repositories
 		}
 		public async Task<List<CompanyDto>> GetAllCompaniesAsync()
 		{
-			return await _context.Companies
-				.Include(c => c.Images)
-				.Select(c => new CompanyDto
+			try
+			{
+				var companies = await _context.Companies
+					.Include(c => c.Images)
+					.ToListAsync();
+				var companyDtos = new List<CompanyDto>();
+				foreach (var company in companies)
 				{
-					CompanyId = c.CompanyId,
-					EmployerId = c.EmployerId,
-					CompanyName = c.CompanyName,
-					CompanyType = c.CompanyType,
-					CompanySize = c.CompanySize,
-					Country = c.Country,
-					WorkingDays = c.WorkingDays,
-					OvertimePolicy = c.OvertimePolicy,
-					CompanyOverview = c.CompanyOverview,
-					KeySkills = c.KeySkills,
-					WhyLoveWorkingHere = c.WhyLoveWorkingHere,
-					LogoUrl = c.LogoUrl,
-					Location = c.Location,
-					WorkType = c.WorkType,
-					Images = c.Images.Select(i => new ImageDto { ImageUrl = i.ImageUrl }).ToList()
-				})
-				.ToListAsync(); 
+					var companyDto = new CompanyDto
+					{
+						CompanyId = company.CompanyId,
+						EmployerId = company.EmployerId,
+						CompanyName = company.CompanyName,
+						CompanyType = company.CompanyType,
+						CompanySize = company.CompanySize,
+						Country = company.Country,
+						WorkingDays = company.WorkingDays,
+						OvertimePolicy = company.OvertimePolicy,
+						CompanyOverview = company.CompanyOverview,
+						KeySkills = company.KeySkills,
+						WhyLoveWorkingHere = company.WhyLoveWorkingHere,
+						LogoUrl = company.LogoUrl,
+						Location = company.Location,
+						WorkType = company.WorkType,
+						Images = company.Images.Select(i => new ImageDto
+						{
+							ImageUrl = i.ImageUrl
+						}).ToList()
+					};
+					companyDtos.Add(companyDto);
+				}
+				return companyDtos;
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
 		}
 	}
 }

@@ -18,6 +18,7 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "PORT": "8080",
         "ConnectionString": "Server=35.239.142.227;Initial Catalog=employer-service-db;User Id=admin-dev;Password=quangluu123;"
       }
     },
