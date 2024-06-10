@@ -6,7 +6,9 @@ import { EyeOff } from "lucide-react";
 import { useAuth } from "../../contexts/authContext";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
-import { auth } from "../../firebase/firebase";
+import { auth, db } from "../../firebase/firebase";
+
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 import { useNavigate, Navigate } from "react-router-dom";
 
@@ -33,28 +35,50 @@ const CustomerLogin = () => {
         return () => setInSingUpInPage(false); // Reset the state when the component is unmounted
     }, [setInSingUpInPage]);
 
+    const checkUserRole = async (email) => {
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("email", "==", email));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+            const userData = querySnapshot.docs[0].data();
+            return userData.role;
+        } else {
+            throw new Error("No such user!");
+        }
+    };
+
     const handleSignIn = async (e) => {
         e.preventDefault();
 
         if (!isSigningIn) {
             setisSigningIn(true);
             try {
-                await signInWithEmailAndPassword(auth, email, password).then(
-                    async (userCred) => {
+                const role = await checkUserRole(email);
+                if (role === "employer") {
+                    await signInWithEmailAndPassword(
+                        auth,
+                        email,
+                        password,
+                    ).then(async (userCred) => {
                         const user = userCred.user;
                         if (user.emailVerified) {
                             toast.success(
-                                "Successfully authenticated from Email & Password account.",
+                                "Successfully authenticated ! Welcome to the FITviec employer page",
                             );
-                            // Điều hướng tới home sau khi đăng nhập  thành công
+                            // Điều hướng tới home sau khi đăng nhập  thành công, để tạm tại vì chưa có UI employer
                             navigate(`/`);
                         } else {
                             toast.error(
-                                "Please verify your email before login ",
+                                "Please wait An administrator verify your information & contact with you  ! ",
                             );
                         }
-                    },
-                );
+                    });
+                } else {
+                    toast.error(
+                        " Oops! This email address doesn't exist, please try again ",
+                    );
+                }
             } catch (error) {
                 handleAuthError(error);
             } finally {
@@ -107,12 +131,12 @@ const CustomerLogin = () => {
                 break;
             case "auth/wrong-password":
                 toast.error(
-                    "Oops! This account incorrect password , please try again ",
+                    "Oops! This account has incorrect password, please try again",
                 );
                 break;
             case "auth/invalid-email":
                 toast.error(
-                    "Oops! This email address invalid, please try again",
+                    "Oops! This email address is invalid, please try again",
                 );
                 break;
             case "auth/user-disabled":
@@ -122,7 +146,7 @@ const CustomerLogin = () => {
                 break;
             case "auth/invalid-credential":
                 toast.error(
-                    "Oops! Invalid credentials provided., please try again ",
+                    "Oops! Invalid credentials provided, please try again",
                 );
                 break;
             default:
@@ -133,6 +157,7 @@ const CustomerLogin = () => {
 
     return (
         <Container className="h-vh-employer-login w-full max-w-full">
+            {userLoggedIn && <Navigate to={"/"} replace={true} />}
             <div className="grid h-full w-full grid-cols-2 xl:grid-rows-1">
                 {/* Left */}
                 <div className="flex h-full items-center justify-center bg-linear-gradient-logo text-center ">
