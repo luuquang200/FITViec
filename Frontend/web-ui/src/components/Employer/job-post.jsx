@@ -63,9 +63,9 @@ const JobPost = () => {
               Job Title
               <span className="text-red-500 ml-1">*</span>
             </label>
-            {errors.job_title && (
-              <span className="text-red-600">This field is required</span>
-            )}
+          {errors.job_title && (
+            <span className="px-3 text-red-600">This field is required</span>
+          )}
           </div>
 
           <div className="relative mb-6">
@@ -84,7 +84,7 @@ const JobPost = () => {
               <span className="text-red-500 ml-1">*</span>
             </label>
             {errors.job_location && (
-              <span className="text-red-600">This field is required</span>
+              <span className="px-3 text-red-600">This field is required</span>
             )}
           </div>
           <div className="relative mb-6">
@@ -103,7 +103,7 @@ const JobPost = () => {
               <span className="text-red-500 ml-1">*</span>
             </label>
             {errors.job_type && (
-              <span className="text-red-600">This field is required</span>
+              <span className="px-3 text-red-600">This field is required</span>
             )}
           </div>
           <div className="relative mb-6">
@@ -122,7 +122,7 @@ const JobPost = () => {
               <span className="text-red-500 ml-1">*</span>
             </label>
             {errors.job_salary && (
-              <span className="text-red-600">This field is required</span>
+              <span className="px-3 text-red-600">This field is required</span>
             )}
           </div>
 
@@ -142,7 +142,7 @@ const JobPost = () => {
               <span className="text-red-500 ml-1">*</span>
             </label>
             {errors.job_skills && (
-              <span className="text-red-600">This field is required</span>
+              <span className="px-3 text-red-600">This field is required</span>
             )}
           </div>
 
@@ -162,7 +162,7 @@ const JobPost = () => {
               <span className="text-red-500 ml-1">*</span>
             </label>
             {errors.job_top_reasons && (
-              <span className="text-red-600">This field is required</span>
+              <span className="px-3 text-red-600">This field is required</span>
             )}
           </div>
 
@@ -183,7 +183,7 @@ const JobPost = () => {
               <span className="text-red-500 ml-1">*</span>
             </label>
             {errors.job_benefits && (
-              <span className="text-red-600">This field is required</span>
+              <span className="px-3 text-red-600">This field is required</span>
             )}
           </div>
         </div>
@@ -192,8 +192,10 @@ const JobPost = () => {
           <div>
             <label htmlFor="job_description" className="block mb-2 font-medium">
               Job Description
+              <span className="text-red-500 ml-1">*</span>
             </label>
             <CKEditor
+              {...register("job_description", { required: true }) }
               onReady={(editor) => {
                 editor.editing.view.change((writer) => {
                   writer.setStyle(
@@ -210,6 +212,9 @@ const JobPost = () => {
               }}
               className="border border-gray-300 rounded-lg"
             />
+            {errors.job_description && (
+              <span className="text-red-600">This field is required</span>
+            )}
           </div>
 
           <div>
@@ -218,8 +223,10 @@ const JobPost = () => {
               className="block mb-2 font-medium"
             >
               Job Responsibility
+              <span className="text-red-500 ml-1">*</span>
             </label>
             <CKEditor
+              {...register("job_responsibility", { required: true }) }
               onReady={(editor) => {
                 editor.editing.view.change((writer) => {
                   writer.setStyle(
@@ -236,6 +243,9 @@ const JobPost = () => {
               }}
               className="border border-gray-300 rounded-lg"
             />
+            {errors.job_responsibility && (
+              <span className="text-red-600">This field is required</span>
+            )}
           </div>
 
           <div>
@@ -244,8 +254,10 @@ const JobPost = () => {
               className="block mb-2 font-medium"
             >
               Job Requirements
+              <span className="text-red-500 ml-1">*</span>
             </label>
             <CKEditor
+              {...register("job_requirements", { required: true }) }
               onReady={(editor) => {
                 editor.editing.view.change((writer) => {
                   writer.setStyle(
@@ -258,10 +270,13 @@ const JobPost = () => {
               editor={ClassicEditor}
               data=""
               onChange={(event, editor) => {
-                console.log(setJobRequirements(editor.getData()));
+                setJobRequirements(editor.getData());
               }}
               className="border border-gray-300 rounded-lg"
             />
+            {errors.job_requirements && (
+              <span className="text-red-600">This field is required</span>
+            )}
           </div>
         </div>
 
