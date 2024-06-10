@@ -1,5 +1,7 @@
-# Use the official .NET image as a build environment
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
+# Use the official .NET 6 SDK as a build stage
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+
+# Set the working directory
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
@@ -10,8 +12,17 @@ RUN dotnet restore
 COPY . ./
 RUN dotnet publish -c Release -o out
 
-# Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+# Use the official ASP.NET runtime as the base image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
+
+# Set the working directory
 WORKDIR /app
-COPY --from=build-env /app/out .
+
+# Copy the build output
+COPY --from=build /app/out ./
+
+# Expose port 8080
+EXPOSE 8080
+
+# Set the entry point for the application
 ENTRYPOINT ["dotnet", "EmployerService.dll"]
