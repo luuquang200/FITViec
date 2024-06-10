@@ -30,6 +30,8 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 const CustomerRegister = () => {
     const { userLoggedIn, setIsRegistered, setInSingUpInPage } = useAuth();
 
+    const navigate = useNavigate();
+
     // state
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -59,8 +61,6 @@ const CustomerRegister = () => {
         return () => setInSingUpInPage(false); // Reset the state when the component is unmounted
     }, [setInSingUpInPage]);
 
-    // validate
-
     const handleRegister = async (e) => {
         e.preventDefault();
 
@@ -78,20 +78,24 @@ const CustomerRegister = () => {
                 // Update the user's profile
                 await updateProfile(user, {
                     displayName: fullName,
-                    disabled: true,
+                    phoneNumber: phone,
                 });
 
                 // Store user role in Firestore
                 await setDoc(doc(db, "users", user.uid), {
                     displayName: fullName,
                     email: user.email,
+                    gender: gender,
+                    phoneNumber: phone,
+                    company: companyName,
+                    workLocation: workLocation,
                     role: "employer", // role employer
                 });
-
                 setIsRegistered(true);
                 toast.success(
-                    "Registration successful! Please wait for account activation by an administrator.",
+                    "Registration successful! You'll receive a mail if approved by the administrator",
                 );
+                navigate(`/customer/notification`);
             } catch (error) {
                 handleAuthError(error);
             } finally {
@@ -99,6 +103,8 @@ const CustomerRegister = () => {
             }
         }
     };
+
+    // validate
 
     const handleAuthError = (error) => {
         switch (error.code) {
@@ -230,6 +236,7 @@ const CustomerRegister = () => {
 
     return (
         <Container className="w-full max-w-full">
+            {userLoggedIn && <Navigate to={"/"} replace={true} />}
             <div className="grid h-full w-full grid-cols-3 xl:grid-rows-1">
                 {/* Left */}
                 <div className="bg-content col-span-2 h-full w-full bg-itviec-register-employer bg-bottom bg-no-repeat">
