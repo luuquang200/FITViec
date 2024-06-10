@@ -25,6 +25,7 @@ import EmployerContainer from "./components/Employer/employer-container";
 import CVViewer from "./components/Employer/cv-detail";
 import CustomerLogin from "./components/Employers/customer-login";
 import CustomerRegister from "./components/Employers/customer-register";
+import VerifyEmployer from "./components/Employers/verify-employer";
 
 function App() {
     return (
@@ -57,7 +58,6 @@ function App() {
                     element={<JobDetailGuestPage />}
                 />
                 <Route path="/profile-cv" element={<ProfileManagement />} />
-                <Route path="/profile-cv" element={<ProfileManagement />} />
                 <Route
                     path="/verify_email"
                     element={
@@ -66,6 +66,7 @@ function App() {
                         </ProtectedRouteVerify>
                     }
                 />
+
                 <Route path="/forgot_password" element={<ForgotPassword />} />
                 <Route path="/account_action" element={<AccountAction />} />
                 <Route path="/for-employers" element={<HomeEmployer />} />
@@ -73,6 +74,14 @@ function App() {
                 <Route
                     path="/customer/register"
                     element={<CustomerRegister />}
+                />
+                <Route
+                    path="/customer/notification"
+                    element={
+                        // <ProtectedRouteVerify>
+                        <VerifyEmployer />
+                        // </ProtectedRouteVerify>
+                    }
                 />
             </Routes>
             <Footer />
