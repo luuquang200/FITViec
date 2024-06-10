@@ -124,7 +124,9 @@ const ForgotPassword = () => {
                             required
                         />
                         {emailError && (
-                            <span className="text-red-500">{emailError}</span>
+                            <span className="font-semibold text-red-500">
+                                {emailError}
+                            </span>
                         )}
                     </div>
 

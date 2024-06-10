@@ -212,7 +212,9 @@ const SignIn = () => {
                             required
                         />
                         {emailError && (
-                            <span className="text-red-500">{emailError}</span>
+                            <span className="font-semibold text-red-500">
+                                {emailError}
+                            </span>
                         )}
                     </div>
                     <div className="mb-6">
@@ -276,7 +278,7 @@ const SignIn = () => {
                             />
                         </div>
                         {passwordError && (
-                            <span className="text-red-500">
+                            <span className="font-semibold text-red-500">
                                 {passwordError}
                             </span>
                         )}

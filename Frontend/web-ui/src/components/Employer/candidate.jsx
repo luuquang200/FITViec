@@ -1,139 +1,402 @@
-import { Link } from 'react-router-dom';
-import {Mail, Phone} from 'lucide-react'
-const candidates = [
+import { useState, useEffect } from 'react';
+import {  ChevronFirst, ChevronLast, ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import CandidateItem from './candidate-item';
+
+const exCandidates = [
   {
     initials: 'MA',
     name: 'Nguyễn Thu Huyền',
-    status: 'Chưa xem',
-    campaign: 'Chiến dịch tuyển Nhà ...',
-    campaignId: '#408580',
+    jobName: 'Chiến dịch tuyển Nhà , Tuyển nhân viên kế toán Ngân hàng ABCD...',
+    jobId: '#408580',
     email: 'banglangtim@gmail.com',
-    phone: '0946765876',
-    insights: ['Ứng tuyển', '05/06/2023 14:38', 'Nhân viên kinh doanh'],
-    statusLabel: 'CV tiếp nhận',
+    appliedAt: '05/06/2023 14:38',
+    status: 'CV tiếp nhận',
   },
   {
-    initials: 'TT',
-    name: 'Trần Đông Thành',
-    status: 'Đã xem',
-    campaign: 'Tuyển nhân viên kinh ...',
-    campaignId: '#408583',
-    email: 'thanh.td@gmail.com',
-    phone: '0962636803',
-    insights: ['Ứng tuyển', '01/06/2023 15:59'],
-    statusLabel: 'CV tiếp nhận',
+    initials: 'TK',
+    name: 'Trần Hữu Khoa',
+    jobName: 'Tuyển nhân viên kế toán Ngân hàng ABCD ...',
+    jobId: '#408583',
+    email: 'thuukhoa@gmail.com',
+    appliedAt: '01/06/2023 15:59',
+    status: 'CV tiếp nhận',
+  },
+  {
+    initials: 'MA',
+    name: 'Nguyễn Thanh Thúy',
+    jobName: 'Chiến dịch tuyển Chọn ...',
+    jobId: '#408580',
+    email: 'banglthanhthuy@gmail.com',
+    appliedAt: '05/06/2023 14:38',
+    status: 'CV tiếp nhận',
+  },
+  {
+    initials: 'VB',
+    name: 'Trần Văn Bá',
+    jobName: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng ABCD Tuyển nhân viên kinh',
+    jobId: '#408583',
+    email: 'thanh.vb@gmail.com',
+    appliedAt: '01/06/2023 15:59',
+    status: 'CV tiếp nhận',
   },
   {
     initials: 'TT',
     name: 'Trần Thanh Tâm',
-    status: 'Đã xem',
-    campaign: 'Tuyển Tester',
-    campaignId: '#408580',
+    jobName: 'Tuyển Tester',
+    jobId: '#408580',
     email: 'thanh.td@gmail.com',
-    phone: '0962636803',
-    insights: ['Ứng tuyển', '01/06/2023 15:59'],
-    statusLabel: 'CV tiếp nhận',
+    appliedAt: '01/06/2023 15:59',
+    status: 'CV tiếp nhận',
   },
   {
     initials: 'BT',
     name: 'Phạm Quang Bình',
-    status: 'Đã xem',
-    campaign: 'Tuyển C&B',
-    campaignId: '#408589',
+    jobName: 'Tuyển C&B',
+    jobId: '#408589',
     email: 'binhpham@gmail.net',
-    phone: '0889245166',
-    insights: ['Ứng tuyển', '01/06/2023 15:59'],
-    statusLabel: 'CV tiếp nhận',
+    appliedAt: '01/06/2023 15:59',
+    status: 'CV tiếp nhận',
+  },
+  {
+    initials: 'MA',
+    name: 'Nguyễn Thu Huyền',
+    jobName: 'Chiến dịch tuyển Nhà , Tuyển nhân viên kế toán Ngân hàng ABCD...',
+    jobId: '#408580',
+    email: 'banglangtim@gmail.com',
+    appliedAt: '05/06/2023 14:38',
+    status: 'CV tiếp nhận',
+  },
+  {
+    initials: 'TK',
+    name: 'Trần Hữu Khoa',
+    jobName: 'Tuyển nhân viên kế toán Ngân hàng ABCD ...',
+    jobId: '#408583',
+    email: 'thuukhoa@gmail.com',
+    appliedAt: '01/06/2023 15:59',
+    status: 'CV tiếp nhận',
+  },
+  {
+    initials: 'MA',
+    name: 'Nguyễn Thanh Thúy',
+    jobName: 'Chiến dịch tuyển Chọn ...',
+    jobId: '#408580',
+    email: 'banglthanhthuy@gmail.com',
+    appliedAt: '05/06/2023 14:38',
+    status: 'CV tiếp nhận',
+  },
+  {
+    initials: 'VB',
+    name: 'Trần Văn Bá',
+    jobName: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng ABCD Tuyển nhân viên kinh',
+    jobId: '#408583',
+    email: 'thanh.vb@gmail.com',
+    appliedAt: '01/06/2023 15:59',
+    status: 'CV tiếp nhận',
+  },
+  {
+    initials: 'TT',
+    name: 'Trần Thanh Tâm',
+    jobName: 'Tuyển Tester',
+    jobId: '#408580',
+    email: 'thanh.td@gmail.com',
+    appliedAt: '01/06/2023 15:59',
+    status: 'CV tiếp nhận',
+  },
+  {
+    initials: 'BT',
+    name: 'Phạm Quang Bình',
+    jobName: 'Tuyển C&B',
+    jobId: '#408589',
+    email: 'binhpham@gmail.net',
+    appliedAt: '01/06/2023 15:59',
+    status: 'CV tiếp nhận',
+  },
+  {
+    initials: 'MA',
+    name: 'Nguyễn Thu Huyền',
+    jobName: 'Chiến dịch tuyển Nhà , Tuyển nhân viên kế toán Ngân hàng ABCD...',
+    jobId: '#408580',
+    email: 'banglangtim@gmail.com',
+    appliedAt: '05/06/2023 14:38',
+    status: 'CV tiếp nhận',
+  },
+  {
+    initials: 'TK',
+    name: 'Trần Hữu Khoa',
+    jobName: 'Tuyển nhân viên kế toán Ngân hàng ABCD ...',
+    jobId: '#408583',
+    email: 'thuukhoa@gmail.com',
+    appliedAt: '01/06/2023 15:59',
+    status: 'CV tiếp nhận',
+  },
+  {
+    initials: 'MA',
+    name: 'Nguyễn Thanh Thúy',
+    jobName: 'Chiến dịch tuyển Chọn ...',
+    jobId: '#408580',
+    email: 'banglthanhthuy@gmail.com',
+    appliedAt: '05/06/2023 14:38',
+    status: 'CV tiếp nhận',
+  },
+  {
+    initials: 'VB',
+    name: 'Trần Văn Bá',
+    jobName: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng ABCD Tuyển nhân viên kinh',
+    jobId: '#408583',
+    email: 'thanh.vb@gmail.com',
+    appliedAt: '01/06/2023 15:59',
+    status: 'CV tiếp nhận',
+  },
+  {
+    initials: 'TT',
+    name: 'Trần Thanh Tâm',
+    jobName: 'Tuyển Tester',
+    jobId: '#408580',
+    email: 'thanh.td@gmail.com',
+    appliedAt: '01/06/2023 15:59',
+    status: 'CV tiếp nhận',
+  },
+  {
+    initials: 'BT',
+    name: 'Phạm Quang Bình',
+    jobName: 'Tuyển C&B',
+    jobId: '#408589',
+    email: 'binhpham@gmail.net',
+    appliedAt: '01/06/2023 15:59',
+    status: 'CV tiếp nhận',
   },
 ];
 
 const statusOptions = {
   'CV tiếp nhận': 'cv-received',
-  'Phù hợp': 'suitable',
   'Hẹn phỏng vấn': 'interview',
-  'Gửi đề nghị': 'offer-sent',
-  'Nhận việc': 'hired',
   'Từ chối': 'rejected'
 };
 
+const jobOptions = [
+  {
+    jobId: 'J001',
+    jobName: 'Nhân viên kinh doanh '
+  },
+  {
+    jobId: 'J002',
+    jobName: 'Lập trình viên'
+  },
+  {
+    jobId: 'J003',
+    jobName: 'Nhân viên thiết kế'
+  },
+  {
+    jobId: 'J004',
+    jobName: 'Nhân viên marketing'
+  },
+  {
+    jobId: 'J005',
+    jobName: 'Nhân viên chăm sóc khách hàng'
+  }
+];
+
 const Candidates = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('');
+  const [selectedJob, setSelectedJob] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState([]);
+  const [candidates, setCandidates] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const candidatesPerPage = 5;
+
+  useEffect(() => {
+    // const fetchCandidates = async () => {
+    //   setLoading(true);
+    //   try {
+    //     const response = await fetch(`your-api-endpoint?page=${currentPage}&perPage=${candidatesPerPage}`);
+    //     const data = await response.json();
+    //     setCandidates(data.candidates);
+    //     setTotalPages(data.totalPages);
+    //   } catch (error) {
+    //     console.error('Error fetching candidates:', error);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
+
+    // Fake API call for pagination
+    console.log('currentPage useEffect: ', currentPage);
+    const startIdx = (currentPage - 1) * candidatesPerPage;
+    const endIdx = startIdx + candidatesPerPage;
+    setCandidates(exCandidates.slice(startIdx, endIdx));
+    setTotalPages(Math.ceil(exCandidates.length / candidatesPerPage));
+    
+  }, [currentPage]);
+
+  const handleSearch = async () => {
+    setLoading(true);
+    try {
+      console.log("searchQuery: ", searchQuery, "- selctedStatus: ", selectedStatus);
+      const filteredCandidates = exCandidates.filter(candidate =>
+        candidate.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        (selectedStatus === '' || candidate.status === selectedStatus)
+      );
+      setResults(filteredCandidates);
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStatusChange = (e) => {
+    setSelectedStatus(e.target.value);
+  };
+
+  const handleJobChange = (e) => {
+    setSelectedJob(e.target.value);
+  };
+
+  const truncateText = (text, maxLength) => {
+    return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+  };
+
+  const handlePageChange = (newPage) => {
+    console.log("currentPage after change: ", newPage);
+    if (newPage > 0 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      
+    }
+  };
+  console.log("currentPage render: ", currentPage);
+  console.log("totalPage render: ", totalPages);
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-white mb-[60px]">
+      <h2 className="text-lg font-bold">Quản lý CV ứng viên</h2>
+      <br/>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold">Quản lý CV ứng viên</h2>
-        <input
-          type="text"
-          placeholder="Tìm kiếm tên, email, số điện thoại"
-          className="border rounded px-2 py-1 text-sm w-[30%]"
-        />
-        <div className="space-x-2">
-          <label  >Nhập trạng thái: </label>
-          <select className="border rounded px-2 py-1 text-sm">
-            
-            {Object.keys(statusOptions).map((status) => (
-              <option key={status} value={statusOptions[status]}>
-                {status}
-              </option>
-            ))}
-          </select>
-          
+        <div className="w-1/2">
+          <p>Tìm kiếm: </p>
+          <div className="flex space-x-2 items-center my-2">
+            <input
+              type="text"
+              placeholder="Tìm kiếm tên, email, số điện thoại"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="border rounded px-2 py-1 text-sm w-full"
+            />
+            <Search 
+              className="cursor-pointer text-gray-500 w-5 h-5"
+              onClick={handleSearch}
+            />
+          </div>
+        </div>
+        <div className="flex w-2/5 space-x-2">
+          <div className="w-1/2">
+            <p>Trạng thái: </p>
+            <select 
+              value={selectedStatus} 
+              onChange={handleStatusChange} 
+              className="border rounded px-2 py-1 my-2 text-sm w-full"
+            >
+              <option value="">Tất cả</option>
+              {Object.keys(statusOptions).map((status) => (
+                <option key={status} value={statusOptions[status]}>
+                  {status}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="w-1/2">
+            <p>Bài đăng: </p>
+            <select 
+              value={selectedJob} 
+              onChange={handleJobChange} 
+              className="border rounded px-2 py-1 my-2 text-sm w-full"
+            >
+              <option value="">Tất cả</option>
+              {jobOptions.map((job) => (
+                <option key={job.jobId} value={job.jobId} title={job.jobName}>
+                  {truncateText(job.jobName, 50)}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
-      
-      <div className="overflow-auto">
-        <table className="min-w-full border rounded">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="p-2 text-left">Ứng viên</th>
-              <th className="p-2 text-left">Chiến dịch</th>
-              <th className="p-2 text-left">Thông tin liên hệ</th>
-              <th className="p-2 text-left">Insights</th>
-              <th className="p-2 text-left">Trạng thái</th>
-            </tr>
-          </thead>
-          <tbody>
-            {candidates.map((candidate, index) => (
-              <tr key={index} className="border-t">
-                <td className="p-2 flex items-center">
-                  <div className={`w-10 h-10 flex items-center justify-center bg-gray-300 rounded-full text-white font-bold mr-2`}>
-                    {candidate.initials}
-                  </div>
-                  <div>
-                    <p>{candidate.name}</p>
-                    <p className="text-xs text-green-500">{candidate.status}</p>
-                  </div>
-                </td>
-                <td className="p-2">
-                  <p>{candidate.campaign}</p>
-                  <p className="text-xs text-gray-500">{candidate.campaignId}</p>
-                </td>
-                <td className="p-2">
-                    <div className="flex items-center mb-1">
-                        <span className='text-primary mr-2'><Mail size={12}/></span>
-                        <span>{candidate.email}</span>
-                    </div>
-                    <div className="flex items-center">
-                        <span className='text-primary mr-2'><Phone size={12}/></span>
-                        <span>{candidate.phone}</span>
-                    </div>
-                </td>
 
-                <td className="p-2">
-                  {candidate.insights.map((insight, i) => (
-                    <p key={i}>{insight}</p>
-                  ))}
-                </td>
-                <td className="p-2">
-                <Link to ={"/cv-detail"}> 
-                  <button className="text-blue-500 border border-blue-500 rounded px-2 py-1">
-                    {candidate.statusLabel} 
-                  </button></Link>
-                </td>
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="loader">Loading...</div>
+        </div>
+      ) : (
+        <div className="overflow-auto">
+          <table className="min-w-full border rounded">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="p-2 text-left">Ứng viên</th>
+                <th className="p-2 text-left">Bài đăng</th>
+                <th className="p-2 text-left">Thông tin liên hệ</th>
+                <th className="p-2 text-left">Ngày tiếp nhận</th>
+                <th className="p-2 text-left">Trạng thái</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {(results.length > 0 ? results : candidates).map((candidate, index) => (
+                <CandidateItem key={index} candidate={candidate} />
+              ))}
+              {results.length === 0 && candidates.length === 0 && (
+                <tr>
+                  <td colSpan="5" className="p-2 text-center">Không có kết quả tìm kiếm.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+          {/* Pagination */}
+          <div className="flex justify-center mt-4 space-x-2 sticky bottom-0">
+            <button
+              onClick={() => handlePageChange(1)}
+              className={`px-2 py-2 ${currentPage === 1 ? 'bg-gray-200' : 'bg-blue-500 text-white'}`}
+            >
+              <ChevronFirst />
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              className={`px-2 py-2 ${currentPage === 1 ? 'bg-gray-200' : 'bg-blue-500 text-white'}`}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft />
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => {
+              if (i + 1 === currentPage || i + 1 === 1 || i + 1 === totalPages) {
+                return (
+                  <button
+                    key={i}
+                    onClick={() => handlePageChange(i + 1)}
+                    className={`px-4 py-2 ${currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                  >
+                    {i + 1}
+                  </button>
+                );
+              } else if (i + 1 === currentPage - 2 || i + 1 === currentPage + 2) {
+                return <span key={i} className="px-4 py-2">...</span>;
+              }
+              return null;
+            })}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              className={`px-2 py-2 ${currentPage === totalPages ? 'bg-gray-200' : 'bg-blue-500 text-white'}`}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight />
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              className={`px-2 py-2 ${currentPage === totalPages ? 'bg-gray-200' : 'bg-blue-500 text-white'}`}
+            >
+             <ChevronLast />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
