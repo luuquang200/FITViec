@@ -1,11 +1,15 @@
 package org.example.jobsearchservice.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.example.jobsearchservice.config.firebase.UserInfo;
 import org.example.jobsearchservice.constant.FilterBy;
+import org.example.jobsearchservice.constant.Roles;
 import org.example.jobsearchservice.dto.GetDataRequest;
 import org.example.jobsearchservice.dto.SearchRequest;
 import org.example.jobsearchservice.repository.model.Job;
 import org.example.jobsearchservice.service.JobSearchService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,5 +60,14 @@ public class JobController {
   public ResponseEntity<List<Job>> GetJobsByLocation(@RequestBody GetDataRequest jobLocation) throws IOException {
     System.out.println(jobLocation.value);
     return ResponseEntity.ok(this.service.GetJobsByOneField(FilterBy.LOCATION, jobLocation.value));
+  }
+  @GetMapping("/admin")
+  public ResponseEntity<List<Job>> GetAllJobsForAdmin(HttpServletRequest request) throws IOException {
+    UserInfo user = (UserInfo) request.getAttribute("userInfo");
+    if (user.getRole().equalsIgnoreCase(Roles.ADMIN)) {
+      return ResponseEntity.ok(this.service.GetAll());
+    } else {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
   }
 }

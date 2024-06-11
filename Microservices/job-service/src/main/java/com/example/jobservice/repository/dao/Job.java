@@ -1,9 +1,8 @@
 package com.example.jobservice.repository.dao;
 
 import com.example.jobservice.listener.JobListener;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Id;
+import com.example.jobservice.repository.EmployerInfoConverter;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -16,6 +15,8 @@ import lombok.*;
 public class Job {
   @Id
   String jobId;
+  String creatorId;
+  String jobStatus;
   String employerId;
   String jobSalary;
   String jobTitle;
@@ -28,4 +29,6 @@ public class Job {
   String jobResponsibility;
   String jobRequirement;
   String jobBenefit;
+  @Convert(converter = EmployerInfoConverter.class)
+  EmployerInfo employerInfo;
 }
