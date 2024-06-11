@@ -36,7 +36,7 @@ function App() {
             <div className="h-[88px]" />
             <Routes>
                 <Route path="/employer" element={<EmployerContainer />} />
-                <Route path="/cv-detail" element={<CVViewer />} />
+                <Route path="/cv-detail/:candidateId" element={<CVViewer/>} />
                 <Route path="/sign_in" element={<SignIn />} />
                 <Route path="/sign_up" element={<SignUp />} />
                 <Route
@@ -47,9 +47,9 @@ function App() {
                         </>
                     }
                 />
-                <Route path="/job-detail" element={<MainTablet />} />
+                <Route path="/job-detail" element={<JobDetailGuestPage />} />
                 <Route
-                    path="/form-apply-job"
+                    path="/form-apply-job/:jobId"
                     element={<FormApplyJob />}
                 ></Route>
                 <Route path="/search" element={<SearchResult />} />

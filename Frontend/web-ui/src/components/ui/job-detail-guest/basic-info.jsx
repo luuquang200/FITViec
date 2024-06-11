@@ -1,24 +1,49 @@
-import React from "react";
-
+import {useState} from "react";
+import PropTypes from "prop-types";
 // Basic info
-function ImageGallery() {
-    const images = [
-        { src: "https://cdn.builder.io/api/v1/image/assets/TEMP/d5daf5335140db7fa166023188d3eb55c01cfa497937c6436722a294b7d9b22d?apiKey=1293b2add2d347908b4e11760098fdbe&", alt: "Image 1" },
-        { src: "https://cdn.builder.io/api/v1/image/assets/TEMP/f597843af9118c35cf06855884e728e0b64fe41eafcf1502c4f4fcd91a5129d0?apiKey=1293b2add2d347908b4e11760098fdbe&", alt: "Image 2" },
-        { src: "https://cdn.builder.io/api/v1/image/assets/TEMP/c0626a6a4a2acda85275ab5536f06c95177df1a626adecf3aaca0e4d6ce3e6f2?apiKey=1293b2add2d347908b4e11760098fdbe&", alt: "Image 3" },
-    ];
+const Gallery = ({ job_detail }) => {
+  const [selectedImage, setSelectedImage] = useState(null);
+  return (
+    <div className="bg-white p-6 rounded-b-md shadow-md">
+        <div className="flex justify-center ">
+            <div  className="flex-none mr-4">
+              <img
+                src={job_detail.employerInfo.image}
+                alt={job_detail.employerInfo.companyName}
+                className="cursor-pointer max-w-[300px] h-[184px]"
+                onClick={() => setSelectedImage(job_detail.employerInfo.image)}
+              />
+            </div>
+        </div>
+        {selectedImage && (
+            <div
+            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
+            onClick={() => setSelectedImage(null)} // Đóng modal khi nhấp ra ngoài
+            >
+                <div className="relative"> 
+                
+                <img
+                    src={selectedImage}
+                    alt="Selected Image"
+                    className="h-[50vh] object-contain "
+                    onClick={(e) => e.stopPropagation()} 
+                />
+                
+                <button
+                    onClick={() => setSelectedImage(null)}
+                    className="absolute top-0 right-0 p-2 bg-black bg-opacity-25 "
+                >
+                    X
+                </button>
+                </div>
 
-    return (
-      <div className="image-gallery" style={{ zIndex: 0 }}>
-          {images.map((image, index) => (
-              <div key={index} className={`image-column ${index === 2 ? "last-image" : ""}`} style={{ zIndex: 0 }}>
-                  <img src={image.src} alt={image.alt} className="gallery-image" />
-                  {index === 2 && <div className="image-overlay">+2</div>}
-              </div>
-          ))}
-      </div>
+            </div>
+        )}
+      
+    </div>
   );
-}
+};
+
 
 function IconText({ iconSrc, text, alt }) {
     return (
@@ -28,6 +53,7 @@ function IconText({ iconSrc, text, alt }) {
         </div>
     );
 }
+
 
 function SkillTags() {
     const skills = ["Flutter", "React Native", "Dart"];
@@ -48,31 +74,31 @@ function SkillTags() {
 
 
 
-function JobDetails() {
+function JobDetails({job_detail}) {
     return (
         <article className="job-details">
-            <ImageGallery />
+            <Gallery job_detail={job_detail}/>
             <div className="job-info">
                 <IconText
                     iconSrc="https://cdn.builder.io/api/v1/image/assets/TEMP/c0626a6a4a2acda85275ab5536f06c95177df1a626adecf3aaca0e4d6ce3e6f2?apiKey=1293b2add2d347908b4e11760098fdbe&"
-                    text="Havana Tower - 132 Ham Nghi, District 1, Ho Chi Minh"
+                    text={job_detail.jobLocation}
                     alt="Location icon"
                 />
-                <IconText iconSrc="https://cdn.builder.io/api/v1/image/assets/TEMP/bd2125e9fd97fbb5b3b13bcb2bdf6e326626587444b795c48309c9c97f097f40?apiKey=1293b2add2d347908b4e11760098fdbe&" text="Tại văn phòng" alt="Office icon" />
-                <IconText iconSrc="https://cdn.builder.io/api/v1/image/assets/TEMP/6d831fdaf31e8169acfb119810b46f9bf0bba65340e3dda6252b5f6ef449a66b?apiKey=1293b2add2d347908b4e11760098fdbe&" text="Đăng 3 ngày trước" alt="Calendar icon" />
+                {/* <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/bd2125e9fd97fbb5b3b13bcb2bdf6e326626587444b795c48309c9c97f097f40?apiKey=1293b2add2d347908b4e11760098fdbe&"/> */}
+                <IconText  iconSrc="https://cdn.builder.io/api/v1/image/assets/TEMP/6d831fdaf31e8169acfb119810b46f9bf0bba65340e3dda6252b5f6ef449a66b?apiKey=1293b2add2d347908b4e11760098fdbe&" text={job_detail.jobType} alt="Office icon" />
+                
             </div>
             <SkillTags />
         </article>
     );
 }
 
-
-function BasicInfo() {
+function BasicInfo( {job_detail}) {
     return (
         <>
-            <JobDetails />
+            <JobDetails job_detail={job_detail}/>
 
-            <style jsx>{`
+            <style>{`
           .job-details {
             border-radius: 0 0 8px 8px;
             box-shadow: 0 6px 32px 0 rgba(0, 0, 0, 0.08);
