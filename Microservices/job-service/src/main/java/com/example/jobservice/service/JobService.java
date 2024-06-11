@@ -2,6 +2,7 @@ package com.example.jobservice.service;
 
 import com.example.jobservice.dto.CUJobDto;
 import com.example.jobservice.dto.JobDetails;
+import com.example.jobservice.dto.JobInfo;
 import com.example.jobservice.dto.UpdateResponse;
 import com.example.jobservice.repository.dao.Job;
 
@@ -13,4 +14,5 @@ public interface JobService {
   UpdateResponse Delete(String creatorId, String jobId);
   UpdateResponse ApproveJob(String jobId);
   UpdateResponse RejectJob(String jobId);
+  JobInfo GetJobInfo(String jobId);
 }

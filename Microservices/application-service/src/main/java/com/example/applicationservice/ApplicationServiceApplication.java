@@ -5,6 +5,8 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,4 +24,8 @@ public class ApplicationServiceApplication {
 		SpringApplication.run(ApplicationServiceApplication.class, args);
 	}
 
+	@Bean
+	public WebClient webClient() {
+		return WebClient.builder().build();
+	}
 }

@@ -46,6 +46,7 @@ const capitalized = (letter) => {
 
 const ProfileMain = () => {
     const { currentUser, inSingUpInPage, isGoogleUser } = useAuth();
+
     const [isOpenPopupPersonal, setIsPopupPersonal] = useState(false);
     const [isOpenAboutMePopup, setisisOpenAboutMePopup] = useState(false);
     const [isOpenWorkExperiencePopup, setisOpenWorkExperiencePopup] =
@@ -79,6 +80,7 @@ const ProfileMain = () => {
                                     : defaultAvt
                             }
                             alt="Avatar"
+                            className="h-32 w-32 rounded-full object-cover  opacity-100 transition-opacity"
                         />
                     </div>
                 </div>

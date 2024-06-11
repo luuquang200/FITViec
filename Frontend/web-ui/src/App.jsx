@@ -28,6 +28,7 @@ import CustomerRegister from "./components/Employers/customer-register";
 import VerifyEmployer from "./components/Employers/verify-employer";
 import ProfileManagementCv from "./components/profile/profile-management-cv";
 import ProfileManagementJob from "./components/profile/profile-management-job";
+import AdminDashboard from "./components/Admin/admin-dashboard";
 
 function App() {
     return (
@@ -92,6 +93,10 @@ function App() {
                         <VerifyEmployer />
                         // </ProtectedRouteVerify>
                     }
+                />
+                <Route
+                    path="/admin"
+                    element={<AdminDashboard />}
                 />
             </Routes>
             <Footer />

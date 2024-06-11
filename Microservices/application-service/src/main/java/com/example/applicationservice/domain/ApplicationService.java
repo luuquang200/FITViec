@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ApplicationService {
   String updateStatus(String applicationId, String newStatus);
-  Application createApplication(CreateApplicationDto data);
+  Application createApplication(String accessToken, CreateApplicationDto data);
   Application getApplicationById(String applicationId);
   List<Application> getApplicationsByJob(String jobId);
   List<Application> getApplicationsByEmployer(String employerId);
