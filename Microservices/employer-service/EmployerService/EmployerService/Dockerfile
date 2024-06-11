@@ -15,7 +15,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 
 # Copy the SSL certificate
-COPY certs/DigiCertGlobalRootCA.crt.pem /etc/ssl/certs/DigiCertGlobalRootCA.crt.pem
+COPY certs /app/certs
 
 COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet", "EmployerService.dll"]
