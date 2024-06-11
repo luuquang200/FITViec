@@ -3,8 +3,6 @@ import { Button } from "../ui/button";
 
 import { useAuth } from "../../contexts/authContext";
 
-
-
 import {
     Mail,
     Gift,
@@ -50,27 +48,23 @@ const ProfileMain = () => {
     const { currentUser, inSingUpInPage, isGoogleUser } = useAuth();
     const [isOpenPopupPersonal, setIsPopupPersonal] = useState(false);
     const [isOpenAboutMePopup, setisisOpenAboutMePopup] = useState(false);
-    const [isOpenWorkExperiencePopup, setisOpenWorkExperiencePopup] = useState(false);
+    const [isOpenWorkExperiencePopup, setisOpenWorkExperiencePopup] =
+        useState(false);
     const [isOpenEducationPopup, setisisOpenEducationPopup] = useState(false);
-
-
 
     const handleModifyPersonalClick = () => {
         setIsPopupPersonal(true);
-      };
+    };
 
     const handleModifyAboutMeClick = () => {
         setisisOpenAboutMePopup(true);
-        };
+    };
     const handleModifyWorkExperiencelClick = () => {
         setisOpenWorkExperiencePopup(true);
     };
     const handleModifyEducationClick = () => {
         setisisOpenEducationPopup(true);
     };
-
-
-
 
     return (
         <div className="col-span-3 mt-3">
@@ -170,8 +164,8 @@ const ProfileMain = () => {
                     </div>
                     {/* edit button */}
                     <button onClick={handleModifyPersonalClick}>
-                    <SquarePen className="absolute right-0 top-0 h-5 w-5 translate-x-[-150%] translate-y-6 cursor-pointer text-red-500" />
-                    </button>                         
+                        <SquarePen className="absolute right-0 top-0 h-5 w-5 translate-x-[-150%] translate-y-6 cursor-pointer text-red-500" />
+                    </button>
                 </div>
             </div>
             {/* About & skill */}
@@ -179,48 +173,68 @@ const ProfileMain = () => {
                 title="About me"
                 content="Introduce your strengths and years of experience"
                 img={images.aboutImage}
-                onModifyClick = {handleModifyAboutMeClick}
+                onModifyClick={handleModifyAboutMeClick}
             />
             <ProfileContent
                 title="Education"
                 content="  Share your background education"
                 img={images.educationImage}
-                onModifyClick = {handleModifyEducationClick}
+                onModifyClick={handleModifyEducationClick}
             />
             <ProfileContent
                 title="Work Experience"
                 content="Highlight detailed information about your job history"
                 img={images.workImage}
-                onModifyClick = {handleModifyWorkExperiencelClick}
+                onModifyClick={handleModifyWorkExperiencelClick}
             />
             <ProfileContent
                 title="Skills"
                 content="Showcase your skills and proficiencies"
                 img={images.skillImage}
-                onModifyClick = {handleModifyPersonalClick}
+                onModifyClick={handleModifyPersonalClick}
             />
             <ProfileContent
                 title="Personal Project"
                 content="Showcase your personal project"
                 img={images.projectImage}
-                onModifyClick = {handleModifyPersonalClick}
+                onModifyClick={handleModifyPersonalClick}
             />
             <ProfileContent
                 title="Certificates"
                 content="Provides evidence of your specific expertise and skills"
                 img={images.certificateImage}
-                onModifyClick = {handleModifyPersonalClick}
+                onModifyClick={handleModifyPersonalClick}
             />
             <ProfileContent
                 title="Awards"
                 content="Highlight your awards or recognitions"
                 img={images.awardsImage}
-                onModifyClick = {handleModifyPersonalClick}
+                onModifyClick={handleModifyPersonalClick}
             />
-            {isOpenPopupPersonal && <PersonalInfoPopUp userInfo = {currentUser} onClose={() => setIsPopupPersonal(false)}/>}
-            {isOpenWorkExperiencePopup && <WorkExperiencePopup userInfo = {currentUser} onClose={() => setisOpenWorkExperiencePopup(false)}/>}
-            {isOpenAboutMePopup && <AboutMePopup userInfo = {currentUser} onClose={() => setisisOpenAboutMePopup(false)}/>}
-            {isOpenEducationPopup && <EducationPopup userInfo = {currentUser} onClose={() => setisisOpenEducationPopup(false)}/>}
+            {isOpenPopupPersonal && (
+                <PersonalInfoPopUp
+                    userInfo={currentUser}
+                    onClose={() => setIsPopupPersonal(false)}
+                />
+            )}
+            {isOpenWorkExperiencePopup && (
+                <WorkExperiencePopup
+                    userInfo={currentUser}
+                    onClose={() => setisOpenWorkExperiencePopup(false)}
+                />
+            )}
+            {isOpenAboutMePopup && (
+                <AboutMePopup
+                    userInfo={currentUser}
+                    onClose={() => setisisOpenAboutMePopup(false)}
+                />
+            )}
+            {isOpenEducationPopup && (
+                <EducationPopup
+                    userInfo={currentUser}
+                    onClose={() => setisisOpenEducationPopup(false)}
+                />
+            )}
         </div>
     );
 };
