@@ -41,7 +41,7 @@ const capitalized = (letter) => {
 };
 
 const ProfileMain = () => {
-    const { currentUser, inSingUpInPage, isGoogleUser } = useAuth();
+    const { currentUser } = useAuth();
 
     return (
         <div className="col-span-3 mt-3">
