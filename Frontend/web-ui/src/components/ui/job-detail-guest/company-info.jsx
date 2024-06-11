@@ -1,74 +1,51 @@
 import * as React from "react";
 
-const CompanyInfo = ({ companyName, companySize, country, workingHours, overtime }) => (
-  <>
-    <div className="company-info-item">
-      <div className="company-info-label">Quy mô công ty</div>
-      <div className="company-info-value">{companySize}</div>
-    </div>
-    <div className="company-info-item">
-      <div className="company-info-label">Quốc gia</div>
-      <div className="company-info-value">
-        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/f16506595376ce3435dfb78d0566f97ed09856fb3251060a1e06b235d6956d6b?apiKey=1293b2add2d347908b4e11760098fdbe&" alt="Country flag" className="country-flag" />
-        <div>{country}</div>
-      </div>
-    </div>
-    <div className="company-info-item">
-      <div className="company-info-label">Thời gian làm việc</div>
-      <div className="company-info-value">{workingHours}</div>
-    </div>
-    <div className="company-info-item">
-      <div className="company-info-label">Làm việc ngoài giờ</div>
-      <div className="company-info-value">{overtime}</div>
-    </div>
-  </>
-);
-
-function CompanyInfoSection() {
+function CompanyInfoSection({job_detail}) {
   return (
     <>
       <article className="company-card">
         <header className="company-header">
-          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e47c4b93b4d4f47b986be54c2cb34896b91d806b8eb5fa5384bf432953b26567?apiKey=1293b2add2d347908b4e11760098fdbe&" alt="Company logo" className="company-logo" />
+          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e47c4b93b4d4f47b986be54c2cb34896b91d806b8eb5fa5384bf432953b26567?apiKey=1293b2add2d347908b4e11760098fdbe&" alt={job_detail?.employerInfo?.logoUrl} className="company-logo" />
           <div className="company-header-info">
-            <h2 className="company-name">Trusting Social</h2>
-            <div className="company-link">
-              <div>Xem công ty</div>
+            <h2 className="company-name">{job_detail?.employerInfo?.companyName}</h2>
+            <a href="#" className="company-link">
+              <div>View company</div>
               <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/32a56c793b7a187bfb978ef5618af22dd9123dcdd096fddd829bcaeb4bce5e99?apiKey=1293b2add2d347908b4e11760098fdbe&" alt="Arrow icon" className="arrow-icon" />
-            </div>
+            </a>
           </div>
         </header>
         <p className="company-description">
-          Making Financial Inclusion a Reality using <br />
-          Machine Learning and AI
+          {job_detail?.employerInfo?.companyOverview}
         </p>
         <div className="company-model">
-          <div className="company-model-label">Mô hình công ty</div>
-          <div className="company-model-value">Sản phẩm</div>
+          <div className="company-model-label">Company type</div>
+          <div className="company-model-value">{job_detail?.employerInfo?.companyType}</div>
         </div>
-        <CompanyInfo
-          companySize="301-500 nhân viên"
-          country="Singapore"
-          workingHours="Thứ 2 - Thứ 6"
-          overtime="Không có OT"
-        />
+        <div className="company-info-item">
+          <div className="company-info-label">Company size</div>
+          <div className="company-info-value">{job_detail?.employerInfo?.companySize}</div>
+        </div>
+        <div className="company-info-item">
+          <div className="company-info-label">Country</div>
+          <div className="company-info-value">
+            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/f16506595376ce3435dfb78d0566f97ed09856fb3251060a1e06b235d6956d6b?apiKey=1293b2add2d347908b4e11760098fdbe&" alt="Country flag" className="country-flag" />
+            <div>{job_detail?.employerInfo?.country}</div>
+          </div>
+        </div>
+        <div className="company-info-item">
+          <div className="company-info-label">Working Days</div>
+          <div className="company-info-value">{job_detail?.employerInfo?.workingDays}</div>
+        </div>
+        <div className="company-info-item">
+          <div className="company-info-label">Overtime policy</div>
+          <div className="company-info-value">{job_detail?.employerInfo?.overtimePolicy}</div>
+        </div>
         <div className="expand-container">
         </div>
-        {/* <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ea3c2ed5806cb1009a641a5ebff3d5312c4368dbb7600348ee68ded4af524fa4?apiKey=1293b2add2d347908b4e11760098fdbe&" alt="Company image" className="company-image" /> */}
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/ea3c2ed5806cb1009a641a5ebff3d5312c4368dbb7600348ee68ded4af524fa4?apiKey=1293b2add2d347908b4e11760098fdbe&"
-          alt="Company image"
-          className="company-image"
-          style={{
-            position: 'absolute',
-            bottom: '-2%',
-            left: '50%',
-            transform: 'translate(-50%, 50%)'
-          }}
-        />
+        
       </article>
 
-      <style jsx>{`
+      <style >{`
         .company-card {
           border-radius: 8px;
           box-shadow: 0 6px 32px 0 rgba(0, 0, 0, 0.08);

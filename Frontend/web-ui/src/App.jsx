@@ -26,6 +26,8 @@ import CVViewer from "./components/Employer/cv-detail";
 import CustomerLogin from "./components/Employers/customer-login";
 import CustomerRegister from "./components/Employers/customer-register";
 import VerifyEmployer from "./components/Employers/verify-employer";
+import ProfileManagementCv from "./components/profile/profile-management-cv";
+import ProfileManagementJob from "./components/profile/profile-management-job";
 import AdminDashboard from "./components/Admin/admin-dashboard";
 
 function App() {
@@ -37,7 +39,7 @@ function App() {
             <div className="h-[88px]" />
             <Routes>
                 <Route path="/employer" element={<EmployerContainer />} />
-                <Route path="/cv-detail" element={<CVViewer />} />
+                <Route path="/cv-detail/:candidateId" element={<CVViewer/>} />
                 <Route path="/sign_in" element={<SignIn />} />
                 <Route path="/sign_up" element={<SignUp />} />
                 <Route
@@ -48,9 +50,9 @@ function App() {
                         </>
                     }
                 />
-                <Route path="/job-detail" element={<MainTablet />} />
+                <Route path="/job-detail" element={<JobDetailGuestPage />} />
                 <Route
-                    path="/form-apply-job"
+                    path="/form-apply-job/:jobId"
                     element={<FormApplyJob />}
                 ></Route>
                 <Route path="/search" element={<SearchResult />} />
@@ -59,6 +61,14 @@ function App() {
                     element={<JobDetailGuestPage />}
                 />
                 <Route path="/profile-cv" element={<ProfileManagement />} />
+                <Route
+                    path="/profile-cv/manage-cv"
+                    element={<ProfileManagementCv />}
+                />
+                <Route
+                    path="/profile-cv/job-preferences"
+                    element={<ProfileManagementJob />}
+                />
                 <Route
                     path="/verify_email"
                     element={

@@ -1,5 +1,5 @@
 
-import { Mail, Phone } from 'lucide-react';
+import { Mail} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PropTypes from "prop-types";
 
@@ -34,7 +34,7 @@ const CandidateItem = ({ candidate }) => {
         
       </td>
       <td className="p-2">
-        <Link to="/cv-detail">
+        <Link to={`/cv-detail/${candidate.id}`}>
           <button className="text-blue-500 border border-blue-500 rounded px-2 py-1">
             {candidate.status}
           </button>
@@ -49,6 +49,7 @@ const CandidateItem = ({ candidate }) => {
 CandidateItem.propTypes = {
     candidate: PropTypes.shape({
       initials: PropTypes.string.isRequired,
+      id:  PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       jobName: PropTypes.string.isRequired,
       jobId: PropTypes.string.isRequired,

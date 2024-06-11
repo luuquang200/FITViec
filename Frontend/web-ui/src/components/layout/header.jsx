@@ -208,11 +208,11 @@ const Header = () => {
                     <li>
                         <Button
                             variant="link"
-                            // onClick={() => {
-                            //     navigate("/employer");
-                            // }}
+                            onClick={() => {
+                                navigate("/employer");
+                            }}
                             className="h-min p-0 text-white hover:no-underline"
-                            onClick={() => navigate("/for-employers")}
+                            // onClick={() => navigate("/for-employers")}
                         >
                             For Employers
                         </Button>
@@ -251,7 +251,10 @@ const Header = () => {
                                     sideOffset={8}
                                     className="w-56"
                                 >
-                                    <MenubarItem className="border-b-2 border-gray-300">
+                                    <MenubarItem
+                                        className="border-b-2 border-gray-300"
+                                        onClick={() => navigate("/profile-cv")}
+                                    >
                                         {" "}
                                         <User className="mr-2 h-5 w-5 text-muted-foreground" />
                                         Profile & CVs
