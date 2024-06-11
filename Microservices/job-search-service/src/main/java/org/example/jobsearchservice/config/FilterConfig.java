@@ -11,7 +11,7 @@ public class FilterConfig {
   public FilterRegistrationBean<FirebaseAuthenticationFilter> firebaseAuthenticationFilter() {
     FilterRegistrationBean<FirebaseAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
     registrationBean.setFilter(new FirebaseAuthenticationFilter());
-    registrationBean.addUrlPatterns("/job-elastic/admin/*");
+    registrationBean.addUrlPatterns("/job-elastic/admin/*", "/job-elastic/jobs-by-employer-id/*");
     return registrationBean;
   }
 }
