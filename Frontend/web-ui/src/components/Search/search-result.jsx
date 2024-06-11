@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 // Components
 import Container from "@/components/layout/container";
-import SearchBar from "./search-bar";
+import SearchBar from "@/components/layout/search-bar";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -23,8 +23,8 @@ import {
     CardDescription,
     CardContent,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import JobDetail from "@/components/Search/job-detail";
 
 // Icons
 import { CircleDollarSign, MapPin, Laptop, Filter } from "lucide-react";
@@ -90,7 +90,7 @@ const SearchResult = () => {
                     {/* "Total jobs" & "filter button" container */}
                     <div className="flex justify-between pb-8">
                         {/* Total jobs headline */}
-                        <h1 className="text-2xl font-bold text-foreground">
+                        <h1 className="text-3xl font-bold text-foreground">
                             {jobs.length}{" "}
                             <span className={keyword && "text-red-500"}>
                                 {keyword || "IT"}
@@ -103,7 +103,7 @@ const SearchResult = () => {
                             <DialogTrigger>
                                 <Button
                                     variant="outline"
-                                    className="border-primary bg-none font-bold text-primary"
+                                    className="border-primary bg-none font-bold text-primary hover:text-"
                                 >
                                     <Filter className="mr-2" />
                                     Filter
@@ -211,7 +211,7 @@ const SearchResult = () => {
 
                         {/* Job detail */}
                         <div className="col-span-6">
-                            <JobDetailInSearchResult job={selectedJob} />
+                            <JobDetail job={selectedJob} />
                         </div>
                     </div>
                 </Container>
@@ -225,33 +225,33 @@ SearchResult.propTypes = {
     query: PropTypes.string,
 };
 
-const JobDetailInSearchResult = ({ job }) => {
-    if (!job) {
-        return null;
-    }
-    // May use the same component for JobDetail in JobDetail page
-    // But for now, we just show the title, company name, and salary
-    return (
-        <div className="sticky top-[100px] rounded-lg bg-white p-6">
-            <div className="flex-col space-y-3">
-                <h2 className="text-3xl font-bold">{job.title ?? ""}</h2>
-                <p className="text-xl">{job.company?.name ?? ""}</p>
-                <p className="flex space-x-1 text-base text-green-600">
-                    <CircleDollarSign />
-                    <div>{job.salary}</div>
-                </p>
-                <hr />
-                <p>
-                    <h2 className="text-2xl font-bold">Description</h2>
-                    <p className="text-base">{job.description}</p>
-                </p>
-            </div>
-        </div>
-    );
-};
+// const JobDetailInSearchResult = ({ job }) => {
+//     if (!job) {
+//         return null;
+//     }
+//     // May use the same component for JobDetail in JobDetail page
+//     // But for now, we just show the title, company name, and salary
+//     return (
+//         <div className="sticky top-[100px] rounded-lg bg-white p-6">
+//             <div className="flex-col space-y-3">
+//                 <h2 className="text-3xl font-bold">{job.title ?? ""}</h2>
+//                 <p className="text-xl">{job.company?.name ?? ""}</p>
+//                 <p className="flex space-x-1 text-base text-green-600">
+//                     <CircleDollarSign />
+//                     <div>{job.salary}</div>
+//                 </p>
+//                 <hr />
+//                 <p>
+//                     <h2 className="text-2xl font-bold">Description</h2>
+//                     <p className="text-base">{job.description}</p>
+//                 </p>
+//             </div>
+//         </div>
+//     );
+// };
 
-JobDetailInSearchResult.propTypes = {
-    job: PropTypes.object,
-};
+// JobDetailInSearchResult.propTypes = {
+//     job: PropTypes.object,
+// };
 
 export default SearchResult;
