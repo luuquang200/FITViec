@@ -4,6 +4,7 @@ import org.example.jobsearchservice.dto.EventData;
 import org.example.jobsearchservice.dto.SearchRequest;
 import org.example.jobsearchservice.dto.UpdateResponse;
 import org.example.jobsearchservice.repository.model.Job;
+import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -16,4 +17,5 @@ public interface JobSearchService {
   List<Job> Search(SearchRequest request) throws IOException;
   List<Job> GetJobsByOneField(String fieldName, String value) throws IOException;
   Job GetJobById(String jobId);
+  List<Job> GetAll() throws IOException;
 }
