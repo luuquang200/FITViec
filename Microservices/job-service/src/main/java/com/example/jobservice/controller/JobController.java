@@ -27,32 +27,28 @@ public class JobController {
   public ResponseEntity<Job> CreateJob(HttpServletRequest request, @RequestBody CUJobDto data) {
     UserInfo user = (UserInfo) request.getAttribute("userInfo");
     if (user.getRole().equalsIgnoreCase(Roles.EMPLOYER)) {
-      return ResponseEntity.ok(this.service.Create(data));
+      return ResponseEntity.ok(this.service.Create(data, user.getUserId()));
     } else {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
   }
-  @PostMapping("/update/{employer-id}/{job-id}")
+  @PostMapping("/update/{job-id}")
   public ResponseEntity<UpdateResponse> UpdateJob(
-      HttpServletRequest request,
-      @PathVariable("employer-id") String employerId, @PathVariable("job-id") String jobId,
+      HttpServletRequest request, @PathVariable("job-id") String jobId,
       @RequestBody CUJobDto data
   ) {
     UserInfo user = (UserInfo) request.getAttribute("userInfo");
     if (user.getRole().equalsIgnoreCase(Roles.EMPLOYER)) {
-      return ResponseEntity.ok(this.service.Update(employerId, jobId, data));
+      return ResponseEntity.ok(this.service.Update(user.getUserId(), jobId, data));
     } else {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
   }
-  @DeleteMapping("/delete/{employer-id}/{job-id}")
-  public ResponseEntity<UpdateResponse> DeleteJob(
-      HttpServletRequest request,
-      @PathVariable("employer-id") String employerId, @PathVariable("job-id") String jobId
-  ) {
+  @DeleteMapping("/delete/{job-id}")
+  public ResponseEntity<UpdateResponse> DeleteJob(HttpServletRequest request, @PathVariable("job-id") String jobId) {
     UserInfo user = (UserInfo) request.getAttribute("userInfo");
     if (user.getRole().equalsIgnoreCase(Roles.EMPLOYER)) {
-      return ResponseEntity.ok(this.service.Delete(employerId, jobId));
+      return ResponseEntity.ok(this.service.Delete(user.getUserId(), jobId));
     } else {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }

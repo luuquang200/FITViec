@@ -133,6 +133,7 @@ public class JobSearchServiceImpl implements JobSearchService {
     List<Job> jobs = new ArrayList<>();
     for (Hit<Job> object: hits) {
       assert object.source() != null;
+      object.source().setCreatorId("PRIVATE");
       object.source().setPostedAt(this.CacalateJobCreatedDuration(object.source().getPostedAt()));
       jobs.add(object.source());
     }

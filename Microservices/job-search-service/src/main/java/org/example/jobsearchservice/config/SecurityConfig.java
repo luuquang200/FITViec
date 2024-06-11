@@ -16,7 +16,7 @@ public class SecurityConfig {
     http
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(authz -> authz
-            .requestMatchers("/admin").authenticated()
+            .requestMatchers("/job-elastic/admin/*/").authenticated()
             .anyRequest().permitAll());
     return http.build();
   }

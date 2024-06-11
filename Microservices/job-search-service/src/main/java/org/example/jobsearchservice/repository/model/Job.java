@@ -17,6 +17,7 @@ import org.springframework.data.elasticsearch.annotations.WriteTypeHint;
 public class Job {
   @Id
   String jobId;
+  String creatorId;
   String jobStatus;
   String employerId;
   String jobSalary;

@@ -8,9 +8,9 @@ import com.example.jobservice.repository.dao.Job;
 import java.util.List;
 
 public interface JobService {
-  Job Create(CUJobDto data);
-  UpdateResponse Update(String employerId, String jobId, CUJobDto data);
-  UpdateResponse Delete(String employerId, String jobId);
+  Job Create(CUJobDto data, String creatorId);
+  UpdateResponse Update(String creatorId, String jobId, CUJobDto data);
+  UpdateResponse Delete(String creatorId, String jobId);
   UpdateResponse ApproveJob(String jobId);
   UpdateResponse RejectJob(String jobId);
 }

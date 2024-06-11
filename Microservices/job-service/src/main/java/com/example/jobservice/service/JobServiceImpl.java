@@ -18,19 +18,20 @@ public class JobServiceImpl implements JobService {
   private final JobRepository repository;
 
   @Override
-  public Job Create(CUJobDto data) {
+  public Job Create(CUJobDto data, String creatorId) {
     Job newJob = new Job();
     this.CopyData(data, newJob);
     newJob.setJobId(this.CreateJobId());
+    newJob.setCreatorId(creatorId);
     newJob.setJobStatus(JobStatus.PENDING);
     return this.repository.save(newJob);
   }
   @Override
-  public UpdateResponse Update(String employerId, String jobId, CUJobDto data) {
+  public UpdateResponse Update(String creatorId, String jobId, CUJobDto data) {
     Job job = this.repository.findById(jobId).orElse(null);
     if (job == null) {
       return new UpdateResponse(HttpStatus.NOT_FOUND.toString(), "Job not found", null);
-    } else if (job.getEmployerId().equals(employerId)) {
+    } else if (job.getCreatorId().equals(creatorId)) {
       this.CopyData(data, job);
       this.repository.save(job);
       return new UpdateResponse(HttpStatus.OK.toString(), "OK", job);
@@ -39,11 +40,11 @@ public class JobServiceImpl implements JobService {
     }
   }
   @Override
-  public UpdateResponse Delete(String employerId, String jobId) {
+  public UpdateResponse Delete(String creatorId, String jobId) {
     Job job = this.repository.findById(jobId).orElse(null);
     if (job == null) {
       return new UpdateResponse(HttpStatus.NOT_FOUND.toString(), "Job not found", null);
-    } else if (job.getEmployerId().equals(employerId)) {
+    } else if (job.getCreatorId().equals(creatorId)) {
       this.repository.delete(job);
       return new UpdateResponse(HttpStatus.OK.toString(), "OK", job);
     } else {

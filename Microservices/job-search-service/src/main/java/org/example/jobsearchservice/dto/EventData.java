@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class EventData {
   String jobId;
+  String creatorId;
   String jobStatus;
   String employerId;
   String jobSalary;
