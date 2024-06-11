@@ -156,7 +156,7 @@ const CustomerLogin = () => {
     };
 
     return (
-        <Container className="h-vh-employer-login w-full max-w-full">
+        <Container className="w-full max-w-full">
             {userLoggedIn && <Navigate to={"/"} replace={true} />}
             <div className="grid h-full w-full grid-cols-2 xl:grid-rows-1">
                 {/* Left */}

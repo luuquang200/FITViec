@@ -1,0 +1,196 @@
+import React from "react";
+import { Button } from "../ui/button";
+
+import { useAuth } from "../../contexts/authContext";
+
+import {
+    Mail,
+    Gift,
+    MapPin,
+    Phone,
+    User,
+    Globe,
+    SquarePen,
+    CirclePlus,
+    ChevronDown,
+} from "lucide-react";
+import ProfileContent from "./profile-content";
+
+const images = {
+    aboutImage:
+        "https://itviec.com/assets/profile/about_me_no_info-c7c9aa8f95cc149ec7646e171c59c2d261d0c9d62da0f5b1fff75886691bd8e9.svg",
+    educationImage:
+        "https://itviec.com/assets/profile/education_no_info-73d159c5c97d90ff0cdd22764fdde92a6ecefaa39c1f68775ba3e126e8ee6140.svg",
+    workImage:
+        "https://itviec.com/assets/profile/experience_no_info-c25e08f6ba4db4a16e0b948d42a90451c7895790324da6420ffeba9525c9c6eb.svg",
+    skillImage:
+        "https://itviec.com/assets/profile/skill_no_info-02f56fa0a5b0ab2ae7d233ceac098f1102a4f774de22f70b0c81fd8e1fb9efbf.svg",
+    projectImage:
+        "https://itviec.com/assets/profile/project_no_info-393d7f7ad578814bcce189f5681ba7e90f6a33343cdb0172eb9761ece4094b5d.svg",
+    certificateImage:
+        "https://itviec.com/assets/profile/certificate_no_info-26fedfa95c272adfe65f1136c3c04973002bea978cc21f91d04f7ce81caeda3f.svg",
+    awardsImage:
+        "https://itviec.com/assets/profile/award_no_info-0a31e0f6a55c3e2b6131000b7c09eab0182d74ab3f6461d604ba495d1cd42571.svg",
+};
+
+const defaultAvt =
+    "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png";
+
+const capitalized = (letter) => {
+    return letter.charAt(0).toUpperCase() + letter.slice(1);
+};
+
+const ProfileMain = () => {
+    const { currentUser, inSingUpInPage, isGoogleUser } = useAuth();
+
+    return (
+        <div className="col-span-3 mt-3">
+            {/* Information Personal */}
+            <div className="grid  w-full grid-cols-6 rounded-lg bg-white  shadow-lg">
+                <div className="col-span-1">
+                    <div className="mt-3 p-4">
+                        <img
+                            src={
+                                currentUser.photoURL
+                                    ? currentUser?.photoURL
+                                    : defaultAvt
+                            }
+                            alt="Avatar"
+                        />
+                    </div>
+                </div>
+                <div className="relative col-span-5">
+                    <div className="h-2/5">
+                        <div className="flex flex-row justify-between">
+                            <div className="ml-3 mt-3 p-3">
+                                <p className="text-2xl font-bold text-slate-700">
+                                    {capitalized(currentUser?.displayName)}
+                                </p>
+                                <p className="mt-2 text-lg font-bold text-gray-400">
+                                    Your title
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-2">
+                        <div className="col-span-1 ml-3  p-3">
+                            <div className="mb-3 flex items-center gap-2 text-gray-400">
+                                <Mail className="h-5 w-5" />{" "}
+                                <span
+                                    className={`${currentUser.email ? "text-slate-800" : ""}`}
+                                >
+                                    {currentUser.email
+                                        ? currentUser.email
+                                        : "Your email"}
+                                </span>
+                            </div>
+                            <div className="mb-3 flex items-center gap-2 text-gray-400">
+                                <Gift className="h-5 w-5" />{" "}
+                                <span
+                                    className={`${currentUser.birthday ? "text-slate-800" : ""}`}
+                                >
+                                    {currentUser.birthday
+                                        ? currentUser.birthday
+                                        : "Your date of birth"}
+                                </span>
+                            </div>
+                            <div className="mb-3 flex items-center gap-2 text-gray-400">
+                                <MapPin className="h-5 w-5" />{" "}
+                                <span
+                                    className={`${currentUser.address ? "text-slate-800" : ""}`}
+                                >
+                                    {currentUser.address
+                                        ? currentUser.address
+                                        : "Your current address"}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="col-span-1  p-3">
+                            <div className="mb-3 flex items-center gap-2 text-gray-400">
+                                <Phone className="h-5 w-5" />{" "}
+                                <span
+                                    className={`${currentUser.phone ? "text-slate-800" : ""}`}
+                                >
+                                    {currentUser.phone
+                                        ? currentUser.phone
+                                        : "Your phone number"}
+                                </span>
+                            </div>
+                            <div className="mb-3 flex items-center gap-2 text-gray-400">
+                                <User className="h-5 w-5" />{" "}
+                                <span
+                                    className={`${currentUser.gender ? "text-slate-800" : ""}`}
+                                >
+                                    {currentUser.gender
+                                        ? currentUser.gender
+                                        : "Your gender"}
+                                </span>
+                            </div>
+                            <div className="mb-3 flex items-center gap-2 text-gray-400">
+                                <Globe className="h-5 w-5" />{" "}
+                                <span
+                                    className={`${currentUser.pLink ? "text-slate-800" : ""}`}
+                                >
+                                    {currentUser.pLink
+                                        ? currentUser.pLink
+                                        : "Your personal link"}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    {/* edit button */}
+                    <SquarePen className="absolute right-0 top-0 h-5 w-5 translate-x-[-150%] translate-y-6 cursor-pointer text-red-500" />
+                </div>
+            </div>
+            {/* About & skill */}
+            <ProfileContent
+                title="About me"
+                content="Introduce your strengths and years of experience"
+                img={images.aboutImage}
+            />
+            <ProfileContent
+                title="Education"
+                content="  Share your background education"
+                img={images.educationImage}
+            />
+            <ProfileContent
+                title="Education"
+                content="Share your background education"
+                img={images.educationImage}
+            />
+            <ProfileContent
+                title="Work Experience"
+                content="Highlight detailed information about your job history"
+                img={images.workImage}
+            />
+            <ProfileContent
+                title="Skills"
+                content="Showcase your skills and proficiencies"
+                img={images.skillImage}
+            />
+            <ProfileContent
+                title="Personal Project"
+                content="Showcase your personal project"
+                img={images.projectImage}
+            />
+            <ProfileContent
+                title="Personal Project"
+                content="Showcase your personal project"
+                img={images.projectImage}
+            />
+            <ProfileContent
+                title="Certificates"
+                content="Provides evidence of your specific expertise and skills"
+                img={images.certificateImage}
+            />
+            <ProfileContent
+                title="Awards"
+                content="Highlight your awards or recognitions"
+                img={images.awardsImage}
+            />
+        </div>
+    );
+};
+
+export default ProfileMain;
