@@ -1,24 +1,34 @@
-import * as React from "react";
+import {  CircleDollarSign, Heart } from "lucide-react";
+import {useState} from "react";
+import PropTypes from 'prop-types';
+import { useAuth } from "@/contexts/authContext";
+import { Link } from "react-router-dom";
+import { Button } from "../button";
+function ApplyJobSection({job_detail})  {
+  const { currentUser} = useAuth();
 
-function ApplyJobSection(props)  {
+  console.log("currentUser from Apply: ", currentUser);
+  const [isClickedHeart, setIsClickedHeart] = useState(false);
   return (
     <>
       <article className="job-listing">
         <header>
-          <h2 className="job-title">Senior Mobile Developer (Flutter)</h2>
-          <div className="company-name-apply">Trusting Social</div>
+          <h2 className="job-title">{job_detail.jobTitle}</h2>
+          <div className="company-name-apply">{job_detail.employerInfo.companyName}</div>
         </header>
         <div className="salary-info">
-          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/10393afa7a68c37e5d79e02f15483fe0e4df12465c247bd00ae595589676c069?apiKey=1293b2add2d347908b4e11760098fdbe&" alt="" className="icon" />
-          <div className="salary-text">Đăng nhập để xem mức lương</div>
+          
+          {!currentUser ? 
+            <div className="flex space-x-2 underline"> <CircleDollarSign /> <span>Sign in to view salary</span></div> :  
+            <div className="flex space-x-2 text-green-500" >   <CircleDollarSign /> <span>{job_detail.jobSalary}</span> </div> }
         </div>
-        <footer className="actions">
-          <button className="apply-button">Ứng tuyển</button>
-          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/0f676638eb622bada169d4802a01de4c3ea227849a483bf0f62307c67761cc4c?apiKey=1293b2add2d347908b4e11760098fdbe&" alt="" className="bookmark-icon" />
+        <footer className="flex justify-between mt-[24px]">
+          <Link className="w-11/12 h-[48px]" to={`/form-apply-job/${job_detail.jobId}`}><Button className="w-full h-[48px] bg-[#ED1B2F] hover:bg-[#C82222]" > Apply Now </Button></Link>
+          <Heart onClick={() => setIsClickedHeart(!isClickedHeart)} className={`w-1/12 m-auto h-[32px] text-[#ED1B2F] cursor-pointer ${isClickedHeart ? " fill-[#ED1B2F]" : '' }`}/>
         </footer>
       </article>
 
-      <style jsx>{`
+      <style>{`
         .job-listing {
           background-color: #fff;
           border-radius: 8px 8px 0px 0px;
@@ -126,9 +136,17 @@ function ApplyJobSection(props)  {
           object-fit: auto;
           object-position: center;
           width: 32px;
+          cursor: pointer;
         }
       `}</style>
     </>
   );
 }
+
+
+ApplyJobSection.propTypes = {
+  job_detail: PropTypes.object.isRequired,
+};
+
+
 export default ApplyJobSection;

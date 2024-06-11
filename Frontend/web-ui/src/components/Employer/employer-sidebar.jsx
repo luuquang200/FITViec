@@ -1,6 +1,6 @@
 import  { useState } from 'react';
 import { LayoutDashboard, BriefcaseBusiness, FileText, CircleUserRound, BarChart4, History, ShoppingCart, FileClock, Settings } from 'lucide-react';
-
+import { useAuth } from "../../contexts/authContext";
 const hrUser = {
   avatar: 'https://via.placeholder.com/50',
   name: 'Nguyễn Văn A',
@@ -8,8 +8,16 @@ const hrUser = {
   companyName: "HCMUS"
 }
 const EmployerSidebar = ({ onTabChange }) => {
-
+  const { currentUser, inSingUpInPage, isGoogleUser } = useAuth();
   const [activeTab, setActiveTab] = useState('dashboard');
+  
+  // Cập nhật user infor
+  if(currentUser){
+    hrUser.name = currentUser.displayName;
+    hrUser.email = currentUser.email;
+  }
+
+
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -48,12 +56,7 @@ const EmployerSidebar = ({ onTabChange }) => {
           <span className="flex-grow">CV Review</span>
           <span className="ml-auto bg-primary text-white text-xs px-2 py-1 rounded-full">17</span>
         </li>
-        <li className={getTabClassName('strategy-detail')} onClick={() => handleTabChange('strategy-detail')}>
-          <span className="mr-4">
-            <BriefcaseBusiness />
-          </span>
-          <span className="flex-grow">Chiến dịch tuyển dụng</span>
-        </li>
+        
         <li className={getTabClassName('job-post')} onClick={() => handleTabChange('job-post')}>
           <span className="mr-4">
             <FileText />
@@ -67,36 +70,7 @@ const EmployerSidebar = ({ onTabChange }) => {
           <span className="flex-grow">Quản lý CV</span>
           <span className="ml-auto bg-primary text-white text-xs px-2 py-1 rounded-full">16</span>
         </li>
-        <li className={getTabClassName('recruitment-report')} onClick={() => handleTabChange('recruitment-report')}>
-          <span className="mr-4">
-            <BarChart4 />
-          </span>
-          <span className="flex-grow">Báo cáo tuyển dụng</span>
-        </li>
-        <li className={getTabClassName('service-purchase')} onClick={() => handleTabChange('service-purchase')}>
-          <span className="mr-4">
-            <ShoppingCart />
-          </span>
-          <span className="flex-grow">Mua dịch vụ</span>
-        </li>
-        <li className={getTabClassName('order-tracking')} onClick={() => handleTabChange('order-tracking')}>
-          <span className="mr-4">
-            <FileClock />
-          </span>
-          <span className="flex-grow">Theo dõi đơn hàng</span>
-        </li>
-        <li className={getTabClassName('activity-history')} onClick={() => handleTabChange('activity-history')}>
-          <span className="mr-4">
-            <History />
-          </span>
-          <span className="flex-grow">Lịch sử hoạt động</span>
-        </li>
-        <li className={getTabClassName('account-setting')} onClick={() => handleTabChange('account-setting')}>
-          <span className="mr-4">
-            <Settings />
-          </span>
-          <span className="flex-grow">Cài đặt tài khoản</span>
-        </li>
+        
       </ul>
     </div>
   );

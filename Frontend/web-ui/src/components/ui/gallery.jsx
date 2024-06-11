@@ -1,31 +1,22 @@
 import React, { useState } from "react";
-
-const Gallery = ({ images }) => {
+import PropTypes from "prop-types";
+const Gallery = ({ image }) => {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
-  };
 
   return (
     <div className="bg-white p-6 rounded-b-md shadow-md">
       
-        <div className="flex overflow-x-auto">
-          {images.map((image, index) => (
-            <div key={index} className="flex-none mr-4">
+        <div className="flex justify-center ">
+          
+            <div  className="flex-none mr-4">
               <img
                 src={image}
-                alt={`Image ${index + 1}`}
+                alt={`image`}
                 className="cursor-pointer max-w-[300px] h-[184px]"
                 onClick={() => setSelectedImage(image)}
               />
             </div>
-          ))}
+          
         </div>
         {selectedImage && (
             <div
@@ -40,18 +31,7 @@ const Gallery = ({ images }) => {
                     className="h-[50vh] object-contain "
                     onClick={(e) => e.stopPropagation()} 
                 />
-                <button
-                    onClick={handlePrev}
-                    className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 -2 bg-black rounded-full text-white "
-                >
-                    {"<"}
-                </button>
-                <button
-                    onClick={handleNext}
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 -2 bg-black rounded-full text-white "
-                >
-                    {">"}
-                </button>
+                
                 <button
                     onClick={() => setSelectedImage(null)}
                     className="absolute top-0 right-0 p-2 bg-black bg-opacity-25 "
@@ -66,5 +46,7 @@ const Gallery = ({ images }) => {
     </div>
   );
 };
-
+Gallery.propTypes = {
+  image: PropTypes.string.isRequired,
+};
 export default Gallery;

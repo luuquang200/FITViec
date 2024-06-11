@@ -5,6 +5,7 @@ import CandidateItem from './candidate-item';
 const exCandidates = [
   {
     initials: 'MA',
+    id: '12345abc',
     name: 'Nguyễn Thu Huyền',
     jobName: 'Chiến dịch tuyển Nhà , Tuyển nhân viên kế toán Ngân hàng ABCD...',
     jobId: '#408580',
@@ -14,6 +15,7 @@ const exCandidates = [
   },
   {
     initials: 'TK',
+    id: '12345abc',
     name: 'Trần Hữu Khoa',
     jobName: 'Tuyển nhân viên kế toán Ngân hàng ABCD ...',
     jobId: '#408583',
@@ -23,6 +25,7 @@ const exCandidates = [
   },
   {
     initials: 'MA',
+    id: '12345abc',
     name: 'Nguyễn Thanh Thúy',
     jobName: 'Chiến dịch tuyển Chọn ...',
     jobId: '#408580',
@@ -32,6 +35,7 @@ const exCandidates = [
   },
   {
     initials: 'VB',
+    id: '12345abc',
     name: 'Trần Văn Bá',
     jobName: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng ABCD Tuyển nhân viên kinh',
     jobId: '#408583',
@@ -41,6 +45,7 @@ const exCandidates = [
   },
   {
     initials: 'TT',
+    id: '12345abc',
     name: 'Trần Thanh Tâm',
     jobName: 'Tuyển Tester',
     jobId: '#408580',
@@ -50,6 +55,7 @@ const exCandidates = [
   },
   {
     initials: 'BT',
+    id: '12345abc',
     name: 'Phạm Quang Bình',
     jobName: 'Tuyển C&B',
     jobId: '#408589',
@@ -59,6 +65,7 @@ const exCandidates = [
   },
   {
     initials: 'MA',
+    id: '12345abc',
     name: 'Nguyễn Thu Huyền',
     jobName: 'Chiến dịch tuyển Nhà , Tuyển nhân viên kế toán Ngân hàng ABCD...',
     jobId: '#408580',
@@ -68,6 +75,7 @@ const exCandidates = [
   },
   {
     initials: 'TK',
+    id: '12345abc',
     name: 'Trần Hữu Khoa',
     jobName: 'Tuyển nhân viên kế toán Ngân hàng ABCD ...',
     jobId: '#408583',
@@ -77,6 +85,7 @@ const exCandidates = [
   },
   {
     initials: 'MA',
+    id: '12345abc',
     name: 'Nguyễn Thanh Thúy',
     jobName: 'Chiến dịch tuyển Chọn ...',
     jobId: '#408580',
@@ -86,6 +95,7 @@ const exCandidates = [
   },
   {
     initials: 'VB',
+    id: '12345abc',
     name: 'Trần Văn Bá',
     jobName: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng ABCD Tuyển nhân viên kinh',
     jobId: '#408583',
@@ -95,6 +105,7 @@ const exCandidates = [
   },
   {
     initials: 'TT',
+    id: '12345abc',
     name: 'Trần Thanh Tâm',
     jobName: 'Tuyển Tester',
     jobId: '#408580',
@@ -104,6 +115,7 @@ const exCandidates = [
   },
   {
     initials: 'BT',
+    id: '12345abc',
     name: 'Phạm Quang Bình',
     jobName: 'Tuyển C&B',
     jobId: '#408589',
@@ -113,6 +125,7 @@ const exCandidates = [
   },
   {
     initials: 'MA',
+    id: '12345abc',
     name: 'Nguyễn Thu Huyền',
     jobName: 'Chiến dịch tuyển Nhà , Tuyển nhân viên kế toán Ngân hàng ABCD...',
     jobId: '#408580',
@@ -122,6 +135,7 @@ const exCandidates = [
   },
   {
     initials: 'TK',
+    id: '12345abc',
     name: 'Trần Hữu Khoa',
     jobName: 'Tuyển nhân viên kế toán Ngân hàng ABCD ...',
     jobId: '#408583',
@@ -131,6 +145,7 @@ const exCandidates = [
   },
   {
     initials: 'MA',
+    id: '12345abc',
     name: 'Nguyễn Thanh Thúy',
     jobName: 'Chiến dịch tuyển Chọn ...',
     jobId: '#408580',
@@ -140,6 +155,7 @@ const exCandidates = [
   },
   {
     initials: 'VB',
+    id: '12345abc',
     name: 'Trần Văn Bá',
     jobName: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng ABCD Tuyển nhân viên kinh',
     jobId: '#408583',
@@ -149,6 +165,7 @@ const exCandidates = [
   },
   {
     initials: 'TT',
+    id: '12345abc',
     name: 'Trần Thanh Tâm',
     jobName: 'Tuyển Tester',
     jobId: '#408580',
@@ -158,6 +175,7 @@ const exCandidates = [
   },
   {
     initials: 'BT',
+    id: '12345abc',
     name: 'Phạm Quang Bình',
     jobName: 'Tuyển C&B',
     jobId: '#408589',
