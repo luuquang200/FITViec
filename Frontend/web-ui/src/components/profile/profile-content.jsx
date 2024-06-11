@@ -2,10 +2,10 @@ import React from "react";
 
 import { CirclePlus, SquarePen } from "lucide-react";
 
-const ProfileContent = ({ title, content, img, icon }) => {
+const ProfileContent = ({ title, content, img, icon, onModifyClick}) => {
     return (
         <div>
-            <div className="relative mt-4 flex  w-full flex-row justify-between rounded-lg bg-white  shadow-lg">
+            <div className="relative mt-4 flex  w-full flex-row justify-between rounded-lg bg-white shadow-lg">
                 <div className="ml-2 mt-3 p-4">
                     <p className="text-xl font-bold text-slate-700">{title}</p>
                     <p className="mt-2 text-base text-gray-400">{content}</p>
@@ -14,12 +14,16 @@ const ProfileContent = ({ title, content, img, icon }) => {
                     <div>
                         <img src={img} alt="img" />
                     </div>
+                    
+                    <button onClick={onModifyClick}>
+                        {icon ? (
+                            <SquarePen className="absolute right-0 top-0 h-5 w-5 translate-x-[-150%] translate-y-6 cursor-pointer text-red-500" />
+                        ) : (
+                            <CirclePlus className="absolute right-0 top-0 h-5 w-5 translate-x-[-150%] translate-y-6 cursor-pointer text-red-500" />
+                        )}
+                    </button>  
                 </div>
-                {icon ? (
-                    <SquarePen className="absolute right-0 top-0 h-5 w-5 translate-x-[-150%] translate-y-6 cursor-pointer text-red-500" />
-                ) : (
-                    <CirclePlus className="absolute right-0 top-0 h-5 w-5 translate-x-[-150%] translate-y-6 cursor-pointer text-red-500" />
-                )}
+                       
             </div>
         </div>
     );

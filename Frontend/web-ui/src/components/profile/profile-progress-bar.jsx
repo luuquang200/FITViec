@@ -1,22 +1,50 @@
 import React from "react";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { CirclePlus, ChevronDown, ChevronUp } from "lucide-react";
+import { CirclePlus, ChevronDown, ChevronUp, Star } from "lucide-react";
 
 const ProfileProgressBar = () => {
     const [showMore, setShowMore] = useState(false);
+
+    // tham khao viec danh gia strength cua profile
+    // const evaluteProfileStrength = () => {
+    //     const totalFields = Object.keys(userInfo).length;
+    //     const nonNullFields = Object.values(userInfo).filter(value => value !== null).length;
+    
+    //     let evaluation;
+    //     if (nonNullFields > 10) {
+    //         evaluation = 'Excellent';
+    //     } else if (nonNullFields >= 8) {
+    //         evaluation = 'Good';
+    //     } else if (nonNullFields >= 6) {
+    //         evaluation = 'Medium';
+    //     } else {
+    //         evaluation = 'Poor';
+    //     }
+    //     const scorePercentage = (nonNullFields / totalFields) * 100;
+    //     return (
+    //         <div>
+    //             <p className="text-xl font-bold">Profile Strength</p>
+    //             <p className="text-base">{evaluation}</p>
+    //             <p className="">{Math.floor(scorePercentage)}% completed</p>
+    //         </div>
+    //     );
+    // }
 
     return (
         <div className="col-span-1 mt-3 ">
             <div className="h-auto w-full rounded-lg bg-white p-5">
                 <div className="grid  grid-cols-3 gap-4 p-4">
                     <div className="col-span-1 flex items-center justify-center">
-                        <img
+                        <div className="size-16 border-4 border-gray-400 rounded-full flex justify-center">
+                        <Star className="size-8 fill-amber-600 stroke-amber-600 relative self-center" />
+                        </div>
+                        {/* <img
                             width="80"
                             height="80"
                             src="https://img.icons8.com/ios-filled/100/army-star.png"
                             alt="army-star"
-                        />
+                        /> */}
                     </div>
                     <div className="col-span-2 flex flex-col">
                         <p className="text-lg font-medium text-slate-700">
