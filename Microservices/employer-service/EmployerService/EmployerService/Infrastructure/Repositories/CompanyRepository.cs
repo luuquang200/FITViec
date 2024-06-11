@@ -32,7 +32,6 @@ namespace EmployerService.Infrastructure.Repositories
 		public async Task<Company> GetByIdAsync(string companyId)
 		{
 			return await _context.Companies
-				.Include(c => c.Images)
 				.FirstOrDefaultAsync(c => c.CompanyId == companyId);
 		}
 
@@ -54,17 +53,21 @@ namespace EmployerService.Infrastructure.Repositories
 
 		public async Task<Company> GetByEmployerIdAsync(string employerId)
 		{
-			return await _context.Companies
-				.Include(c => c.Images)
+			var company = await _context.Companies
 				.FirstOrDefaultAsync(c => c.EmployerId == employerId);
+
+			if (company == null)
+			{
+				return null;
+			}
+
+			return company;
 		}
 		public async Task<List<CompanyDto>> GetAllCompaniesAsync()
 		{
 			try
 			{
-				var companies = await _context.Companies
-					.Include(c => c.Images)
-					.ToListAsync();
+				var companies = await _context.Companies.ToListAsync();
 				var companyDtos = new List<CompanyDto>();
 				foreach (var company in companies)
 				{
@@ -84,10 +87,7 @@ namespace EmployerService.Infrastructure.Repositories
 						LogoUrl = company.LogoUrl,
 						Location = company.Location,
 						WorkType = company.WorkType,
-						Images = company.Images.Select(i => new ImageDto
-						{
-							ImageUrl = i.ImageUrl
-						}).ToList()
+						Image = company.Image
 					};
 					companyDtos.Add(companyDto);
 				}

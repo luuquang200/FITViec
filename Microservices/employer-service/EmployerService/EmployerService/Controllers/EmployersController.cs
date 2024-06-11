@@ -11,6 +11,7 @@ namespace EmployerService.Controllers
 	public class EmployersController : Controller
 	{
 		private readonly ICompanyService _employerService;
+		private readonly IJobService _jobService;
 
 		public EmployersController(ICompanyService employerService)
 		{
@@ -79,17 +80,17 @@ namespace EmployerService.Controllers
 		}
 
 		// Post job with employer id
-		[Route("post-job")]
-		[HttpPost]
-		public async Task<IActionResult> PostJob(PostJobRequest request)
+		[HttpPost("post-job")]
+		public async Task<IActionResult> PostJob([FromBody] PostJobRequestDto request)
 		{
-			var result = await _employerService.PostJobAsync(request);
-			if (!result.IsSuccess)
+			var result = await _jobService.PostJobAsync(request);
+
+			if (result.Success)
 			{
-				return BadRequest(result.ErrorMessage);
+				return Ok(result);
 			}
 
-			return Ok(result);
+			return BadRequest(result);
 		}
 
 		// Get all jobs by employer id

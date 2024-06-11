@@ -1,26 +1,48 @@
-﻿namespace EmployerService.Domain.DTO
+﻿using EmployerService.Domain.Entities;
+
+namespace EmployerService.Domain.DTO
 {
 	public class CompanyDto
 	{
-		public string CompanyId { get; set; }
-		public string EmployerId { get; set; }
-		public string CompanyName { get; set; }
-		public string CompanyType { get; set; }
-		public string CompanySize { get; set; }
-		public string Country { get; set; }
-		public string WorkingDays { get; set; }
-		public string OvertimePolicy { get; set; }
-		public string CompanyOverview { get; set; }
-		public string KeySkills { get; set; }
-		public string WhyLoveWorkingHere { get; set; }
-		public string LogoUrl { get; set; }
-		public string Location { get; set; }
-		public string WorkType { get; set; }
-		public List<ImageDto> Images { get; set; }
+		public string CompanyId { get; set; } = string.Empty;
+		public string EmployerId { get; set; } = string.Empty;
+		public string CompanyName { get; set; } = string.Empty;
+		public string CompanyType { get; set; } = string.Empty;
+		public string CompanySize { get; set; } = string.Empty;
+		public string Country { get; set; } = string.Empty;
+		public string WorkingDays { get; set; } = string.Empty;
+		public string OvertimePolicy { get; set; } = string.Empty;
+		public string CompanyOverview { get; set; } = string.Empty;
+		public string KeySkills { get; set; } = string.Empty;
+		public string WhyLoveWorkingHere { get; set; } = string.Empty;
+		public string LogoUrl { get; set; } = string.Empty;
+		public string Location { get; set; } = string.Empty;
+		public string WorkType { get; set; } = string.Empty;
+		public string Image { get; set; } = string.Empty;
+
+		// constructor
+		public CompanyDto()
+		{
+		}
+
+		// constructor
+		public CompanyDto(Company company)
+		{
+			EmployerId = company.EmployerId;
+			CompanyName = company.CompanyName;
+			CompanyType = company.CompanyType;
+			CompanySize = company.CompanySize;
+			Country = company.Country;
+			WorkingDays = company.WorkingDays;
+			OvertimePolicy = company.OvertimePolicy;
+			CompanyOverview = company.CompanyOverview;
+			KeySkills = company.KeySkills;
+			WhyLoveWorkingHere = company.WhyLoveWorkingHere;
+			LogoUrl = company.LogoUrl;
+			Location = company.Location;
+			WorkType = company.WorkType;
+			Image = company.Image;
+		}
 	}
 
-	public class ImageDto
-	{
-		public string ImageUrl { get; set; }
-	}
 }

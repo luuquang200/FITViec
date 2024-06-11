@@ -15,6 +15,6 @@
 		public string? LogoUrl { get; set; }
 		public string? Location { get; set; }
 		public string? WorkType { get; set; }
-		public List<string>? Images { get; set; }
+		public string? Image { get; set; }
 	}
 }
