@@ -132,9 +132,20 @@ const SearchResult = () => {
                                             handleListItemClick(job.id)
                                         }
                                     >
-                                        <Card>
+                                        <Card
+                                            // Conditional styling for the selected card
+                                            className={
+                                                selectedJob.id === job.id &&
+                                                // The red ring around the selected card
+                                                "relative ring-1 ring-inset ring-primary" +
+                                                    // The red line on the left side of the selected card
+                                                    " before:absolute before:left-0 before:top-[8px] before:h-[calc(100%-16px)] before:w-1.5 before:rounded-r-lg before:bg-primary before:content-['']" +
+                                                    // The red triangle on the right side of the selected card
+                                                    " after:absolute after:left-full after:top-1/2 after:h-0 after:w-0 after:border-b-[10px] after:border-l-[10px] after:border-t-[10px] after:border-b-transparent after:border-l-primary after:border-t-transparent after:content-['']"
+                                            }
+                                        >
                                             <CardHeader>
-                                                {/* Post date */}
+                                                {/* Posted date */}
                                                 <p className="text-sm text-gray-500">
                                                     Posted on {job.posted_day}
                                                 </p>
@@ -148,36 +159,39 @@ const SearchResult = () => {
                                                     </Link>
                                                 </CardTitle>
 
+                                                {/* Company name */}
                                                 <p className="text-base">
                                                     {job.company?.name}
                                                 </p>
 
-                                                <p className="flex space-x-1 text-base text-green-600">
+                                                {/* Salary */}
+                                                <p className="flex space-x-3 text-green-600">
                                                     <CircleDollarSign />
                                                     <div>{job.salary}</div>
                                                 </p>
-
-                                                <Separator className="" />
                                             </CardHeader>
 
+                                            <hr className="mx-6 mb-6 border-dashed" />
+
                                             <CardContent>
-                                                <p className="flex space-x-1">
-                                                    <Laptop />
+                                                <CardDescription className="flex items-center space-x-2">
+                                                    <Laptop className="h-5 w-5" />
 
-                                                    <div className="text-sm">
+                                                    <p className="text-foreground">
                                                         {job.working_model}
-                                                    </div>
-                                                </p>
+                                                    </p>
+                                                </CardDescription>
 
-                                                <p className="flex space-x-1">
-                                                    <MapPin />
-                                                    <div className="text-sm">
+                                                <CardDescription className="flex items-center space-x-2">
+                                                    <MapPin className="h-5 w-5" />
+
+                                                    <p className="text-foreground">
                                                         {job.location}
-                                                    </div>
-                                                </p>
+                                                    </p>
+                                                </CardDescription>
 
                                                 {/* Skills section */}
-                                                <div className="flex flex-wrap space-x-1">
+                                                <div className="space-x-1 space-y-1 pt-2">
                                                     {job.skills.map((skill) => (
                                                         <Badge
                                                             key={skill}
@@ -196,8 +210,7 @@ const SearchResult = () => {
                         </div>
 
                         {/* Job detail */}
-                        <div className="col-span-6 bg-blue-500">
-                            {/* {selectedJob && <Card>job detail</Card>} */}
+                        <div className="col-span-6">
                             <JobDetailInSearchResult job={selectedJob} />
                         </div>
                     </div>
@@ -205,61 +218,6 @@ const SearchResult = () => {
             </div>
         </>
     );
-    // return (
-    //     <div className="bg-gray-100">
-    //         <div className="bg-linear-gradient py-8">
-    //             <Container>
-    //                 <SearchBar inputCity={city} inputQuery={keyword} />
-    //             </Container>
-    //         </div>
-    //         <div className="px-8 py-8">
-    //             <h1 className="text-2xl font-bold text-foreground">
-    //                 {jobs.length} <span className={keyword ? "text-red-500" : ""}>{keyword || "IT"}</span> {jobs.length == 1 ? "job" : "jobs"} in {city_label}
-    //             </h1>
-    //         </div>
-    //         <div className="px-8 py-8 grid grid-cols-5 gap-5">
-    //             <div className="col-span-2">
-    //                 <ul>
-    //                     {jobs.map(job => (
-    //                         <li
-    //                             key={job.id}
-    //                             className="block max-w-none p-6 mb-6 bg-white rounded-lg flex-col space-y-1"
-    //                             onMouseDown={() => onListItemMouseDown(job.id)}>
-    //                             <p className="text-sm text-gray-500">Posted on {job.posted_day}</p>
-
-    //                             <a href={`/job-detail?id=${job.id}`} className="bg-blue-500">
-    //                                 <h2 className="text-xl font-bold">{job.title}</h2>
-    //                             </a>
-    //                             <p className="text-base">{job.company?.name}</p>
-
-    //                             <p className="text-base text-green-600 flex space-x-1">
-    //                                 <CircleDollarSign />
-    //                                 <div>{job.salary}</div>
-    //                             </p>
-    //                             <hr />
-    //                             <p className="flex space-x-1">
-    //                                 <User />
-    //                                 <div className="text-sm">{job.working_model}</div>
-    //                             </p>
-    //                             <p className="flex space-x-1">
-    //                                 <MapPin />
-    //                                 <div className="text-sm">{job.location}</div>
-    //                             </p>
-    //                             <div className="flex space-x-1">
-    //                                 {job.skills.map(skill => (
-    //                                     <span key={skill} className="text-xs p-1 border rounded-full">{skill}</span>
-    //                                 ))}
-    //                             </div>
-    //                         </li>
-    //                     ))}
-    //                 </ul>
-    //             </div>
-    //             <div className="col-span-3">
-    //                 <JobDetailInSearchResult job={selectedJob} />
-    //             </div>
-    //         </div>
-    //     </div>
-    // );
 };
 
 SearchResult.propTypes = {
