@@ -64,7 +64,7 @@ const ProfileProgressBar = () => {
                                 </div>
                             </button>
                         </div>
-                        {showMore ? (
+                        {!showMore ? (
                             <></>
                         ) : (
                             <>
@@ -127,13 +127,13 @@ const ProfileProgressBar = () => {
                                 }
                             >
                                 <div className="flex items-center gap-2">
-                                    {showMore ? (
+                                    {!showMore ? (
                                         <ChevronDown className="h-6 w-6 text-gray-700" />
                                     ) : (
                                         <ChevronUp className="h-6 w-6 text-gray-700" />
                                     )}
                                     <p className="text-base text-gray-700">
-                                        {showMore
+                                        {!showMore
                                             ? "Add more information"
                                             : "Show less"}
                                     </p>
@@ -144,7 +144,7 @@ const ProfileProgressBar = () => {
                 </div>
                 <hr />
                 <div className="">
-                    <div className="my-4 flex h-3/5 flex-row justify-between">
+                    <div className="my-4 flex h-3/5 flex-row justify-between gap-1">
                         <div className="w-1/4">
                             <img
                                 src="https://itviec.com/assets/profile/cv-d4db00ef4c885c25e437715236babd64c7cbb960ddf4771e69e55dd8169dd5ba.svg"
