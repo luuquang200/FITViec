@@ -21,9 +21,9 @@ const ProfileNavbar = () => {
                     <NavLink to="/profile-cv/manage-cv" className={Hover}>
                         Manage CVs
                     </NavLink>
-                    <NavLink to="/profile-cv/job-preferences" className={Hover}>
+                    {/* <NavLink to="/profile-cv/job-preferences" className={Hover}>
                         Job Preferences
-                    </NavLink>
+                    </NavLink> */}
                 </div>
             </Container>
         </div>
