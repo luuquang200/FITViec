@@ -37,11 +37,11 @@ const AdminSidebar = ({ onTabChange }) => {
             </div>
             <ul className="space-y-3">
                 <li
-                    className={getTabClassName("account-management")}
-                    onClick={() => handleTabChange("account-management")}
+                    className={getTabClassName("employer-management")}
+                    onClick={() => handleTabChange("employer-management")}
                 >
                     <User className="mr-4 h-5 w-5" />
-                    <span className="flex-grow">Accounts Management</span>
+                    <span className="flex-grow">Employers Management</span>
                 </li>
                 <li
                     className={getTabClassName("job-management")}

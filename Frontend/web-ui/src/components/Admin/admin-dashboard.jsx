@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AdminSidebar from './admin-sidebar';
-import AccountManagement from './accounts-management';
+import EmployerManagement from "./employers-management";
 import JobManagement from './jobs-management';
 
 const AdminDashboard = () => {
@@ -8,8 +8,8 @@ const AdminDashboard = () => {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'account-management':
-        return <AccountManagement />;
+      case 'employer-management':
+        return <EmployerManagement />;
       case 'job-management':
         return <JobManagement />;
       default:
