@@ -26,6 +26,8 @@ import CVViewer from "./components/Employer/cv-detail";
 import CustomerLogin from "./components/Employers/customer-login";
 import CustomerRegister from "./components/Employers/customer-register";
 import VerifyEmployer from "./components/Employers/verify-employer";
+import ProfileManagementCv from "./components/profile/profile-management-cv";
+import ProfileManagementJob from "./components/profile/profile-management-job";
 
 function App() {
     return (
@@ -58,6 +60,14 @@ function App() {
                     element={<JobDetailGuestPage />}
                 />
                 <Route path="/profile-cv" element={<ProfileManagement />} />
+                <Route
+                    path="/profile-cv/manage-cv"
+                    element={<ProfileManagementCv />}
+                />
+                <Route
+                    path="/profile-cv/job-preferences"
+                    element={<ProfileManagementJob />}
+                />
                 <Route
                     path="/verify_email"
                     element={

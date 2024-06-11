@@ -36,6 +36,7 @@ export function AuthProvider({ children }) {
             if (user.emailVerified) {
                 // Fetch the user's role from Firestore
                 const userDoc = await getDoc(doc(db, "users", user.uid));
+
                 let role = "user";
                 if (userDoc.exists()) {
                     role = userDoc.data().role;

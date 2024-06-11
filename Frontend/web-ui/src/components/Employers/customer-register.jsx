@@ -239,7 +239,7 @@ const CustomerRegister = () => {
             {userLoggedIn && <Navigate to={"/"} replace={true} />}
             <div className="grid h-full w-full grid-cols-3 xl:grid-rows-1">
                 {/* Left */}
-                <div className="bg-content col-span-2 h-full w-full bg-itviec-register-employer bg-bottom bg-no-repeat">
+                <div className="bg-content col-span-2 h-full w-full bg-itviec-register-employer bg-bottom bg-no-repeat pb-8">
                     {/* Header */}
                     <div className="mx-auto mb-8 mt-[6vh] max-w-[1000px] ">
                         <div className="flex items-center gap-x-3">

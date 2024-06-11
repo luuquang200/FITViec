@@ -79,7 +79,7 @@ const ForgotPassword = () => {
     };
 
     return (
-        <Container className="h-vh-main py-16 pt-8">
+        <Container className=" py-24 ">
             {userLoggedIn && <Navigate to={"/"} replace={true} />}
             <div className="mb-4 flex gap-x-3">
                 <h3 className="text-xl font-bold">Welcome to</h3>
