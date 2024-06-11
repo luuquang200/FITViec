@@ -177,7 +177,7 @@ const ProfileManagementCv = () => {
 
             <Container className=" max-w-[1000px] pb-10 pt-4">
                 <div className="mt-4  flex w-full flex-col  rounded-lg bg-white  shadow-lg">
-                    <div className="ml-2 mt-3 p-4">
+                    <div className="ml-2 mt-3 p-6">
                         <p className="text-xl font-bold text-slate-700">
                             Manage CVs
                         </p>
@@ -185,7 +185,7 @@ const ProfileManagementCv = () => {
                             Upload your CV below to use it throughout your
                             application process
                         </p>
-                        <div className="w-100  rounded-md border-2 border-gray-300 p-5 shadow-sm ">
+                        <div className="w-100  mb-7 rounded-md border-2 border-gray-300 p-5 shadow-sm ">
                             <div className="relative flex items-center justify-start gap-5">
                                 <FileText className="h-12 w-12 text-gray-500" />
                                 <div className="flex flex-grow flex-col items-start gap-2">
