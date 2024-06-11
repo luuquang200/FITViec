@@ -2,6 +2,7 @@ package com.example.jobservice.service;
 
 import com.example.jobservice.constant.JobStatus;
 import com.example.jobservice.dto.CUJobDto;
+import com.example.jobservice.dto.JobInfo;
 import com.example.jobservice.dto.UpdateResponse;
 import com.example.jobservice.repository.JobRepository;
 import com.example.jobservice.repository.dao.Job;
@@ -72,6 +73,14 @@ public class JobServiceImpl implements JobService {
     } else {
       return new UpdateResponse(HttpStatus.NOT_FOUND.toString(), "Job not found", null);
     }
+  }
+  @Override
+  public JobInfo GetJobInfo(String jobId) {
+    Job job = this.repository.findById(jobId).orElse(null);
+    if (job != null) {
+      return new JobInfo(job.getJobId(), job.getJobTitle());
+    }
+    return null;
   }
 
   private String CreateJobId() {

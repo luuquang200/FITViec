@@ -37,9 +37,15 @@ public class JobController {
     return ResponseEntity.ok(this.service.GetJobById(jobId));
   }
   @GetMapping("/jobs-by-employer-id/{employer-id}")
-  public ResponseEntity<List<Job>> GetJobsByEmployerId(@PathVariable("employer-id") String employerId) throws IOException {
-    System.out.println(employerId);
-    return ResponseEntity.ok(this.service.GetJobsByOneField(FilterBy.COPANY_ID, employerId));
+  public ResponseEntity<List<Job>> GetJobsByEmployerId(
+      HttpServletRequest request, @PathVariable("employer-id") String employerId) throws IOException {
+    UserInfo user = (UserInfo) request.getAttribute("userInfo");
+    if (user.getRole().equalsIgnoreCase(Roles.EMPLOYER)) {
+      System.out.println(employerId);
+      return ResponseEntity.ok(this.service.GetJobsByOneField(FilterBy.COPANY_ID, employerId));
+    } else {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
   }
   @GetMapping("/jobs-by-skill")
   public ResponseEntity<List<Job>> GetJobsBySkill(@RequestBody GetDataRequest skillName) throws IOException {

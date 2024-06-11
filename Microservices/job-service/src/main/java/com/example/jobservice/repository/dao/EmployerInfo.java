@@ -10,12 +10,17 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployerInfo {
-  private String name;
-  private String description;
-  private String avatar;
+  private String companyName;
   private String companyType;
   private String companySize;
   private String country;
   private String workingDays;
   private String overtimePolicy;
+  private String companyOverview;
+  private String keySkills;
+  private String whyLoveWorkingHere;
+  private String logoUrl;
+  private String location;
+  private String workType;
+  private String image;
 }

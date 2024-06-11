@@ -66,6 +66,7 @@ const CustomerLogin = () => {
                             toast.success(
                                 "Successfully authenticated ! Welcome to the FITviec employer page",
                             );
+                            console.log(user);
                             // Điều hướng tới home sau khi đăng nhập  thành công, để tạm tại vì chưa có UI employer
                             navigate(`/`);
                         } else {
@@ -156,7 +157,7 @@ const CustomerLogin = () => {
     };
 
     return (
-        <Container className="h-vh-employer-login w-full max-w-full">
+        <Container className="w-full max-w-full">
             {userLoggedIn && <Navigate to={"/"} replace={true} />}
             <div className="grid h-full w-full grid-cols-2 xl:grid-rows-1">
                 {/* Left */}
