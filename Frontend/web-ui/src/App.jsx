@@ -38,7 +38,7 @@ function App() {
             <div className="h-[88px]" />
             <Routes>
                 <Route path="/employer" element={<EmployerContainer />} />
-                <Route path="/cv-detail/:candidateId" element={<CVViewer/>} />
+                <Route path="/cv-detail/:applicantId" element={<CVViewer/>} />
                 <Route path="/sign_in" element={<SignIn />} />
                 <Route path="/sign_up" element={<SignUp />} />
                 <Route
