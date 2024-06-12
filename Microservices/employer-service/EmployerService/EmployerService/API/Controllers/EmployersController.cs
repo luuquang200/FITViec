@@ -98,7 +98,7 @@ namespace EmployerService.API.Controllers
         // Get all jobs by employer id
         [Route("get-all-jobs")]
         [HttpGet]
-        public async Task<IActionResult> GetListJobByEmployerId()
+        public async Task<IActionResult> GetListJobByEmployer()
         {
             var result = await _employerService.GetListJobByEmployerAsync();
             return Ok(result);
