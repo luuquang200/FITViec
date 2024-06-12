@@ -6,24 +6,25 @@ import { Link } from "react-router-dom";
 import { Button } from "../button";
 function ApplyJobSection({job_detail})  {
   const { currentUser} = useAuth();
-
-  console.log("currentUser from Apply: ", currentUser);
   const [isClickedHeart, setIsClickedHeart] = useState(false);
   return (
     <>
       <article className="job-listing">
         <header>
-          <h2 className="job-title">{job_detail.jobTitle}</h2>
-          <div className="company-name-apply">{job_detail.employerInfo.companyName}</div>
+          <h2 className="job-title">{job_detail?.jobTitle}</h2>
+          <div className="company-name-apply">{job_detail?.employerInfo.companyName}</div>
         </header>
         <div className="salary-info">
           
           {!currentUser ? 
             <div className="flex space-x-2 underline"> <CircleDollarSign /> <span>Sign in to view salary</span></div> :  
-            <div className="flex space-x-2 text-green-500" >   <CircleDollarSign /> <span>{job_detail.jobSalary}</span> </div> }
+            <div className="flex space-x-2 text-green-500" >   <CircleDollarSign /> <span>{job_detail?.jobSalary}</span> </div> }
         </div>
         <footer className="flex justify-between mt-[24px]">
-          <Link className="w-11/12 h-[48px]" to={`/form-apply-job/${job_detail.jobId}`}><Button className="w-full h-[48px] bg-[#ED1B2F] hover:bg-[#C82222]" > Apply Now </Button></Link>
+          <Link className="w-11/12 h-[48px]" to={{
+              pathname: `/form-apply-job/${job_detail?.jobId}`,
+              state: { job_detail },
+            }}><Button className="w-full h-[48px] bg-[#ED1B2F] hover:bg-[#C82222]" > Apply Now </Button></Link>
           <Heart onClick={() => setIsClickedHeart(!isClickedHeart)} className={`w-1/12 m-auto h-[32px] text-[#ED1B2F] cursor-pointer ${isClickedHeart ? " fill-[#ED1B2F]" : '' }`}/>
         </footer>
       </article>

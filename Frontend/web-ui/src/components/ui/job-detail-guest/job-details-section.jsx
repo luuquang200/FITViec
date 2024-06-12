@@ -113,7 +113,7 @@ const JobDetailsSection = ({job_detail}) => {
         <header>
           <h2 className="section-title">Top 3 reasons to join us</h2>
           <ul className="section-content">
-            <div dangerouslySetInnerHTML={{ __html: job_detail.jobTopReasons }} />
+            <div dangerouslySetInnerHTML={{ __html: job_detail?.jobTopReasons }} />
           </ul>
         </header>
 
@@ -122,7 +122,7 @@ const JobDetailsSection = ({job_detail}) => {
         <section>
           <h2 className="section-title">Job description</h2>
           <ul className="section-content">
-            <div dangerouslySetInnerHTML={{ __html: job_detail.jobDescription }} />
+            <div dangerouslySetInnerHTML={{ __html: job_detail?.jobDescription }} />
           </ul>
         </section>
 
@@ -140,7 +140,7 @@ const JobDetailsSection = ({job_detail}) => {
         <section>
           <h2 className="section-title">Why you will love working here</h2>
           <ul className="section-content">
-            <div dangerouslySetInnerHTML={{ __html: job_detail.jobBenefit }} />
+            <div dangerouslySetInnerHTML={{ __html: job_detail?.jobBenefit }} />
           </ul>
         </section>
       </article>
