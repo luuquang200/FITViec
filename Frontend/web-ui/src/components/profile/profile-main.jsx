@@ -273,7 +273,7 @@ const ProfileMain = () => {
                 <AboutMePopup
                     userInfo={currentUser}
                     aboutMe={profileUser?.aboutMe}
-                    onClose={() => setisisOpenAboutMePopup(false)}
+                    onClose={() => setIsOpenAboutMePopup(false)}
 
                 />
             )}
