@@ -1,5 +1,6 @@
 import * as React from "react";
 import Container from "@/components/layout/container";
+import { useState } from "react";
 
 import ProfileNavbar from "./profile-navbar";
 import ProfileProgressBar from "./profile-progress-bar";

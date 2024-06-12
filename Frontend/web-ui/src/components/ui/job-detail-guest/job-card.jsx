@@ -1,4 +1,4 @@
-import * as React from "react";
+import PropTypes from 'prop-types';
 
 function TagSkills({ children }) {
   return (
@@ -7,7 +7,9 @@ function TagSkills({ children }) {
     </div>
   );
 }
-
+TagSkills.propTypes = {
+    children: PropTypes.any,
+};
 
 const TypeTag = ({ type }) => {
     return (
@@ -19,6 +21,10 @@ const TypeTag = ({ type }) => {
         </div>
     );
 };
+TypeTag.propTypes = {
+    type: PropTypes.string,
+};
+
 
 function JobCardSimilar(
     {
@@ -28,7 +34,6 @@ function JobCardSimilar(
         time,
         companyLogo,
         companyName,
-        salary,
         position,
         location
     }
@@ -110,6 +115,15 @@ function JobCardSimilar(
         </article>
     );
 }
-
+JobCardSimilar.propTypes = {
+    tag: PropTypes.string,
+    jobTitle: PropTypes.string.isRequired,
+    labels: PropTypes.arrayOf(PropTypes.string).isRequired,
+    time: PropTypes.string,
+    companyLogo: PropTypes.string.isRequired,
+    companyName: PropTypes.string.isRequired,
+    position: PropTypes.string,
+    location: PropTypes.string,
+};
 
 export default JobCardSimilar;

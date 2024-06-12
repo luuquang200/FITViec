@@ -2,7 +2,6 @@ package org.example.jobsearchservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -16,7 +15,7 @@ public class SecurityConfig {
     http
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(authz -> authz
-            .requestMatchers("/job-elastic/admin/*/").authenticated()
+            .requestMatchers("/job-elastic/admin/*/", "/job-elastic/jobs-by-employer-id/*/").authenticated()
             .anyRequest().permitAll());
     return http.build();
   }

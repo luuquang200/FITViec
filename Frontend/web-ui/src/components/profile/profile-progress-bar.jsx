@@ -1,16 +1,78 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import { CirclePlus, ChevronDown, ChevronUp, Star } from "lucide-react";
+import { db } from "../../firebase/firebase";
+import { doc, getDoc } from "firebase/firestore";
+
+import PersonalInfoPopUp from "./PopupForm/personal-info-popup";
+import WorkExperiencePopup from "./PopupForm/work-experience-popup";
+import AboutMePopup from "./PopupForm/about-me-popup";
+import EducationPopup from "./PopupForm/education-popup";
+import PersonalProjectPopup from "./PopupForm/personal-project-popup";
+import CertificatePopup from "./PopupForm/certificate-popup";
+import AwardPopup from "./PopupForm/award-popup";
+import SkillPopup from "./PopupForm/skill-popup";
+
+import { useAuth } from "../../contexts/authContext";
 
 const ProfileProgressBar = () => {
+    const { currentUser, inSingUpInPage, isGoogleUser } = useAuth();
     const [showMore, setShowMore] = useState(false);
+
+    const [profileUser, setProfileUser] = useState(null);
+    const [isOpenPopupPersonal, setIsPopupPersonal] = useState(false);
+    const [isOpenAboutMePopup, setIsOpenAboutMePopup] = useState(false);
+    const [isOpenEducationMePopup, setIsOpenEducationMePopup] = useState(false);
+    const [isOpenWorkExperiencePopup, setisOpenWorkExperiencePopup] =
+        useState(false);
+
+    const [isOpenPersonalProjectPopup, setIsOpenPersonalProjectPopup] =
+        useState(false);
+    const [isOpenCertificatePopup, setIsOpenCertificatePopup] = useState(false);
+    const [isOpenAwardPopup, setIsOpenAwardPopup] = useState(false);
+    const [isOpenSkillPopup, setisOpenSkillPopup] = useState(false);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            if (currentUser) {
+                const profileDoc = await getDoc(
+                    doc(db, "profiles", currentUser.uid),
+                );
+                const profileData = profileDoc.exists()
+                    ? profileDoc.data()
+                    : {};
+                setProfileUser(profileData);
+            }
+        };
+
+        fetchUserData();
+    }, [currentUser, isOpenAboutMePopup]);
+
+    const handleModifyPersonalClick = () => {
+        setIsPopupPersonal(true);
+    };
+
+    const handleModifyAboutMeClick = () => {
+        setIsOpenAboutMePopup(true);
+    };
+    const handleModifyWorkExperiencelClick = () => {
+        setisOpenWorkExperiencePopup(true);
+    };
+    const handleModifyEducationClick = () => {
+        setIsOpenEducationMePopup(true);
+    };
+    const handleModifyPersonalProjectClick = () =>
+        setIsOpenPersonalProjectPopup(true);
+    const handleModifyCertificateClick = () => setIsOpenCertificatePopup(true);
+    const handleModifyAwardClick = () => setIsOpenAwardPopup(true);
+    const handleModifySkillClick = () => setisOpenSkillPopup(true);
 
     // tham khao viec danh gia strength cua profile
     // const evaluteProfileStrength = () => {
     //     const totalFields = Object.keys(userInfo).length;
     //     const nonNullFields = Object.values(userInfo).filter(value => value !== null).length;
-    
+
     //     let evaluation;
     //     if (nonNullFields > 10) {
     //         evaluation = 'Excellent';
@@ -36,15 +98,9 @@ const ProfileProgressBar = () => {
             <div className="h-auto w-full rounded-lg bg-white p-5">
                 <div className="grid  grid-cols-3 gap-4 p-4">
                     <div className="col-span-1 flex items-center justify-center">
-                        <div className="size-16 border-4 border-gray-400 rounded-full flex justify-center">
-                        <Star className="size-8 fill-amber-600 stroke-amber-600 relative self-center" />
+                        <div className="flex size-16 justify-center rounded-full border-4 border-gray-400">
+                            <Star className="relative size-8 self-center fill-amber-600 stroke-amber-600" />
                         </div>
-                        {/* <img
-                            width="80"
-                            height="80"
-                            src="https://img.icons8.com/ios-filled/100/army-star.png"
-                            alt="army-star"
-                        /> */}
                     </div>
                     <div className="col-span-2 flex flex-col">
                         <p className="text-lg font-medium text-slate-700">
@@ -63,7 +119,7 @@ const ProfileProgressBar = () => {
                     </p>
                     <div className="flex flex-col justify-center">
                         <div className="w-100 mb-0 p-2">
-                            <button>
+                            <button onClick={handleModifyAboutMeClick}>
                                 <div className="flex items-center gap-2">
                                     <CirclePlus className="h-4 w-4 text-blue-700" />
                                     <p className="text-base text-blue-700">
@@ -73,7 +129,7 @@ const ProfileProgressBar = () => {
                             </button>
                         </div>
                         <div className="w-100 mb-0 p-2">
-                            <button>
+                            <button onClick={handleModifyPersonalClick}>
                                 <div className="flex items-center gap-2">
                                     <CirclePlus className="h-4 w-4 text-blue-700" />
                                     <p className="text-base text-blue-700">
@@ -83,7 +139,7 @@ const ProfileProgressBar = () => {
                             </button>
                         </div>
                         <div className="w-100 mb-0 p-2">
-                            <button>
+                            <button onClick={handleModifyWorkExperiencelClick}>
                                 <div className="flex items-center gap-2">
                                     <CirclePlus className="h-4 w-4 text-blue-700" />
                                     <p className="text-base text-blue-700">
@@ -97,7 +153,9 @@ const ProfileProgressBar = () => {
                         ) : (
                             <>
                                 <div className="w-100 mb-0 p-2">
-                                    <button>
+                                    <button
+                                        onClick={handleModifyEducationClick}
+                                    >
                                         <div className="flex items-center gap-2">
                                             <CirclePlus className="h-4 w-4 text-blue-700" />
                                             <p className="text-base text-blue-700">
@@ -107,7 +165,7 @@ const ProfileProgressBar = () => {
                                     </button>
                                 </div>
                                 <div className="w-100 mb-0 p-2">
-                                    <button>
+                                    <button onClick={handleModifySkillClick}>
                                         <div className="flex items-center gap-2">
                                             <CirclePlus className="h-4 w-4 text-blue-700" />
                                             <p className="text-base text-blue-700">
@@ -117,7 +175,9 @@ const ProfileProgressBar = () => {
                                     </button>
                                 </div>
                                 <div className="w-100 mb-0 p-2">
-                                    <button>
+                                    <button
+                                        onClick={handleModifyCertificateClick}
+                                    >
                                         <div className="flex items-center gap-2">
                                             <CirclePlus className="h-4 w-4 text-blue-700" />
                                             <p className="text-base text-blue-700">
@@ -127,7 +187,7 @@ const ProfileProgressBar = () => {
                                     </button>
                                 </div>
                                 <div className="w-100 mb-0 p-2">
-                                    <button>
+                                    <button onClick={handleModifyAwardClick}>
                                         <div className="flex items-center gap-2">
                                             <CirclePlus className="h-4 w-4 text-blue-700" />
                                             <p className="text-base text-blue-700">
@@ -137,7 +197,11 @@ const ProfileProgressBar = () => {
                                     </button>
                                 </div>
                                 <div className="w-100 mb-0 p-2">
-                                    <button>
+                                    <button
+                                        onClick={
+                                            handleModifyPersonalProjectClick
+                                        }
+                                    >
                                         <div className="flex items-center gap-2">
                                             <CirclePlus className="h-4 w-4 text-blue-700" />
                                             <p className="text-base text-blue-700">
@@ -192,6 +256,55 @@ const ProfileProgressBar = () => {
                     </div>
                 </div>
             </div>
+            {isOpenPopupPersonal && (
+                <PersonalInfoPopUp
+                    userInfo={currentUser}
+                    onClose={() => setIsPopupPersonal(false)}
+                />
+            )}
+            {isOpenWorkExperiencePopup && (
+                <WorkExperiencePopup
+                    userInfo={currentUser}
+                    onClose={() => setisOpenWorkExperiencePopup(false)}
+                />
+            )}
+            {isOpenAboutMePopup && (
+                <AboutMePopup
+                    userInfo={currentUser}
+                    aboutMe={profileUser?.aboutMe}
+                    onClose={() => setIsOpenAboutMePopup(false)}
+                />
+            )}
+            {isOpenEducationMePopup && (
+                <EducationPopup
+                    userInfo={currentUser}
+                    onClose={() => setIsOpenEducationMePopup(false)}
+                />
+            )}
+            {isOpenPersonalProjectPopup && (
+                <PersonalProjectPopup
+                    userInfo={currentUser}
+                    onClose={() => setIsOpenPersonalProjectPopup(false)}
+                />
+            )}
+            {isOpenCertificatePopup && (
+                <CertificatePopup
+                    userInfo={currentUser}
+                    onClose={() => setIsOpenCertificatePopup(false)}
+                />
+            )}
+            {isOpenAwardPopup && (
+                <AwardPopup
+                    userInfo={currentUser}
+                    onClose={() => setIsOpenAwardPopup(false)}
+                />
+            )}
+            {isOpenSkillPopup && (
+                <SkillPopup
+                    userInfo={currentUser}
+                    onClose={() => setisOpenSkillPopup(false)}
+                />
+            )}
         </div>
     );
 };

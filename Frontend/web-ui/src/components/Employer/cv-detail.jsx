@@ -4,84 +4,103 @@ import { toast } from 'react-toastify';
 import { useAuth } from "../../contexts/authContext";
 import PropTypes from "prop-types";
 const exCandidateData = {
+  id: "0963271f6612e330867f84eddab1542",
   name: "Nguyễn Việt Anh",
   email: "nv.anh933@gmail.com",
-  phone: "0989311857",
-  status: "CV tiếp nhận",
-  code: "0963271f6612e330867f84eddab1542",
-  cvUrl: "Domain_Model.pdf"
+};
+const exJobData = {
+  jobId: "abca45673",
+  jobStatus: "pending",
+  jobTitle: "Công việc nặng nhọc",
 };
 
-const CVViewer = ({ jobId}) => {
-  const { candidateId } = useParams(); 
-  console.log("candidateId: ", candidateId);
-  const [candidateData, setCandidateData] = useState(exCandidateData);
+const exApplicationData = {
+  applicationId: "applicationId",
+  employerId: "employerId",
+  jobId: "jobId",
+  jobSeekerId: "jobSeekerId",
+  applicationStatus: "in_review",
+  applicationName: "applicationName",
+  cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+  coverLetter: "coverLetter",
+  applyAt: "applyAt",
+};
+
+const CVViewer = () => {
+  const {applicationId} = useParams();
+  const [JobSeekerData, setJobSeekerData] = useState(exCandidateData);
+  const [applicationData, setApplicationData] = useState(exApplicationData);
   const [loading, setLoading] = useState(false);
   const { currentUser } = useAuth();
-  console.log(candidateData);
-  const fetchCandidateData = async (id) => {
+
+  console.log(currentUser);
+  //Dữ liệu liên quan đến việc ứng tuyển công việc
+  const fetchApplicationData = async (applicationId) => { 
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:5173/job-seeker/${id}`);
+      const response = await fetch(`http://localhost:5173/application/${applicationId}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      setCandidateData(data);
+      setApplicationData(data);
     } catch (error) {
-      console.error('Error fetching candidate data:', error);
+      console.error('Error fetching Applicant data:', error);
+      toast.error("Có lỗi xảy ra khi lấy dữ liệu thông tin ứng tuyển.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  //Dữ liệu liên quan đến việc thông tin người ứng tuyển
+  const fetchJobSeekerData = async (JobSeekerId) => { 
+    setLoading(true);
+    try {
+      const response = await fetch(`http://localhost:5173/job-seeker/${JobSeekerId}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setJobSeekerData(data);
+    } catch (error) {
+      console.error('Error fetching JobSeeker data:', error);
       toast.error("Có lỗi xảy ra khi lấy dữ liệu ứng viên.");
     } finally {
       setLoading(false);
     }
   };
 
-  // useEffect(() => {
-  //   console.log("candidateId: ", candidateId);
-  //   setLoading(true);
-  //   //if (candidateId) {
-  //     //fetchCandidateData(candidateId);
-  //     setTimeout(()=>{
-  //       setCandidateData(exCandidateData);
-  //       setLoading(false);
-  //       console.log("candidateId 2: ", candidateId);
-  //     }, 3000);
-
-  //   //}
-  // }, []);
-
 
   const copyCodeToClipboard = () => {
-    navigator.clipboard.writeText(candidateData.code);
+    navigator.clipboard.writeText(JobSeekerData.id);
     toast.success("Mã đã được sao chép thành công!")
   };
   
   const downloadCV = () => {
     const link = document.createElement('a');
-    link.href = candidateData.cvUrl;
-    link.download = candidateData.cvUrl.split('/').pop();
+    link.href = applicationData.cvLink;
+    link.target = "_blank";
+    link.download = applicationData.cvLink.split('/').pop();
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
-  const updateCandidateStatus = async (newStatus) => {
-    if (!candidateData) return;
-    //update candidate status (verify employerId <-> currentUser.uid)
+  const updateApplicationStatus = async (newStatus) => {
+    if (!applicationData) return;
+    //update applicant status (need verify employerId <-> currentUser.uid)
     try {
-      const response = await fetch(`http://localhost:5173/api/candidates/${candidateId}/status`, {
-        method: 'PUT',
+      const response = await fetch(`http://localhost:1200/application/${newStatus}/${applicationId}`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ status: newStatus , employerId: currentUser.uid, jobId: jobId }),
       });
 
       if (!response.ok) {
         throw new Error("Failed to update status");
       }
 
-      setCandidateData((prevData) => ({
+      setApplicationData((prevData) => ({
         ...prevData,
         status: newStatus,
       }));
@@ -96,16 +115,16 @@ const CVViewer = ({ jobId}) => {
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
   }
 
-  if (!candidateData) {
+  if (!applicationData) {
     return <div className="flex justify-center items-center h-screen">Không có dữ liệu ứng viên.</div>;
   }
-  console.log("candidateData.cvUrl: ", candidateData.cvUrl );
+  console.log("applicationData.cvUrl: ", applicationData.cvLink );
   return (
     <div className="flex p-4 h-screen">
       {/* Left Section for PDF Content */}
       <div className="w-2/3 bg-gray-100 p-4 border-r">
         <iframe 
-          src={candidateData.cvUrl}
+          src={applicationData.cvLink}
           title="CV PDF Viewer"
           className="w-full h-full"
         />
@@ -117,26 +136,26 @@ const CVViewer = ({ jobId}) => {
           <div className="flex items-center mb-4">
             <div className="bg-primary text-white rounded-full h-10 w-10 flex items-center justify-center mr-4">PB</div>
             <div>
-              <div className="font-bold">{candidateData.name}</div>
-              <div className="text-sm text-gray-600">{candidateData.email} | {candidateData.phone}</div>
+              <div className="font-bold">{JobSeekerData.name}</div>
+              <div className="text-sm text-gray-600">{JobSeekerData.email} </div>
             </div>
           </div>
           <div className="mb-4">
             <div className="font-semibold mb-2">Đổi trạng thái CV : </div>
             <div className="flex items-center justify-between">
-              <button onClick={() => updateCandidateStatus('interview')} className="bg-green-100 text-green-700 w-1/2 py-2 rounded mr-2">Hẹn phỏng vấn</button>
-              <button onClick={() => updateCandidateStatus('rejected')} className="bg-red-100 text-red-700 w-1/2 py-2 rounded">Từ chối</button>
+              <button onClick={() => updateApplicationStatus('accepted')} className="bg-green-100 text-green-700 w-1/2 py-2 rounded mr-2">Hẹn phỏng vấn</button>
+              <button onClick={() => updateApplicationStatus('rejected')} className="bg-red-100 text-red-700 w-1/2 py-2 rounded">Từ chối</button>
             </div>
           </div>
           <div className="mb-4 flex">
             <div className="font-semibold mb-2">Trạng thái CV:</div>
-            <span className="text-gray-600 ml-4">{candidateData.status}</span>
+            <span className="text-gray-600 ml-4">{applicationData.status}</span>
           </div>
           <div>
             
             <button onClick={downloadCV} className="bg-gray-200 text-gray-700 px-4 py-2 rounded w-full mb-2">Tải CV PDF</button>
             <div className="text-gray-600">Mã ứng viên</div>
-            <div className="bg-gray-100 text-gray-800 px-4 py-2 mb-2 text-center border-gray-300 border-2 rounded overflow-hidden text-ellipsis whitespace-nowrap">{candidateData.code}</div>
+            <div className="bg-gray-100 text-gray-800 px-4 py-2 mb-2 text-center border-gray-300 border-2 rounded overflow-hidden text-ellipsis whitespace-nowrap">{JobSeekerData.id}</div>
             <button onClick={copyCodeToClipboard} className="bg-gray-300 text-gray-700 px-4 py-2 rounded w-full mb-2">Sao chép mã</button>
           </div>
         </div>

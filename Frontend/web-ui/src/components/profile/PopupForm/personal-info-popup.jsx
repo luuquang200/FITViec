@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Camera, X } from "lucide-react";
 
 import { db, storage } from "../../../firebase/firebase";
-import { setDoc, doc, getDoc } from "firebase/firestore";
+import { setDoc, doc } from "firebase/firestore";
 
 import { useAuth } from "../../../contexts/authContext";
 import { toast } from "react-toastify";
@@ -29,21 +29,24 @@ const PersonalInfoPopUp = ({ userInfo, onClose }) => {
     const tomorrowISO = tomorrow.toISOString().split("T")[0];
 
     const [formData, setFormData] = useState({
-        name: userInfo.displayName,
-        title: userInfo.title,
-        email: userInfo.email,
-        phone: userInfo.phone,
-        dob: userInfo.birthday,
-        gender: userInfo.gender,
-        provice: userInfo.title,
-        address: userInfo.address,
-        personalLink: userInfo.pLink,
+        name: userInfo.displayName || "",
+        title: userInfo.title || "",
+        email: userInfo.email || "",
+        phone: userInfo.phone || "",
+        dob: userInfo.birthday || "",
+        gender: userInfo.gender || "",
+        provice: userInfo.provice || "",
+        address: userInfo.address || "",
+        personalLink: userInfo.personalLink || "",
     });
 
+    const [errors, setErrors] = useState({});
     const [imageFileUpload, setImageFileUpload] = useState(null);
+    const [updating, setUpdating] = useState(false);
 
     const popupRef = useRef(null);
 
+    // Click background close popup
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (popupRef.current && !popupRef.current.contains(event.target)) {
@@ -103,24 +106,44 @@ const PersonalInfoPopUp = ({ userInfo, onClose }) => {
             ...formData,
             [name]: value,
         });
-    };
-    const updateCurrentUser = (updatedInfo) => {
-        setCurrentUser((prevUser) => ({
-            ...prevUser,
-            ...updatedInfo,
-        }));
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: "" })); // Xóa lỗi khi người dùng nhập
     };
 
+    // Kiểm tra các trường bắt buộc
+    const validateField = (name, value) => {
+        let error = "";
+        if (name === "name" && !value) error = "Full name is required";
+        if (name === "title" && !value) error = "Title is required";
+        if (name === "email" && !value) error = "Email address is required";
+        if (name === "phone" && !value) error = "Phone number is required";
+        if (name === "dob" && !value) error = "Date of birth is required";
+        if (name === "address" && !value) error = "Address is required";
+        return error;
+    };
+
+    const handleBlur = (e) => {
+        const { name, value } = e.target;
+        const error = validateField(name, value);
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+    };
+
+    // Submit form
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
-        const sanitizeData = (data) => {
-            return Object.keys(data).reduce((acc, key) => {
-                acc[key] = typeof data[key] !== "undefined" ? data[key] : null;
-                return acc;
-            }, {});
-        };
+
+        // Kiểm tra các trường bắt buộc
+        const newErrors = {};
+        Object.keys(formData).forEach((key) => {
+            const error = validateField(key, formData[key]);
+            if (error) newErrors[key] = error;
+        });
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
         try {
+            setUpdating(true);
             const profileUpdates = {
                 displayName: formData.name,
                 phoneNumber: formData.phone,
@@ -130,25 +153,24 @@ const PersonalInfoPopUp = ({ userInfo, onClose }) => {
                 profileUpdates.photoURL = imageFileUpload;
             }
 
-            // Cập nhật profile
+            // Cập nhật profile của authentication
             await updateProfile(auth.currentUser, profileUpdates);
 
             // Cập nhật thông tin vào cơ sở dữ liệu Firestore
             const userDocRef = doc(db, "users", currentUser.uid);
             await setDoc(
                 userDocRef,
-                sanitizeData({
+                {
                     displayName: formData.name,
                     title: formData.title,
                     email: formData.email,
                     phone: formData.phone,
                     birthday: formData.dob,
                     gender: formData.gender,
-                    provice: formData.provice,
                     address: formData.address,
                     personalLink: formData.personalLink,
                     photoURL: imageFileUpload ? imageFileUpload : null,
-                }),
+                },
                 { merge: true },
             ); // Sử dụng merge để cập nhật thông tin mà không ghi đè tài liệu đang tồn tại
 
@@ -161,19 +183,17 @@ const PersonalInfoPopUp = ({ userInfo, onClose }) => {
                 phone: formData.phone,
                 birthday: formData.dob,
                 gender: formData.gender,
-                provice: formData.provice,
                 address: formData.address,
                 personalLink: formData.personalLink,
                 photoURL: imageFileUpload ? imageFileUpload : prevUser.photoURL,
                 // Thêm các trường khác tương ứng ở đây nếu cần
             }));
-
+            setUpdating(false);
+            toast.success("Update profile successfully ");
             onClose();
         } catch (error) {
-            console.error("Error updating user info:", error);
-            // Handle error
+            toast.error("Error update user info :", error);
         }
-        onClose();
     };
 
     return (
@@ -184,7 +204,7 @@ const PersonalInfoPopUp = ({ userInfo, onClose }) => {
             >
                 <div
                     ref={popupRef}
-                    className="mt-14 h-[92%] w-3/5 transform  overflow-auto rounded-lg bg-white p-8 shadow-md transition-all duration-300 ease-in-out "
+                    className="mt-8 h-[96%] w-[53%] transform  overflow-auto rounded-lg bg-white p-8 shadow-md transition-all duration-300 ease-in-out "
                 >
                     <div className="flex justify-between">
                         <h2 className="mb-4 text-xl font-semibold text-slate-700">
@@ -225,79 +245,114 @@ const PersonalInfoPopUp = ({ userInfo, onClose }) => {
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="">
+                    <form onSubmit={handleSubmit} className="mt-8">
                         <div className="mb-4">
                             <label className="block text-base font-semibold text-slate-700">
                                 Full name
+                                <abbr className="ml-1 text-red-500">*</abbr>
                             </label>
                             <input
                                 type="text"
                                 name="name"
-                                defaultValue={formData.name}
+                                value={formData.name}
                                 onChange={handleChange}
-                                className="mt-1 w-full rounded border-2 p-2 outline-none  focus:border-green-500 peer-required:border-red-500"
+                                onBlur={handleBlur}
+                                className={`mt-1 w-full rounded border-2 p-2 outline-none ${errors.name ? "border-red-500" : "focus:border-green-500"}`}
                                 placeholder="Full name"
                                 maxLength="30"
                             />
+                            {errors.name && (
+                                <p className="mt-1 text-sm text-red-500">
+                                    {errors.name}
+                                </p>
+                            )}
                         </div>
 
                         <div className="mb-4">
                             <label className="block text-base font-semibold text-slate-700">
                                 Title
+                                <abbr className="ml-1 text-red-500">*</abbr>
                             </label>
                             <input
                                 type="text"
                                 name="title"
-                                defaultValue={formData.title}
+                                value={formData.title}
                                 onChange={handleChange}
-                                className="mt-1 w-full rounded border-2 p-2 outline-none  focus:border-green-500 peer-required:border-red-500"
+                                onBlur={handleBlur}
+                                className={`mt-1 w-full rounded border-2 p-2 outline-none ${errors.title ? "border-red-500" : "focus:border-green-500"}`}
                                 placeholder="Title"
                                 maxLength="20"
                             />
+                            {errors.title && (
+                                <p className="mt-1 text-sm text-red-500">
+                                    {errors.title}
+                                </p>
+                            )}
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="mb-4">
                                 <label className="block text-base font-semibold text-slate-700">
                                     Email address
+                                    <abbr className="ml-1 text-red-500">*</abbr>
                                 </label>
                                 <input
                                     disabled
                                     type="email"
                                     name="email"
-                                    defaultValue={formData.email}
+                                    value={formData.email}
                                     onChange={handleChange}
-                                    className="mt-1 w-full rounded border-2 p-2 focus:border-green-500 peer-required:border-red-500"
+                                    onBlur={handleBlur}
+                                    className={`mt-1 w-full rounded border-2 p-2 outline-none ${errors.email ? "border-red-500" : "focus:border-green-500"}`}
                                     placeholder="Email address"
                                 />
+                                {errors.email && (
+                                    <p className="mt-1 text-sm text-red-500">
+                                        {errors.email}
+                                    </p>
+                                )}
                             </div>
                             <div className="mb-4">
                                 <label className="block text-base font-semibold text-slate-700">
                                     Phone
+                                    <abbr className="ml-1 text-red-500">*</abbr>
                                 </label>
                                 <input
                                     type="tel"
                                     name="phone"
                                     value={formData.phone}
                                     onChange={handleChange}
-                                    className="mt-1 w-full rounded border-2 p-2 outline-none focus:border-green-500 peer-required:border-red-500"
+                                    onBlur={handleBlur}
+                                    className={`mt-1 w-full rounded border-2 p-2 outline-none ${errors.phone ? "border-red-500" : "focus:border-green-500"}`}
                                     placeholder="Phone"
                                     maxLength="11"
                                 />
+                                {errors.phone && (
+                                    <p className="mt-1 text-sm text-red-500">
+                                        {errors.phone}
+                                    </p>
+                                )}
                             </div>
                             <div className="mb-4">
                                 <label className="block text-base font-semibold text-slate-700">
                                     Date of Birth
+                                    <abbr className="ml-1 text-red-500">*</abbr>
                                 </label>
                                 <input
                                     type="date"
                                     name="dob"
                                     value={formData.dob}
                                     onChange={handleChange}
-                                    className="mt-1 w-full rounded border-2 p-2 outline-none focus:border-green-500 peer-required:border-red-500"
+                                    onBlur={handleBlur}
+                                    className={`mt-1 w-full rounded border-2 p-2 outline-none ${errors.dob ? "border-red-500" : "focus:border-green-500"}`}
                                     placeholder="Date of Birth"
                                     max={tomorrowISO} // Set max value to today's date
                                 />
+                                {errors.dob && (
+                                    <p className="mt-1 text-sm text-red-500">
+                                        {errors.dob}
+                                    </p>
+                                )}
                             </div>
                             <div className="mb-4">
                                 <label className="block text-base font-semibold text-slate-700">
@@ -305,44 +360,36 @@ const PersonalInfoPopUp = ({ userInfo, onClose }) => {
                                 </label>
                                 <select
                                     name="gender"
-                                    defaultValue="male"
                                     value={formData.gender}
                                     onChange={handleChange}
-                                    className="mt-1 w-full rounded border-2 p-2 outline-none focus:border-green-500 peer-required:border-red-500"
+                                    className="mt-1 w-full rounded border-2 p-2 outline-none focus:border-green-500"
                                 >
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                    <option value="other">Other</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
                                 </select>
                             </div>
-                            <div className="mb-4">
-                                <label className="block text-base font-semibold text-slate-700">
-                                    Provice/city
-                                </label>
-                                <input
-                                    type="text"
-                                    name="provice"
-                                    value={formData.provice}
-                                    onChange={handleChange}
-                                    className="mt-1 w-full rounded border-2 p-2 outline-none focus:border-green-500 peer-required:border-red-500"
-                                    placeholder="Current provice/city "
-                                    maxLength="50"
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-base font-semibold text-slate-700">
-                                    Address
-                                </label>
-                                <input
-                                    type="text"
-                                    name="address"
-                                    value={formData.address}
-                                    onChange={handleChange}
-                                    className="mt-1 w-full rounded border-2 p-2 outline-none focus:border-green-500 peer-required:border-red-500"
-                                    placeholder="Address"
-                                    maxLength="80"
-                                />
-                            </div>
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-base font-semibold text-slate-700">
+                                Address
+                                <abbr className="ml-1 text-red-500">*</abbr>
+                            </label>
+                            <input
+                                type="text"
+                                name="address"
+                                value={formData.address}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                className={`mt-1 w-full rounded border-2 p-2 outline-none ${errors.address ? "border-red-500" : "focus:border-green-500"}`}
+                                placeholder="Address"
+                                maxLength="100"
+                            />
+                            {errors.address && (
+                                <p className="mt-1 text-sm text-red-500">
+                                    {errors.address}
+                                </p>
+                            )}
                         </div>
                         <div className="mb-4">
                             <label className="block text-base font-semibold text-slate-700">
@@ -353,7 +400,7 @@ const PersonalInfoPopUp = ({ userInfo, onClose }) => {
                                 name="personalLink"
                                 value={formData.personalLink}
                                 onChange={handleChange}
-                                className="mt-1 w-full rounded border-2 p-2 outline-none focus:border-green-500 peer-required:border-red-500"
+                                className="mt-1 w-full rounded border-2 p-2 outline-none focus:border-green-500"
                                 placeholder="Personal Link"
                                 maxLength="200"
                             />
@@ -368,9 +415,10 @@ const PersonalInfoPopUp = ({ userInfo, onClose }) => {
                             </button>
                             <button
                                 type="submit"
-                                className="rounded bg-red-500 px-8 py-2 text-white"
+                                className={`rounded  px-8 py-2 text-white ${updating ? "bg-gray-500" : "bg-red-500"}`}
+                                disabled={updating}
                             >
-                                Save
+                                {updating ? "Updating..." : "Save"}
                             </button>
                         </div>
                     </form>
