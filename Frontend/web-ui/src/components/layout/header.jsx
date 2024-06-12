@@ -259,7 +259,7 @@ const Header = () => {
                                         <User className="mr-2 h-5 w-5 text-muted-foreground" />
                                         Profile & CVs
                                     </MenubarItem>
-                                    <MenubarItem 
+                                    <MenubarItem
                                         className="border-b-2 border-gray-300"
                                         onClick={() => navigate("/my-jobs")}
                                     >
@@ -274,7 +274,10 @@ const Header = () => {
                                         <Mail className="mr-2 h-5 w-5 text-muted-foreground" />
                                         Email Subscriptions
                                     </MenubarItem>
-                                    <MenubarItem className="border-b-2 border-gray-300">
+                                    <MenubarItem
+                                        className="border-b-2 border-gray-300"
+                                        onClick={() => navigate("/settings")}
+                                    >
                                         <Settings className="mr-2 h-5 w-5 text-muted-foreground" />
                                         Settings
                                     </MenubarItem>
