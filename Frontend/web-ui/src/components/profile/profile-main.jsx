@@ -19,6 +19,10 @@ import PersonalInfoPopUp from "./PopupForm/personal-info-popup";
 import WorkExperiencePopup from "./PopupForm/work-experience-popup";
 import AboutMePopup from "./PopupForm/about-me-popup";
 import EducationPopup from "./PopupForm/education-popup";
+import PersonalProjectPopup from "./PopupForm/personal-project-popup";
+import CertificatePopup from "./PopupForm/certificate-popup";
+import AwardPopup from "./PopupForm/award-popup";
+import SkillPopup from "./PopupForm/skill-popup";
 
 const images = {
     aboutImage:
@@ -53,24 +57,36 @@ const ProfileMain = () => {
     const { currentUser, inSingUpInPage, isGoogleUser } = useAuth();
 
     const [isOpenPopupPersonal, setIsPopupPersonal] = useState(false);
-    const [isOpenAboutMePopup, setisisOpenAboutMePopup] = useState(false);
+    const [isOpenAboutMePopup, setIsOpenAboutMePopup] = useState(false);
+    const [isOpenEducationMePopup, setIsOpenEducationMePopup] = useState(false);
     const [isOpenWorkExperiencePopup, setisOpenWorkExperiencePopup] =
         useState(false);
-    const [isOpenEducationPopup, setisisOpenEducationPopup] = useState(false);
+
+    const [isOpenPersonalProjectPopup, setIsOpenPersonalProjectPopup] = useState(false);
+    const [isOpenCertificatePopup, setIsOpenCertificatePopup] = useState(false);
+    const [isOpenAwardPopup, setIsOpenAwardPopup] = useState(false);
+    const [isOpenSkillPopup, setisOpenSkillPopup] = useState(false);
+
 
     const handleModifyPersonalClick = () => {
         setIsPopupPersonal(true);
     };
 
     const handleModifyAboutMeClick = () => {
-        setisisOpenAboutMePopup(true);
+        setIsOpenAboutMePopup(true);
     };
     const handleModifyWorkExperiencelClick = () => {
         setisOpenWorkExperiencePopup(true);
     };
     const handleModifyEducationClick = () => {
-        setisisOpenEducationPopup(true);
+        setIsOpenEducationMePopup(true);
     };
+    const handleModifyPersonalProjectClick = () => setIsOpenPersonalProjectPopup(true);
+    const handleModifyCertificateClick = () => setIsOpenCertificatePopup(true);
+    const handleModifyAwardClick = () => setIsOpenAwardPopup(true);
+    const handleModifySkillClick = () => setisOpenSkillPopup(true);
+
+
 
     return (
         <div className="col-span-3 mt-3">
@@ -202,25 +218,25 @@ const ProfileMain = () => {
                 title="Skills"
                 content="Showcase your skills and proficiencies"
                 img={images.skillImage}
-                onModifyClick={handleModifyPersonalClick}
+                onModifyClick={handleModifySkillClick}
             />
             <ProfileContent
                 title="Personal Project"
                 content="Showcase your personal project"
                 img={images.projectImage}
-                onModifyClick={handleModifyPersonalClick}
+                onModifyClick={handleModifyPersonalProjectClick}
             />
             <ProfileContent
                 title="Certificates"
                 content="Provides evidence of your specific expertise and skills"
                 img={images.certificateImage}
-                onModifyClick={handleModifyPersonalClick}
+                onModifyClick={handleModifyCertificateClick}
             />
             <ProfileContent
                 title="Awards"
                 content="Highlight your awards or recognitions"
                 img={images.awardsImage}
-                onModifyClick={handleModifyPersonalClick}
+                onModifyClick={handleModifyAwardClick}
             />
             {isOpenPopupPersonal && (
                 <PersonalInfoPopUp
@@ -237,15 +253,39 @@ const ProfileMain = () => {
             {isOpenAboutMePopup && (
                 <AboutMePopup
                     userInfo={currentUser}
-                    onClose={() => setisisOpenAboutMePopup(false)}
+                    onClose={() => setIsOpenAboutMePopup(false)}
                 />
             )}
-            {isOpenEducationPopup && (
+            {isOpenEducationMePopup && (
                 <EducationPopup
                     userInfo={currentUser}
-                    onClose={() => setisisOpenEducationPopup(false)}
+                    onClose={() => setIsOpenEducationMePopup(false)}
                 />
             )}
+            {isOpenPersonalProjectPopup && (
+                <PersonalProjectPopup
+                    userInfo={currentUser}
+                    onClose={() => setIsOpenPersonalProjectPopup(false)}
+                />
+            )}
+            {isOpenCertificatePopup && (
+                <CertificatePopup
+                    userInfo={currentUser}
+                    onClose={() => setIsOpenCertificatePopup(false)}
+                />
+            )}         
+            {isOpenAwardPopup && (
+                <AwardPopup
+                    userInfo={currentUser}
+                    onClose={() => setIsOpenAwardPopup(false)}
+                />
+            )}   
+            {isOpenSkillPopup && (
+                <SkillPopup
+                    userInfo={currentUser}
+                    onClose={() => setisOpenSkillPopup(false)}
+                />
+            )}         
         </div>
     );
 };

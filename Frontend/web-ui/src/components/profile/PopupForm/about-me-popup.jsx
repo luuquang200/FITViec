@@ -16,10 +16,9 @@ const AboutMePopup = ({userInfo, onClose}) => {
     });
   };
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(formData);
+    console.log(formData);
     // send or handle data in server
     onClose()
   };
@@ -37,7 +36,7 @@ const AboutMePopup = ({userInfo, onClose}) => {
           <div className="mb-4">
             <label className="block text-gray-700 ">Description</label>
             <textarea
-              name="description"
+              name="content"
               value={formData.content}
               onChange={handleChange}
               className={`w-full mt-1 p-2 border rounded `}
