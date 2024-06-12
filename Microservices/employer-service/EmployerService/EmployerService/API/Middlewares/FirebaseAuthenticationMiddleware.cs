@@ -19,8 +19,13 @@ namespace EmployerService.API.Middlewares
 
 		public async Task InvokeAsync(HttpContext context)
 		{
-			var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+			if (context.Request.Path.StartsWithSegments("/uploads"))
+			{
+				await _next(context);
+				return;
+			}
 
+			var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 			if (token != null)
 			{
 				try
