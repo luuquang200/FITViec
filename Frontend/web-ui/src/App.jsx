@@ -29,6 +29,7 @@ import VerifyEmployer from "./components/Employers/verify-employer";
 import ProfileManagementCv from "./components/profile/profile-management-cv";
 import ProfileManagementJob from "./components/profile/profile-management-job";
 import AdminDashboard from "./components/Admin/admin-dashboard";
+import EmployeeJobManagment from "./components/Employee/employee-job-managment";
 
 function App() {
     return (
@@ -68,6 +69,10 @@ function App() {
                 <Route
                     path="/profile-cv/job-preferences"
                     element={<ProfileManagementJob />}
+                />
+                <Route
+                    path="/my-jobs/"
+                    element={<EmployeeJobManagment />}
                 />
                 <Route
                     path="/verify_email"

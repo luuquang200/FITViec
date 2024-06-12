@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { X, Lightbulb } from "lucide-react";
 
@@ -125,5 +126,6 @@ const AboutMePopup = ({ userInfo, onClose, aboutMe }) => {
         </div>
     );
 };
+
 
 export default AboutMePopup;
