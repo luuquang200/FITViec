@@ -29,7 +29,7 @@ public class ApplicationController {
   public ResponseEntity<Application> CreateApplication(HttpServletRequest request, @RequestBody CreateApplicationDto data) {
     UserInfo user = (UserInfo) request.getAttribute("userInfo");
     if (user.getRole().equalsIgnoreCase(Roles.USER)) {
-      return ResponseEntity.ok(this.service.createApplication((String) request.getAttribute("accessToken"), data));
+      return ResponseEntity.ok(this.service.createApplication((String) request.getAttribute("accessToken"), user, data));
     } else {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
