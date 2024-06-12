@@ -1,15 +1,18 @@
 package com.example.jobservice.service;
 
 import com.example.jobservice.dto.CUJobDto;
+import com.example.jobservice.dto.JobDetails;
+import com.example.jobservice.dto.JobInfo;
 import com.example.jobservice.dto.UpdateResponse;
 import com.example.jobservice.repository.dao.Job;
 
 import java.util.List;
 
 public interface JobService {
-  Job Create(CUJobDto data);
-  Job GetOne(String jobId);
-  UpdateResponse Update(String employerId, String jobId, CUJobDto data);
-  UpdateResponse Delete(String employerId, String jobId);
-  List<Job> GetJobsByEmployer(String employerId);
+  Job Create(CUJobDto data, String creatorId);
+  UpdateResponse Update(String creatorId, String jobId, CUJobDto data);
+  UpdateResponse Delete(String creatorId, String jobId);
+  UpdateResponse ApproveJob(String jobId);
+  UpdateResponse RejectJob(String jobId);
+  JobInfo GetJobInfo(String jobId);
 }

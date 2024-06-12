@@ -195,7 +195,7 @@ const ResetPassword = () => {
                         </div>
 
                         {passwordError && (
-                            <span className="text-red-500">
+                            <span className="font-semibold text-red-500">
                                 {passwordError}
                             </span>
                         )}
@@ -260,7 +260,7 @@ const ResetPassword = () => {
                         </div>
 
                         {confirmPasswordError && (
-                            <span className="text-red-500">
+                            <span className="font-semibold text-red-500">
                                 {confirmPasswordError}
                             </span>
                         )}

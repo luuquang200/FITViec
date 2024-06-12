@@ -1,6 +1,8 @@
 package com.example.jobservice.service;
 
+import com.example.jobservice.constant.JobStatus;
 import com.example.jobservice.dto.CUJobDto;
+import com.example.jobservice.dto.JobInfo;
 import com.example.jobservice.dto.UpdateResponse;
 import com.example.jobservice.repository.JobRepository;
 import com.example.jobservice.repository.dao.Job;
@@ -8,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -17,22 +19,20 @@ public class JobServiceImpl implements JobService {
   private final JobRepository repository;
 
   @Override
-  public Job Create(CUJobDto data) {
+  public Job Create(CUJobDto data, String creatorId) {
     Job newJob = new Job();
     this.CopyData(data, newJob);
     newJob.setJobId(this.CreateJobId());
+    newJob.setCreatorId(creatorId);
+    newJob.setJobStatus(JobStatus.PENDING);
     return this.repository.save(newJob);
   }
   @Override
-  public Job GetOne(String jobId) {
-    return this.repository.findById(jobId).orElse(null);
-  }
-  @Override
-  public UpdateResponse Update(String employerId, String jobId, CUJobDto data) {
+  public UpdateResponse Update(String creatorId, String jobId, CUJobDto data) {
     Job job = this.repository.findById(jobId).orElse(null);
     if (job == null) {
       return new UpdateResponse(HttpStatus.NOT_FOUND.toString(), "Job not found", null);
-    } else if (job.getEmployerId().equals(employerId)) {
+    } else if (job.getCreatorId().equals(creatorId)) {
       this.CopyData(data, job);
       this.repository.save(job);
       return new UpdateResponse(HttpStatus.OK.toString(), "OK", job);
@@ -41,11 +41,11 @@ public class JobServiceImpl implements JobService {
     }
   }
   @Override
-  public UpdateResponse Delete(String employerId, String jobId) {
+  public UpdateResponse Delete(String creatorId, String jobId) {
     Job job = this.repository.findById(jobId).orElse(null);
     if (job == null) {
       return new UpdateResponse(HttpStatus.NOT_FOUND.toString(), "Job not found", null);
-    } else if (job.getEmployerId().equals(employerId)) {
+    } else if (job.getCreatorId().equals(creatorId)) {
       this.repository.delete(job);
       return new UpdateResponse(HttpStatus.OK.toString(), "OK", job);
     } else {
@@ -53,8 +53,34 @@ public class JobServiceImpl implements JobService {
     }
   }
   @Override
-  public List<Job> GetJobsByEmployer(String employerId) {
-    return this.repository.findAllByEmployerId(employerId);
+  public UpdateResponse ApproveJob(String jobId) {
+    Job job = this.repository.findById(jobId).orElse(null);
+    if (job != null) {
+      job.setJobStatus(JobStatus.APPROVED);
+      this.repository.save(job);
+      return new UpdateResponse(HttpStatus.OK.toString(), "Approved", job);
+    } else {
+      return new UpdateResponse(HttpStatus.NOT_FOUND.toString(), "Job not found", null);
+    }
+  }
+  @Override
+  public UpdateResponse RejectJob(String jobId) {
+    Job job = this.repository.findById(jobId).orElse(null);
+    if (job != null) {
+      job.setJobStatus(JobStatus.REJECTED);
+      this.repository.save(job);
+      return new UpdateResponse(HttpStatus.OK.toString(), "Rejected", job);
+    } else {
+      return new UpdateResponse(HttpStatus.NOT_FOUND.toString(), "Job not found", null);
+    }
+  }
+  @Override
+  public JobInfo GetJobInfo(String jobId) {
+    Job job = this.repository.findById(jobId).orElse(null);
+    if (job != null) {
+      return new JobInfo(job.getJobId(), job.getJobTitle());
+    }
+    return null;
   }
 
   private String CreateJobId() {
@@ -62,13 +88,21 @@ public class JobServiceImpl implements JobService {
   }
   private void CopyData(CUJobDto data, Job job) {
     job.setEmployerId(data.employerId);
+    job.setJobSalary(data.jobSalary);
     job.setJobTitle(data.jobTitle);
-    job.setJobDescription(data.jobDescription);
     job.setJobLocation(data.jobLocation);
     job.setJobType(data.jobType);
-    job.setJobCategory(data.jobCategory);
-    job.setJobSalary(data.jobSalary);
-    job.setPostedAt(data.postedAt);
-    job.setClosingAt(data.closingAt);
+    job.setPostedAt(this.CreatePostedDate());
+    job.setJobSkills(data.jobSkills);
+    job.setJobTopReasons(data.jobTopReasons);
+    job.setJobDescription(data.jobDescription);
+    job.setJobResponsibility(data.jobResponsibility);
+    job.setJobRequirement(data.jobRequirement);
+    job.setJobBenefit(data.jobBenefit);
+    job.setEmployerInfo(data.employerInfo);
+  }
+  private String CreatePostedDate() {
+    LocalDateTime now = LocalDateTime.now();
+    return now.toString();
   }
 }

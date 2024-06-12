@@ -202,7 +202,7 @@ const SignUp = () => {
                             </label>
                         </div>
                         <div className="text-sm text-gray-600">
-                            By signing up with Google, I agree to ITviec’s{" "}
+                            By signing up with Google, I agree to FITviec’s{" "}
                             <a
                                 href="#"
                                 target="_blank"
@@ -271,7 +271,7 @@ const SignUp = () => {
                             required
                         />
                         {userNameError && (
-                            <span className="text-red-500">
+                            <span className="font-semibold text-red-500">
                                 {userNameError}
                             </span>
                         )}
@@ -305,7 +305,9 @@ const SignUp = () => {
                             required
                         />
                         {emailError && (
-                            <span className="text-red-500">{emailError}</span>
+                            <span className="font-semibold text-red-500">
+                                {emailError}
+                            </span>
                         )}
                     </div>
                     <div className="mb-6 ">
@@ -363,7 +365,7 @@ const SignUp = () => {
                         </div>
 
                         {passwordError && (
-                            <span className="text-red-500">
+                            <span className="font-semibold text-red-500">
                                 {passwordError}
                             </span>
                         )}

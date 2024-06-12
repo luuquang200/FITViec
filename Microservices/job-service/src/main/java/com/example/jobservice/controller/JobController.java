@@ -1,14 +1,17 @@
 package com.example.jobservice.controller;
 
+import com.example.jobservice.config.firebase.UserInfo;
+import com.example.jobservice.constant.Roles;
 import com.example.jobservice.dto.CUJobDto;
+import com.example.jobservice.dto.JobInfo;
 import com.example.jobservice.dto.UpdateResponse;
 import com.example.jobservice.repository.dao.Job;
 import com.example.jobservice.service.JobService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/job")
@@ -17,32 +20,65 @@ public class JobController {
   private final JobService service;
 
   @GetMapping("")
-  public String service() {
-    return "Hello job service";
+  public String service(HttpServletRequest request) {
+    UserInfo user = (UserInfo) request.getAttribute("userInfo");
+    return "Hello job service " + user.getFullName();
   }
   @PostMapping("/create")
-  public ResponseEntity<Job> CreateJob(@RequestBody CUJobDto data) {
-    return ResponseEntity.ok(this.service.Create(data));
+  public ResponseEntity<Job> CreateJob(HttpServletRequest request, @RequestBody CUJobDto data) {
+    UserInfo user = (UserInfo) request.getAttribute("userInfo");
+    if (user.getRole().equalsIgnoreCase(Roles.EMPLOYER)) {
+      return ResponseEntity.ok(this.service.Create(data, user.getUserId()));
+    } else {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
   }
-  @GetMapping("/{job-id}")
-  public ResponseEntity<Job> GetOneJob(@PathVariable("job-id") String jobId) {
-    return ResponseEntity.ok(this.service.GetOne(jobId));
-  }
-  @PostMapping("/update/{employer-id}/{job-id}")
+  @PostMapping("/update/{job-id}")
   public ResponseEntity<UpdateResponse> UpdateJob(
-      @PathVariable("employer-id") String employerId, @PathVariable("job-id") String jobId,
+      HttpServletRequest request, @PathVariable("job-id") String jobId,
       @RequestBody CUJobDto data
   ) {
-    return ResponseEntity.ok(this.service.Update(employerId, jobId, data));
+    UserInfo user = (UserInfo) request.getAttribute("userInfo");
+    if (user.getRole().equalsIgnoreCase(Roles.EMPLOYER)) {
+      return ResponseEntity.ok(this.service.Update(user.getUserId(), jobId, data));
+    } else {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
   }
-  @DeleteMapping("/delete/{employer-id}/{job-id}")
-  public ResponseEntity<UpdateResponse> DeleteJob(
-      @PathVariable("employer-id") String employerId, @PathVariable("job-id") String jobId
-  ) {
-    return ResponseEntity.ok(this.service.Delete(employerId, jobId));
+  @DeleteMapping("/delete/{job-id}")
+  public ResponseEntity<UpdateResponse> DeleteJob(HttpServletRequest request, @PathVariable("job-id") String jobId) {
+    UserInfo user = (UserInfo) request.getAttribute("userInfo");
+    if (user.getRole().equalsIgnoreCase(Roles.EMPLOYER)) {
+      return ResponseEntity.ok(this.service.Delete(user.getUserId(), jobId));
+    } else {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
   }
-  @GetMapping("/jobs-by-employer/{employer-id}")
-  public ResponseEntity<List<Job>> GetJobsByEmployer(@PathVariable("employer-id") String employerId) {
-    return ResponseEntity.ok(this.service.GetJobsByEmployer(employerId));
+  @PostMapping("/approve/{job-id}")
+  public ResponseEntity<UpdateResponse> ApproveJob(HttpServletRequest request, @PathVariable("job-id") String jobId) {
+    UserInfo user = (UserInfo) request.getAttribute("userInfo");
+    if (user.getRole().equalsIgnoreCase(Roles.ADMIN)) {
+      return ResponseEntity.ok(this.service.ApproveJob(jobId));
+    } else {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+  }
+  @PostMapping("/reject/{job-id}")
+  public ResponseEntity<UpdateResponse> RejectJob(HttpServletRequest request, @PathVariable("job-id") String jobId) {
+    UserInfo user = (UserInfo) request.getAttribute("userInfo");
+    if (user.getRole().equalsIgnoreCase(Roles.ADMIN)) {
+      return ResponseEntity.ok(this.service.RejectJob(jobId));
+    } else {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+  }
+  @GetMapping("/get-info/{job-id}")
+  public ResponseEntity<JobInfo> GetJobInfo(HttpServletRequest request, @PathVariable("job-id") String jobId) {
+    UserInfo user = (UserInfo) request.getAttribute("userInfo");
+    if (user.getRole().equalsIgnoreCase(Roles.USER)) {
+      return ResponseEntity.ok(this.service.GetJobInfo(jobId));
+    } else {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
   }
 }

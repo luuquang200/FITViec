@@ -9,12 +9,6 @@ import {
 import { auth, db } from "./firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
-// export const doSignInWithGoogle = async () => {
-//     const provider = new GoogleAuthProvider();
-//     const result = await signInWithPopup(auth, provider);
-//     return result;
-// };
-
 export const doSignInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
@@ -32,6 +26,7 @@ export const doSignInWithGoogle = async () => {
                 displayName: user.displayName,
             });
         }
+        console.log(user);
 
         return user;
     } catch (error) {

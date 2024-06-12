@@ -5,10 +5,11 @@ import { Eye } from "lucide-react";
 import { EyeOff } from "lucide-react";
 
 import { useAuth } from "../../contexts/authContext";
-import { signInWithEmailAndPassword } from "firebase/auth";
 
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { doSignInWithGoogle } from "../../firebase/auth";
-import { auth } from "../../firebase/firebase";
+import { auth, db } from "../../firebase/firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 import { useNavigate, Navigate } from "react-router-dom";
 
@@ -37,28 +38,51 @@ const SignIn = () => {
         return () => setInSingUpInPage(false); // Reset the state when the component is unmounted
     }, [setInSingUpInPage]);
 
+    const checkUserRole = async (email) => {
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("email", "==", email));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+            const userData = querySnapshot.docs[0].data();
+            return userData.role;
+        } else {
+            throw new Error("No such user!");
+        }
+    };
+
     const handleSignIn = async (e) => {
         e.preventDefault();
 
         if (!isSigningIn) {
             setisSigningIn(true);
             try {
-                await signInWithEmailAndPassword(auth, email, password).then(
-                    async (userCred) => {
+                const role = await checkUserRole(email);
+                if (role === "user" || role === "admin") {
+                    await signInWithEmailAndPassword(
+                        auth,
+                        email,
+                        password,
+                    ).then(async (userCred) => {
                         const user = userCred.user;
                         if (user.emailVerified) {
                             toast.success(
                                 "Successfully authenticated from Email & Password account.",
                             );
+                            console.log(user);
                             // Điều hướng tới home sau khi đăng nhập  thành công
                             navigate(`/`);
                         } else {
                             toast.error(
-                                "Please verify your email before login ",
+                                " Please verify your email before login",
                             );
                         }
-                    },
-                );
+                    });
+                } else {
+                    toast.error(
+                        "  Oops! This email address doesn't exist, please try again",
+                    );
+                }
             } catch (error) {
                 handleAuthError(error);
             } finally {
@@ -212,7 +236,9 @@ const SignIn = () => {
                             required
                         />
                         {emailError && (
-                            <span className="text-red-500">{emailError}</span>
+                            <span className="font-semibold text-red-500">
+                                {emailError}
+                            </span>
                         )}
                     </div>
                     <div className="mb-6">
@@ -276,7 +302,7 @@ const SignIn = () => {
                             />
                         </div>
                         {passwordError && (
-                            <span className="text-red-500">
+                            <span className="font-semibold text-red-500">
                                 {passwordError}
                             </span>
                         )}
