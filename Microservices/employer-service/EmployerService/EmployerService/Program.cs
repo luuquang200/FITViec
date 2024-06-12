@@ -13,9 +13,10 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Change HTTP port
 builder.WebHost.ConfigureKestrel(options =>
 {
-	options.ListenAnyIP(8080);
+	options.ListenAnyIP(8080); // HTTP port
 });
 
 // Add services to the container.
@@ -35,7 +36,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Initialize Firebase Admin SDK
 FirebaseApp.Create(new AppOptions()
 {
-    Credential = GoogleCredential.FromFile("secrets/fit-viec-firebase-adminsdk.json")
+	Credential = GoogleCredential.FromFile("secrets/fit-viec-firebase-adminsdk.json")
 });
 
 // Configure Authentication
@@ -64,9 +65,6 @@ builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-
 // Configure CORS
 builder.Services.AddCors(options =>
 {
@@ -77,7 +75,6 @@ builder.Services.AddCors(options =>
 			   .AllowAnyHeader();
 	});
 });
-
 
 // Configure Swagger/OpenAPI
 builder.Services.AddSwaggerGen(c =>
@@ -119,17 +116,18 @@ builder.Services.AddSwaggerGen(c =>
 	});
 });
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseCors(); 
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseAuthentication(); // Add this line to use authentication
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<FirebaseAuthenticationMiddleware>();
