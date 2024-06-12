@@ -8,7 +8,7 @@ using System.Text;
 
 namespace EmployerService.Domain.Services
 {
-	public interface ICompanyService
+    public interface ICompanyService
 	{
 		Task<CreateEmployerResult> CreateEmployerAsync(CreateEmployerRequest request);
 		Task<UpdateEmployerResult> UpdateEmployerAsync(UpdateEmployerRequest request);
@@ -34,6 +34,12 @@ namespace EmployerService.Domain.Services
 		// Create company by employer id
 		public async Task<CreateEmployerResult> CreateEmployerAsync(CreateEmployerRequest request)
 		{
+			// Check if company already exists
+			var companyExists = await _companyRepository.GetByEmployerIdAsync(request.EmployerId);
+			if (companyExists != null)
+			{
+				return new CreateEmployerResult { IsSuccess = false, ErrorMessage = "Company already exists" };
+			}
 			
 			var company = new Company
 			{
