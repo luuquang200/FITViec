@@ -1,6 +1,6 @@
 // Components
 import { useEffect, useState } from "react";
-import {Link, useParams} from "react-router-dom"
+import {Link, useParams, useNavigate} from "react-router-dom"
 import Logo from "../../assets/logo-fitviec.webp";
 import { ChevronLeft, Eye } from "lucide-react";
 import { useAuth } from "@/contexts/authContext";
@@ -37,13 +37,29 @@ const job_detail = {
     }
   }
 const FormApplyJob = () => {
-    const {jobId} = useParams();
     const { currentUser} = useAuth();
+    const {jobId} = useParams();
+    console.log(jobId);
+    //const location = useLocation();
     console.log("currentUser form apply: ", currentUser);
     const [cvOption, setCvOption] = useState('current');
     const [file, setFile] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const [coverLetter, setCoverLetter] = useState('');
-    const [jobDetail, setJobDetail] = useState(job_detail);
+    const [jobData, setJobData] = useState('');
+
+    //Chưa đăng nhập chuyển sang trang SignIn
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (!currentUser) {
+            navigate("/sign_in");
+        }
+        if(!currentUser?.cv?.fileName){
+            setCvOption('new');
+        }
+        // Fetch job detail here if needed and set it to state
+    }, [currentUser, navigate]);
+
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
         toast.success("upload ok");
@@ -56,22 +72,34 @@ const FormApplyJob = () => {
         }
     };
     //Call API get job infor
-    // useEffect(() => {
-    //     const fetchJobDetail = async () => {
-    //     try {
-    //         const response = await fetch(`http://localhost:5173/api/jobDetail/${jobId}`);
-    //         if (!response.ok) {
-    //             throw new Error('Network response was not ok');
-    //         }
-    //         const data = await response.json();
-    //         setJobDetail(data.jobDetail);
-    //     } catch (error) {
-    //         console.error('Error fetching jobDetail:', error);
-    //     }
-    //     };
-
-    //     fetchJobDetail();
-    // }, []);
+    useEffect(()=>{
+        const fetchJobData = async (jobId) => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(`https://job-service.azurewebsites.net/job/get-info/${jobId}`,{
+                headers: {
+                    "Authorization" : currentUser.accessToken,
+                }
+            });
+    
+            if (!response.ok) {
+                toast.error("Network response was not ok");
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            console.log("job-data: ", data);
+            setJobData(data);
+            toast.success("Fetching JobData was OK!!!");
+            setIsLoading(false);
+            
+        } catch (error) {
+            toast.error("Error fetching JobData:");
+            console.error('Error fetching JobData:', error);
+        }
+        };
+        console.log("call fetch");
+        fetchJobData(jobId);
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -144,7 +172,9 @@ const FormApplyJob = () => {
             throw error;
         }
     };
-    
+    if (isLoading) {
+        return <div className="flex justify-center items-center h-screen">Loading...</div>;
+      }
     return (
         <div className=" p-[30px] pb-[150px] bg-gray-200 bg-opacity-50">
         {/* Background */}
@@ -158,14 +188,14 @@ const FormApplyJob = () => {
             </div>
             {/* Body */}
             <div className=" rounded-lg bg-white p-[32px] shadow-lg">
-                <h2 className="text-[22px] font-bold ">{jobDetail.jobTitle}</h2>
+                <h2 className="text-[22px] font-bold ">{job_detail.jobTitle}</h2>
                 
                 <form className="bg-white  pt-6 pb-3 mb-4" onSubmit={handleSubmit}> 
                     {/* Input với label */}
                     <div className="relative mb-6">
                         <input
                             type="text"
-                            value={currentUser.displayName}
+                            value={currentUser?.displayName || ''}
                             className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
                             placeholder=" "
                         />
@@ -181,6 +211,7 @@ const FormApplyJob = () => {
                         <label className="block text-lg font-bold mb-2">
                             Your CV <span className="text-red-500">*</span>
                         </label>
+                        
                         <div className={`mb-4 p-4 border border-gray-300 rounded-lg ${cvOption === 'current' ? 'border-red-500 bg-red-100 bg-opacity-50' : 'border-gray-300'}`}>
                             <label className="inline-flex items-center">
                                 <input
@@ -194,7 +225,8 @@ const FormApplyJob = () => {
                                 <span className="ml-2 text-gray-700 cursor-pointer ">Use your current CV</span>
                             </label>
                             <div className="ml-4 p-2 text-blue-700 flex items-center">
-                            <a href="#" className="">NguyenVanA_CV.pdf</a>
+
+                            <a href={currentUser?.cv?.fileName} className="">{currentUser?.cv?.fileName}</a>
                                 <Eye className="ml-2"/>
                             </div>
                         </div>
@@ -256,16 +288,9 @@ const FormApplyJob = () => {
                 </form>
             </div>
         </div>
-
         </div>
-
-
-
-        
     );
 };
-
-
 
 export default FormApplyJob;
 

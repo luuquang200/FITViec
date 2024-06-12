@@ -1,4 +1,4 @@
-import * as React from "react";
+import PropTypes from 'prop-types';
 
 function CompanyInfoSection({job_detail}) {
   return (
@@ -28,7 +28,6 @@ function CompanyInfoSection({job_detail}) {
         <div className="company-info-item">
           <div className="company-info-label">Country</div>
           <div className="company-info-value">
-            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/f16506595376ce3435dfb78d0566f97ed09856fb3251060a1e06b235d6956d6b?apiKey=1293b2add2d347908b4e11760098fdbe&" alt="Country flag" className="country-flag" />
             <div>{job_detail?.employerInfo?.country}</div>
           </div>
         </div>
@@ -173,5 +172,9 @@ function CompanyInfoSection({job_detail}) {
     </>
   );
 }
+
+CompanyInfoSection.propTypes = {
+  job_detail: PropTypes.object.isRequired,
+};
 
 export default CompanyInfoSection;
