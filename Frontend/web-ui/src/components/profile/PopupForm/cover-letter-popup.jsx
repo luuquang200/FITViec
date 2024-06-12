@@ -2,13 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import { X, Lightbulb } from "lucide-react";
 
 import { db } from "../../../firebase/firebase";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, updateDoc } from "firebase/firestore";
 
 import { toast } from "react-toastify";
 
 import { Label } from "@radix-ui/react-dropdown-menu";
 
-const AboutMePopup = ({ userInfo, onClose, aboutMe }) => {
+const CoverLetterPopup = ({ userInfo, onClose, coverLetter }) => {
     const popupRef = useRef(null);
 
     // Click background close popup
@@ -25,10 +25,12 @@ const AboutMePopup = ({ userInfo, onClose, aboutMe }) => {
         };
     }, [onClose]);
 
-    const [content, setContent] = useState(aboutMe ? aboutMe : "");
-    const [charCount, setCharCount] = useState(aboutMe ? aboutMe.length : 0);
+    const [content, setContent] = useState(coverLetter ? coverLetter : "");
+    const [charCount, setCharCount] = useState(
+        coverLetter ? coverLetter.length : 0,
+    );
     const [updating, setUpdating] = useState(false);
-    const maxChars = 2500;
+    const maxChars = 500;
 
     const handleChange = (e) => {
         const { value } = e.target;
@@ -43,13 +45,13 @@ const AboutMePopup = ({ userInfo, onClose, aboutMe }) => {
         // Store aboutMe user in Firestore
         setUpdating(true);
         try {
-            await setDoc(doc(db, "profiles", userInfo.uid), {
-                aboutMe: content,
+            await updateDoc(doc(db, "users", userInfo.uid), {
+                "cv.coverLetter": content,
             });
 
-            toast.success("Update AboutMe successfully ");
+            toast.success("Update Cover Letter successfully ");
         } catch (error) {
-            toast.error("Error update user AboutMe :", error);
+            toast.error("Error update user Cover Letter :", error);
         } finally {
             setUpdating(false);
         }
@@ -69,7 +71,7 @@ const AboutMePopup = ({ userInfo, onClose, aboutMe }) => {
                 <div>
                     <div className="mb-2 flex justify-between">
                         <h2 className="mb-4 text-xl font-semibold text-slate-700">
-                            About me
+                            Cover Letter
                         </h2>
                         <button onClick={onClose}>
                             <X className="h-6 w-6 text-slate-700" />
@@ -78,7 +80,7 @@ const AboutMePopup = ({ userInfo, onClose, aboutMe }) => {
                     <hr />
                     <div className="mt-4">
                         <Label
-                            htmlFor="aboutMe"
+                            htmlFor="coverLetter"
                             className="flex items-center gap-2"
                         >
                             <Lightbulb className="h-6 w-6 rounded bg-orange-400 p-1 font-extrabold text-white " />
@@ -86,14 +88,14 @@ const AboutMePopup = ({ userInfo, onClose, aboutMe }) => {
                                 Tips :
                             </span>
                             <p className="text-slate-700 ">
-                                Summarize your professional experience,
-                                highlight your skills and your strengths .
+                                Start by describing what you bring to the table
+                                and why this job excites you
                             </p>
                         </Label>
                         <textarea
                             name="content"
-                            placeholder="Type about your here..."
-                            id="aboutMe"
+                            placeholder="Type cover letter here..."
+                            id="coverLetter"
                             className="mb-2 mt-4 min-h-[240px] w-full rounded-md border border-gray-300 px-3 py-4 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             onChange={handleChange}
                             maxLength={maxChars}
@@ -126,4 +128,4 @@ const AboutMePopup = ({ userInfo, onClose, aboutMe }) => {
     );
 };
 
-export default AboutMePopup;
+export default CoverLetterPopup;
