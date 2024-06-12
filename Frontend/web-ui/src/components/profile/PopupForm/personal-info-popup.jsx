@@ -192,7 +192,7 @@ const PersonalInfoPopUp = ({ userInfo, onClose }) => {
             toast.success("Update profile successfully ");
             onClose();
         } catch (error) {
-            toast.error("Error updating user info :", error);
+            toast.error("Error update user info :", error);
         }
     };
 

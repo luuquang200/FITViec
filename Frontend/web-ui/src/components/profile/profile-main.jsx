@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "../ui/button";
 
 import { useAuth } from "../../contexts/authContext";
-
+import { db } from "../../firebase/firebase";
+import { doc, getDoc } from "firebase/firestore";
 import {
     Mail,
     Gift,
@@ -56,6 +57,7 @@ const formatDate = (dateString) => {
 const ProfileMain = () => {
     const { currentUser, inSingUpInPage, isGoogleUser } = useAuth();
 
+    const [profileUser, setProfileUser] = useState(null);
     const [isOpenPopupPersonal, setIsPopupPersonal] = useState(false);
     const [isOpenAboutMePopup, setIsOpenAboutMePopup] = useState(false);
     const [isOpenEducationMePopup, setIsOpenEducationMePopup] = useState(false);
@@ -67,6 +69,22 @@ const ProfileMain = () => {
     const [isOpenAwardPopup, setIsOpenAwardPopup] = useState(false);
     const [isOpenSkillPopup, setisOpenSkillPopup] = useState(false);
 
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            if (currentUser) {
+                const profileDoc = await getDoc(
+                    doc(db, "profiles", currentUser.uid),
+                );
+                const profileData = profileDoc.exists()
+                    ? profileDoc.data()
+                    : {};
+                setProfileUser(profileData);
+            }
+        };
+
+        fetchUserData();
+    }, [currentUser, isOpenAboutMePopup]);
 
     const handleModifyPersonalClick = () => {
         setIsPopupPersonal(true);
@@ -201,6 +219,7 @@ const ProfileMain = () => {
                 content="Introduce your strengths and years of experience"
                 img={images.aboutImage}
                 onModifyClick={handleModifyAboutMeClick}
+                aboutMe={profileUser?.aboutMe}
             />
             <ProfileContent
                 title="Education"
@@ -253,7 +272,9 @@ const ProfileMain = () => {
             {isOpenAboutMePopup && (
                 <AboutMePopup
                     userInfo={currentUser}
-                    onClose={() => setIsOpenAboutMePopup(false)}
+                    aboutMe={profileUser?.aboutMe}
+                    onClose={() => setisisOpenAboutMePopup(false)}
+
                 />
             )}
             {isOpenEducationMePopup && (
