@@ -204,7 +204,7 @@ const PersonalInfoPopUp = ({ userInfo, onClose }) => {
             >
                 <div
                     ref={popupRef}
-                    className="mt-10 h-[94%] w-3/5 transform  overflow-auto rounded-lg bg-white p-8 shadow-md transition-all duration-300 ease-in-out "
+                    className="mt-8 h-[96%] w-[53%] transform  overflow-auto rounded-lg bg-white p-8 shadow-md transition-all duration-300 ease-in-out "
                 >
                     <div className="flex justify-between">
                         <h2 className="mb-4 text-xl font-semibold text-slate-700">

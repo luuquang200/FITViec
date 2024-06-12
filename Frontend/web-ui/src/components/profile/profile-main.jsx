@@ -24,6 +24,7 @@ import PersonalProjectPopup from "./PopupForm/personal-project-popup";
 import CertificatePopup from "./PopupForm/certificate-popup";
 import AwardPopup from "./PopupForm/award-popup";
 import SkillPopup from "./PopupForm/skill-popup";
+import { toast } from "react-toastify";
 
 const images = {
     aboutImage:
@@ -64,22 +65,30 @@ const ProfileMain = () => {
     const [isOpenWorkExperiencePopup, setisOpenWorkExperiencePopup] =
         useState(false);
 
-    const [isOpenPersonalProjectPopup, setIsOpenPersonalProjectPopup] = useState(false);
+    const [isOpenPersonalProjectPopup, setIsOpenPersonalProjectPopup] =
+        useState(false);
     const [isOpenCertificatePopup, setIsOpenCertificatePopup] = useState(false);
     const [isOpenAwardPopup, setIsOpenAwardPopup] = useState(false);
     const [isOpenSkillPopup, setisOpenSkillPopup] = useState(false);
-
+    const [loading, setLoading] = useState(true); // Trạng thái loading
 
     useEffect(() => {
         const fetchUserData = async () => {
+            setLoading(true);
             if (currentUser) {
-                const profileDoc = await getDoc(
-                    doc(db, "profiles", currentUser.uid),
-                );
-                const profileData = profileDoc.exists()
-                    ? profileDoc.data()
-                    : {};
-                setProfileUser(profileData);
+                try {
+                    const profileDoc = await getDoc(
+                        doc(db, "profiles", currentUser.uid),
+                    );
+                    const profileData = profileDoc.exists()
+                        ? profileDoc.data()
+                        : {};
+                    setProfileUser(profileData);
+                } catch (error) {
+                    toast.error("Something went wrong : ", error);
+                } finally {
+                    setLoading(false);
+                }
             }
         };
 
@@ -99,12 +108,11 @@ const ProfileMain = () => {
     const handleModifyEducationClick = () => {
         setIsOpenEducationMePopup(true);
     };
-    const handleModifyPersonalProjectClick = () => setIsOpenPersonalProjectPopup(true);
+    const handleModifyPersonalProjectClick = () =>
+        setIsOpenPersonalProjectPopup(true);
     const handleModifyCertificateClick = () => setIsOpenCertificatePopup(true);
     const handleModifyAwardClick = () => setIsOpenAwardPopup(true);
     const handleModifySkillClick = () => setisOpenSkillPopup(true);
-
-
 
     return (
         <div className="col-span-3 mt-3">
@@ -220,10 +228,11 @@ const ProfileMain = () => {
                 img={images.aboutImage}
                 onModifyClick={handleModifyAboutMeClick}
                 aboutMe={profileUser?.aboutMe}
+                loading={loading}
             />
             <ProfileContent
                 title="Education"
-                content="  Share your background education"
+                content="Share your background education"
                 img={images.educationImage}
                 onModifyClick={handleModifyEducationClick}
             />
@@ -273,8 +282,7 @@ const ProfileMain = () => {
                 <AboutMePopup
                     userInfo={currentUser}
                     aboutMe={profileUser?.aboutMe}
-                    onClose={() => setisisOpenAboutMePopup(false)}
-
+                    onClose={() => setIsOpenAboutMePopup(false)}
                 />
             )}
             {isOpenEducationMePopup && (
@@ -294,19 +302,19 @@ const ProfileMain = () => {
                     userInfo={currentUser}
                     onClose={() => setIsOpenCertificatePopup(false)}
                 />
-            )}         
+            )}
             {isOpenAwardPopup && (
                 <AwardPopup
                     userInfo={currentUser}
                     onClose={() => setIsOpenAwardPopup(false)}
                 />
-            )}   
+            )}
             {isOpenSkillPopup && (
                 <SkillPopup
                     userInfo={currentUser}
                     onClose={() => setisOpenSkillPopup(false)}
                 />
-            )}         
+            )}
         </div>
     );
 };

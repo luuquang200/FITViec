@@ -13,7 +13,22 @@ import { toast } from "react-toastify";
 import { db } from "../../firebase/firebase";
 import { setDoc, doc, getDoc } from "firebase/firestore";
 
+import CoverLetterPopup from "./PopupForm/cover-letter-popup";
+import ClipLoader from "react-spinners/ClipLoader";
+
 import { useAuth } from "../../contexts/authContext";
+
+// Component loading đơn giản
+const LoadingSpinner = () => (
+    <div className="flex h-full items-center justify-center">
+        <ClipLoader
+            color="rgba(239, 68, 68, 1)"
+            size={40}
+            speedMultiplier={1}
+            className="mt-4 "
+        />
+    </div>
+);
 
 const ProfileManagementCv = () => {
     const { currentUser } = useAuth();
@@ -23,9 +38,18 @@ const ProfileManagementCv = () => {
     const [uploading, setUploading] = useState(false); // Thêm trạng thái uploading
     const [initialFileInfo, setInitialFileInfo] = useState(null); // Trạng thái CV ban đầu
     const [fileUploaded, setFileUploaded] = useState(false); // Thêm trạng thái này
+    const [coverLetter, setCoverLetter] = useState(null);
+    const [loading, setLoading] = useState(true); // Trạng thái loading
+
+    const [isOpenPopup, setisOpenPopup] = useState(false); // popup cover letter
+
+    const handleModifyCoverLetterClick = () => {
+        setisOpenPopup(true);
+    };
 
     useEffect(() => {
         const fetchCVInfo = async () => {
+            setLoading(true); // Bắt đầu loading
             try {
                 const userDocRef = doc(db, "users", currentUser.uid);
                 const userDocSnap = await getDoc(userDocRef);
@@ -57,6 +81,7 @@ const ProfileManagementCv = () => {
                             url,
                         };
 
+                        setCoverLetter(userData.cv?.coverLetter);
                         setFileInfo(initialFileInfo);
                         setInitialFileInfo(initialFileInfo); // Lưu trạng thái CV ban đầu
                     }
@@ -65,11 +90,13 @@ const ProfileManagementCv = () => {
                 // Handle errors with toast notifications
                 handleAuthError(error);
                 console.error("Error fetching CV info:", error);
+            } finally {
+                setLoading(false); // Kết thúc loading
             }
         };
 
         fetchCVInfo();
-    }, [currentUser, fileUploaded]); // Fetch lại thông tin CV khi currentUser thay đổi
+    }, [currentUser, fileUploaded, isOpenPopup]); // Fetch lại thông tin CV khi currentUser thay đổi
 
     const handleAuthError = (error) => {
         switch (error.code) {
@@ -177,11 +204,11 @@ const ProfileManagementCv = () => {
     };
 
     return (
-        <div className=" min-h-screen bg-gray-200">
+        <div className="min-h-screen bg-gray-200">
             <ProfileNavbar />
 
-            <Container className=" max-w-[1000px] pb-10 pt-4">
-                <div className="mt-4  flex w-full flex-col  rounded-lg bg-white  shadow-lg">
+            <Container className="max-w-[1000px] pb-10 pt-4">
+                <div className="mt-4 flex w-full flex-col rounded-lg bg-white shadow-lg">
                     <div className="ml-2 mt-3 p-6">
                         <p className="text-xl font-bold text-slate-700">
                             Manage CVs
@@ -190,60 +217,64 @@ const ProfileManagementCv = () => {
                             Upload your CV below to use it throughout your
                             application process
                         </p>
-                        <div className="w-100  mb-7 rounded-md border-2 border-gray-300 p-5 shadow-sm ">
+                        <div className="w-100 mb-7 rounded-md border-2 border-gray-300 p-5 shadow-sm">
                             <div className="relative flex items-center justify-start gap-5">
                                 <FileText className="h-12 w-12 text-gray-500" />
-                                <div className="flex flex-grow flex-col items-start gap-2">
-                                    <p className="text-base font-semibold text-slate-700">
-                                        Your own CV
-                                    </p>
-                                    {fileInfo && (
-                                        <div className="flex flex-col gap-2">
-                                            <p className="text-base text-gray-700 underline">
-                                                <a
-                                                    className="no-underline"
-                                                    target="_blank"
-                                                    href={fileInfo.url}
-                                                >
-                                                    {" "}
-                                                    {fileInfo.fileName}{" "}
-                                                </a>
-                                            </p>
-                                            <p className="text-sm text-gray-400">
-                                                Uploaded :{" "}
-                                                {fileInfo.uploadedDate}
-                                            </p>
-                                        </div>
-                                    )}
-                                    <div className="flex items-center gap-2">
-                                        <input
-                                            type="file"
-                                            onChange={handleFileChange}
-                                            style={{ display: "none" }}
-                                            id="fileInput"
-                                            accept=".doc, .docx, .pdf"
-                                        />
-                                        <label
-                                            htmlFor="fileInput"
-                                            className={`flex cursor-pointer items-center gap-2 ${uploading ? "pointer-events-none" : ""}`}
-                                        >
-                                            <Upload className="h-5 w-5 text-blue-400" />
-                                            <span className="text-blue-600">
-                                                {uploading
-                                                    ? "Uploading..."
-                                                    : fileInfo
-                                                      ? "Upload new"
-                                                      : "Upload"}
+                                {loading ? (
+                                    <LoadingSpinner />
+                                ) : (
+                                    <div className="flex flex-grow flex-col items-start gap-2">
+                                        <p className="text-base font-semibold text-slate-700">
+                                            Your own CV
+                                        </p>
+                                        {fileInfo && (
+                                            <div className="flex flex-col gap-2">
+                                                <p className="text-base text-gray-700 underline">
+                                                    <a
+                                                        className="no-underline"
+                                                        target="_blank"
+                                                        href={fileInfo.url}
+                                                    >
+                                                        {" "}
+                                                        {fileInfo.fileName}{" "}
+                                                    </a>
+                                                </p>
+                                                <p className="text-sm text-gray-400">
+                                                    Uploaded :{" "}
+                                                    {fileInfo.uploadedDate}
+                                                </p>
+                                            </div>
+                                        )}
+                                        <div className="flex items-center gap-2">
+                                            <input
+                                                type="file"
+                                                onChange={handleFileChange}
+                                                style={{ display: "none" }}
+                                                id="fileInput"
+                                                accept=".doc, .docx, .pdf"
+                                            />
+                                            <label
+                                                htmlFor="fileInput"
+                                                className={`flex cursor-pointer items-center gap-2 ${uploading ? "pointer-events-none" : ""}`}
+                                            >
+                                                <Upload className="h-5 w-5 text-blue-400" />
+                                                <span className="text-blue-600">
+                                                    {uploading
+                                                        ? "Uploading..."
+                                                        : fileInfo
+                                                          ? "Upload new"
+                                                          : "Upload"}
+                                                </span>
+                                            </label>
+                                            <span className="text-base text-gray-400">
+                                                (Use .doc, .docx or .pdf files,
+                                                3MB and no password protected)
                                             </span>
-                                        </label>
-                                        <span className="text-base text-gray-400 ">
-                                            (Use .doc, .docx or .pdf files, 3MB
-                                            and no password protected)
-                                        </span>
+                                        </div>
                                     </div>
-                                </div>
+                                )}
                                 <button
-                                    className={`absolute bottom-0 right-0 flex items-center justify-center   gap-2 rounded  p-2 text-sm font-bold text-white  ${!fileInfo || !hasCVChanged() || uploading ? "bg-gray-400" : "bg-red-600 hover:bg-red-700"} `}
+                                    className={`absolute bottom-0 right-0 flex items-center justify-center gap-2 rounded p-2 text-sm font-bold text-white ${!fileInfo || !hasCVChanged() || uploading ? "bg-gray-400" : "bg-red-600 hover:bg-red-700"}`}
                                     onClick={uploadCv}
                                     disabled={
                                         !fileInfo ||
@@ -261,11 +292,22 @@ const ProfileManagementCv = () => {
 
                 <ProfileContent
                     title="Cover Letter"
-                    content="Introduce yourself and why you'd make a greate hire"
+                    content="Introduce yourself and why you'd make a great hire"
                     img="https://itviec.com/assets/profile/cover_letter_no_info-f9d084dcc48161f6e480d74ea191ad4421e4b7fb2fe89dd2c29a2fdd90f46d49.svg"
                     icon={true}
+                    coverLetter={coverLetter ? coverLetter : null}
+                    onModifyClick={handleModifyCoverLetterClick}
+                    loading={loading}
                 />
             </Container>
+
+            {isOpenPopup && (
+                <CoverLetterPopup
+                    userInfo={currentUser}
+                    coverLetter={coverLetter ? coverLetter : null}
+                    onClose={() => setisOpenPopup(false)}
+                />
+            )}
         </div>
     );
 };
