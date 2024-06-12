@@ -21,7 +21,7 @@ const exApplicationData = {
   jobSeekerId: "jobSeekerId",
   applicationStatus: "in_review",
   applicationName: "applicationName",
-  cvLink: "http://employer-service-otwul2bnna-uc.a.run.app/uploads/1cf32878-8912-467f-be46-538c5d32370d.pdf",
+  cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
   coverLetter: "coverLetter",
   applyAt: "applyAt",
 };
