@@ -15,7 +15,6 @@ const trendingNow = [
 ];
 
 const SearchSection = () => {
-
     return (
         <div className="bg-linear-gradient py-16 pt-36">
             <Container>
@@ -23,7 +22,7 @@ const SearchSection = () => {
                     1,031 IT Jobs For &quot;Chất&quot; Developers
                 </h1>
 
-                <SearchBar/>
+                <SearchBar />
 
                 <div className="mt-8 flex flex-wrap items-center space-x-4">
                     <h1 className="text-lg text-background">Trending now:</h1>
