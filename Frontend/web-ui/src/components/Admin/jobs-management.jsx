@@ -14,9 +14,8 @@ import {
     FaUser,
 } from "react-icons/fa";
 import { jobData } from "./data";
-import Modal from "./modal";
 
-const JobManagement = () => {
+const JobManagement = ({ onSelectJob }) => {
     const [selectedJob, setSelectedJob] = useState(null);
     const [filterInput, setFilterInput] = useState("");
 
@@ -26,21 +25,22 @@ const JobManagement = () => {
         () => [
             {
                 Header: "Title",
-                accessor: "title",
+                accessor: "jobTitle",
             },
             {
                 Header: "Employer",
-                accessor: "employer",
+                accessor: "employerId",
                 Filter: ColumnFilter,
             },
             {
                 Header: "Post Date",
-                accessor: "date",
-                Cell: ({ value }) => new Date(value).toLocaleDateString(),
+                accessor: "postedAt",
+                // Cell: ({ value }) => new Date(value).toLocaleDateString(),
+                Filter: ColumnFilter,
             },
             {
                 Header: "Status",
-                accessor: "status",
+                accessor: "jobStatus",
                 Filter: SelectColumnFilter, // Sử dụng bộ lọc Select cho Status
             },
             {
@@ -49,7 +49,7 @@ const JobManagement = () => {
                     <div className="flex items-center space-x-2">
                         <EyeIcon
                             className="h-5 w-5 cursor-pointer text-blue-500"
-                            onClick={() => setSelectedJob(row.original)}
+                            onClick={() => onSelectJob(row.original)}
                         />
                     </div>
                 ),
@@ -61,7 +61,7 @@ const JobManagement = () => {
     const handleApprove = (id) => {
         console.log(`Approved job with ID: ${id}`);
         if (window.confirm("Are you sure you want to approve?")) {
-            setSelectedJob((prev) => ({ ...prev, status: "approved" }));
+            setSelectedJob((prev) => ({ ...prev, jobStatus: "approved" }));
         } else {
             return;
         }
@@ -70,7 +70,7 @@ const JobManagement = () => {
     const handleReject = (id) => {
         console.log(`Rejected job with ID: ${id}`);
         if (window.confirm("Are you sure you want to reject?")) {
-            setSelectedJob((prev) => ({ ...prev, status: "rejected" }));
+            setSelectedJob((prev) => ({ ...prev, jobStatus: "rejected" }));
         } else {
             return;
         }
@@ -104,7 +104,7 @@ const JobManagement = () => {
 
     const handleFilterChange = (e) => {
         const value = e.target.value || undefined;
-        setFilter("employer", value);
+        setFilter("employerId", value);
         setFilterInput(value);
     };
 
@@ -119,11 +119,11 @@ const JobManagement = () => {
                 <input
                     value={filterInput}
                     onChange={handleFilterChange}
-                    placeholder={"Search by Employer"}
+                    placeholder={"Search by employerId"}
                     className="w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <select
-                    onChange={(e) => setFilter("status", e.target.value)}
+                    onChange={(e) => setFilter("jobStatus", e.target.value)}
                     className="w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                     <option value="">All Statuses</option>
@@ -218,71 +218,6 @@ const JobManagement = () => {
                     <ChevronRightIcon className="h-5 w-5" />
                 </button>
             </div>
-            {selectedJob && (
-                <Modal onClose={() => setSelectedJob(null)}>
-                    <div className="transform rounded-lg p-4 transition-all sm:w-full sm:max-w-lg">
-                        <div className="flex items-center justify-between border-b pb-3">
-                            <h3 className="text-lg font-semibold text-gray-800">
-                                Job Details
-                            </h3>
-                        </div>
-                        <div className="mt-4">
-                            <div className="mb-3 flex items-center text-sm text-gray-700">
-                                <FaUser className="mr-2 text-gray-600" />
-                                <strong>Job Title:</strong>
-                                <span className="ml-2">
-                                    {selectedJob.title}
-                                </span>
-                            </div>
-                            <div className="mb-3 flex items-center text-sm text-gray-700">
-                                <FaBuilding className="mr-2 text-gray-600" />
-                                <strong>Employer:</strong>
-                                <span className="ml-2">
-                                    {selectedJob.employer}
-                                </span>
-                            </div>
-                            <div className="mb-3 flex items-center text-sm text-gray-700">
-                                <FaCalendarAlt className="mr-2 text-gray-600" />
-                                <strong>Post Date:</strong>
-                                <span className="ml-2">
-                                    {new Date(
-                                        selectedJob.date,
-                                    ).toLocaleDateString()}
-                                </span>
-                            </div>
-                            <div className="mb-3 flex items-center text-sm text-gray-700">
-                                <FaCheck className="mr-2 text-gray-600" />
-                                <strong>Status:</strong>
-                                <span
-                                    className={`ml-2 ${selectedJob.status === "approved" ? "text-green-600" : selectedJob.status === "rejected" ? "text-red-600" : "text-yellow-600"}`}
-                                >
-                                    {selectedJob.status}
-                                </span>
-                            </div>
-                        </div>
-                        <div className="mt-6 flex justify-end space-x-4">
-                            {selectedJob.status !== "approved" && (
-                                <button
-                                    onClick={() =>
-                                        handleApprove(selectedJob.id)
-                                    }
-                                    className="flex items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-white transition duration-150 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
-                                >
-                                    <FaCheck className="mr-2" /> Approve Job
-                                </button>
-                            )}
-                            {selectedJob.status !== "rejected" && (
-                                <button
-                                    onClick={() => handleReject(selectedJob.id)}
-                                    className="flex items-center justify-center rounded-lg bg-red-500 px-4 py-2 text-white transition duration-150 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
-                                >
-                                    <FaTimes className="mr-2" /> Reject Job
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                </Modal>
-            )}
         </Container>
     );
 };
