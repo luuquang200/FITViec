@@ -63,7 +63,9 @@ builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddHttpClient();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddHttpContextAccessor();
+
 
 // Configure CORS
 builder.Services.AddCors(options =>

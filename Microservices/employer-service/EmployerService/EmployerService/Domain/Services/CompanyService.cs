@@ -12,11 +12,11 @@ namespace EmployerService.Domain.Services
 	{
 		Task<CreateEmployerResult> CreateEmployerAsync(CreateEmployerRequest request);
 		Task<UpdateEmployerResult> UpdateEmployerAsync(UpdateEmployerRequest request);
-		Task<CompanyDto> GetCompanyByEmployerIdAsync(string employerId);
+		Task<CompanyDto> GetCompanyByEmployerAsync();
 		Task DeleteCompanyAsync(string companyId);
 		Task<List<CompanyDto>> GetAllCompaniesAsync();
 		Task<CreateJobResponseDto> PostJobAsync(PostJobRequestDto request);
-		Task<ApiResult> GetListJobByEmployerIdAsync(string employerId);
+		Task<List<JobDto>> GetListJobByEmployerAsync();
 		Task<ApiResult> UpdateJobByEmployerIdAsync(UpdateJobRequest request);
 		Task<ApiResult> DeleteJobByEmployerIdAsync(string employerId, string jobId);
 	}
@@ -24,18 +24,21 @@ namespace EmployerService.Domain.Services
 	{
 		private readonly ICompanyRepository _companyRepository;
 		private readonly IJobService _jobService;
+		private readonly ICurrentUserService _currentUserService;
 
-		public CompanyService(ICompanyRepository companyRepository, IJobService jobService)
+		public CompanyService(ICompanyRepository companyRepository, IJobService jobService, ICurrentUserService currentUserService)
 		{
 			_companyRepository = companyRepository;
 			_jobService = jobService;
+			_currentUserService = currentUserService;
 		}
 
 		// Create company by employer id
 		public async Task<CreateEmployerResult> CreateEmployerAsync(CreateEmployerRequest request)
 		{
 			// Check if company already exists
-			var companyExists = await _companyRepository.GetByEmployerIdAsync(request.EmployerId);
+			var employerId = _currentUserService.GetUserId();
+			var companyExists = await _companyRepository.GetByEmployerIdAsync(employerId);
 			if (companyExists != null)
 			{
 				return new CreateEmployerResult { IsSuccess = false, ErrorMessage = "Company already exists" };
@@ -44,7 +47,7 @@ namespace EmployerService.Domain.Services
 			var company = new Company
 			{
 				CompanyId = Guid.NewGuid().ToString(),
-				EmployerId = request.EmployerId,
+				EmployerId = employerId,
 				CompanyName = request.CompanyName,
 				CompanyType = request.CompanyType,
 				CompanySize = request.CompanySize,
@@ -63,13 +66,14 @@ namespace EmployerService.Domain.Services
 			// Save to database
 			await _companyRepository.AddAsync(company);
 
-			return new CreateEmployerResult { IsSuccess = true, EmployerId = request.EmployerId };
+			return new CreateEmployerResult { IsSuccess = true, EmployerId = employerId };
 		}
 
 		// Update company by employer id
 		public async Task<UpdateEmployerResult> UpdateEmployerAsync(UpdateEmployerRequest request)
 		{
-			var company = await _companyRepository.GetByEmployerIdAsync(request.EmployerId);
+			var employerId = _currentUserService.GetUserId();
+			var company = await _companyRepository.GetByEmployerIdAsync(employerId);
 			if (company == null)
 			{
 				return new UpdateEmployerResult { IsSuccess = false, ErrorMessage = "Company not found" };
@@ -94,9 +98,10 @@ namespace EmployerService.Domain.Services
 			return new UpdateEmployerResult { IsSuccess = true };
 		}
 
-		// Get company by employer id
-		public async Task<CompanyDto> GetCompanyByEmployerIdAsync(string employerId)
+		// Get company by employer 
+		public async Task<CompanyDto> GetCompanyByEmployerAsync()
 		{
+			var employerId = _currentUserService.GetUserId();
 			var company = await _companyRepository.GetByEmployerIdAsync(employerId);
 			if (company == null)
 			{
@@ -115,7 +120,14 @@ namespace EmployerService.Domain.Services
 		// Get all companies
 		public async Task<List<CompanyDto>> GetAllCompaniesAsync()
 		{
-			return await _companyRepository.GetAllCompaniesAsync();
+			var companies = await _companyRepository.GetAllCompaniesAsync();
+			var companyDtos = new List<CompanyDto>();
+			foreach (var company in companies)
+			{
+				var companyDto = new CompanyDto(company);
+				companyDtos.Add(companyDto);
+			}
+			return companyDtos;
 		}
 
 		// Post job by employer id
@@ -132,36 +144,10 @@ namespace EmployerService.Domain.Services
 		}
 
 		// Get list job by employer id
-		public async Task<ApiResult> GetListJobByEmployerIdAsync(string employerId)
+		public async Task<List<JobDto>> GetListJobByEmployerAsync()
 		{
-			//var response = new ApiResult();
-			//try
-			//{
-			//	var result = await _httpClient.GetAsync($"https://job-service.azurewebsites.net/job/jobs-by-employer/{employerId}");
-
-			//	if (result.IsSuccessStatusCode)
-			//	{
-			//		var jsonData = await result.Content.ReadAsStringAsync();
-			//		var jobs = JsonConvert.DeserializeObject<List<JobDto>>(jsonData);
-			//		response.Data = jobs;
-			//		response.IsSuccess = true;
-			//	}
-			//	else
-			//	{
-			//		response.ErrorMessage = await result.Content.ReadAsStringAsync();
-			//		response.IsSuccess = false;
-			//	}
-			//}
-			//catch (Exception ex)
-			//{
-			//	response.ErrorMessage = ex.Message;
-			//	response.IsSuccess = false;
-			//}
-
-			//return response;
-
-			// return not implemented
-			return new ApiResult();
+			var result = await _jobService.GetListJobByEmployerAsync();
+			return result;
 		}
 
 		// Update job by employer id

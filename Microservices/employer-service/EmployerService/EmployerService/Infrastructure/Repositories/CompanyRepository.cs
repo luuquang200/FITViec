@@ -12,7 +12,7 @@ namespace EmployerService.Infrastructure.Repositories
 		Task<Company> GetByEmployerIdAsync(string employerId);
 		Task UpdateAsync(Company company);
 		Task DeleteAsync(string companyId);
-		Task<List<CompanyDto>> GetAllCompaniesAsync();
+		Task<List<Company>> GetAllCompaniesAsync();
 	}
 	public class CompanyRepository : ICompanyRepository
 	{
@@ -31,8 +31,14 @@ namespace EmployerService.Infrastructure.Repositories
 
 		public async Task<Company> GetByIdAsync(string companyId)
 		{
-			return await _context.Companies
+			var company = await _context.Companies
 				.FirstOrDefaultAsync(c => c.CompanyId == companyId);
+
+			if (company == null)
+			{
+				return null;
+			}
+			return company;
 		}
 
 		public async Task UpdateAsync(Company company)
@@ -63,35 +69,12 @@ namespace EmployerService.Infrastructure.Repositories
 
 			return company;
 		}
-		public async Task<List<CompanyDto>> GetAllCompaniesAsync()
+		public async Task<List<Company>> GetAllCompaniesAsync()
 		{
 			try
 			{
 				var companies = await _context.Companies.ToListAsync();
-				var companyDtos = new List<CompanyDto>();
-				foreach (var company in companies)
-				{
-					var companyDto = new CompanyDto
-					{
-						CompanyId = company.CompanyId,
-						EmployerId = company.EmployerId,
-						CompanyName = company.CompanyName,
-						CompanyType = company.CompanyType,
-						CompanySize = company.CompanySize,
-						Country = company.Country,
-						WorkingDays = company.WorkingDays,
-						OvertimePolicy = company.OvertimePolicy,
-						CompanyOverview = company.CompanyOverview,
-						KeySkills = company.KeySkills,
-						WhyLoveWorkingHere = company.WhyLoveWorkingHere,
-						LogoUrl = company.LogoUrl,
-						Location = company.Location,
-						WorkType = company.WorkType,
-						Image = company.Image
-					};
-					companyDtos.Add(companyDto);
-				}
-				return companyDtos;
+				return companies;
 			}
 			catch (Exception ex)
 			{

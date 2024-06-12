@@ -14,9 +14,10 @@ namespace EmployerService.API.Controllers
         private readonly ICompanyService _employerService;
         private readonly IJobService _jobService;
 
-        public EmployersController(ICompanyService employerService)
+        public EmployersController(ICompanyService employerService, IJobService jobService)
         {
             _employerService = employerService;
+            _jobService = jobService;
         }
 
         [Route("register")]
@@ -48,9 +49,9 @@ namespace EmployerService.API.Controllers
         // get company by employer id
         [Route("get")]
         [HttpGet]
-        public async Task<IActionResult> GetCompanyByEmployerId(string employerId)
+        public async Task<IActionResult> GetCompanyByEmployerId()
         {
-            var company = await _employerService.GetCompanyByEmployerIdAsync(employerId);
+            var company = await _employerService.GetCompanyByEmployerAsync();
             if (company == null)
             {
                 return NotFound();
@@ -97,14 +98,9 @@ namespace EmployerService.API.Controllers
         // Get all jobs by employer id
         [Route("get-all-jobs")]
         [HttpGet]
-        public async Task<IActionResult> GetListJobByEmployerId(string employerId)
+        public async Task<IActionResult> GetListJobByEmployerId()
         {
-            var result = await _employerService.GetListJobByEmployerIdAsync(employerId);
-            if (!result.IsSuccess)
-            {
-                return BadRequest(result.ErrorMessage);
-            }
-
+            var result = await _employerService.GetListJobByEmployerAsync();
             return Ok(result);
         }
 

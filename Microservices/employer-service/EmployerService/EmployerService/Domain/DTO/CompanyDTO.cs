@@ -4,7 +4,6 @@ namespace EmployerService.Domain.DTO
 {
 	public class CompanyDto
 	{
-		public string CompanyId { get; set; } = string.Empty;
 		public string EmployerId { get; set; } = string.Empty;
 		public string CompanyName { get; set; } = string.Empty;
 		public string CompanyType { get; set; } = string.Empty;

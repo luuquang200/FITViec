@@ -2,7 +2,6 @@
 {
     public class UpdateEmployerRequest
     {
-        public string EmployerId { get; set; }
         public string CompanyName { get; set; }
         public string? CompanyOverview { get; set; }
         public string? CompanyType { get; set; }

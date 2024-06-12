@@ -2,7 +2,6 @@
 {
     public class CreateEmployerRequest
     {
-        public string EmployerId { get; set; }
         public string CompanyName { get; set; }
         public string? CompanyType { get; set; }
         public string? CompanySize { get; set; }
