@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Container from "@/components/layout/container";
 import { useTable, usePagination, useSortBy, useFilters } from "react-table";
 import {
@@ -6,20 +6,44 @@ import {
     ChevronRightIcon,
     EyeIcon,
 } from "@heroicons/react/solid";
-import {
-    FaCheck,
-    FaTimes,
-    FaCalendarAlt,
-    FaBuilding,
-    FaUser,
-} from "react-icons/fa";
-import { jobData } from "./data";
+import { ClipLoader } from "react-spinners"; // Import the ClipLoader
+import { getToken } from "@/cookie/cookie";
 
 const JobManagement = ({ onSelectJob }) => {
     const [selectedJob, setSelectedJob] = useState(null);
     const [filterInput, setFilterInput] = useState("");
+    const [jobData, setJobData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const data = useMemo(() => jobData, []);
+    useEffect(() => {
+        const fetchJobs = async () => {
+            try {
+                const response = await fetch(
+                    "https://job-search-service.azurewebsites.net/job-elastic/admin",
+                    {
+                        headers: {
+                            Authorization: `${getToken()}`,
+                        },
+                    },
+                );
+                if (!response.ok) {
+                    throw new Error(
+                        "Network response was not ok " + response.statusText,
+                    );
+                }
+                const data = await response.json();
+                setJobData(data);
+            } catch (error) {
+                console.error("Failed to fetch job data", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchJobs();
+    }, []);
+
+    const data = useMemo(() => jobData, [jobData]);
 
     const columns = useMemo(
         () => [
@@ -35,13 +59,12 @@ const JobManagement = ({ onSelectJob }) => {
             {
                 Header: "Post Date",
                 accessor: "postedAt",
-                // Cell: ({ value }) => new Date(value).toLocaleDateString(),
                 Filter: ColumnFilter,
             },
             {
                 Header: "Status",
                 accessor: "jobStatus",
-                Filter: SelectColumnFilter, // Sử dụng bộ lọc Select cho Status
+                Filter: SelectColumnFilter,
             },
             {
                 Header: "Action",
@@ -57,24 +80,6 @@ const JobManagement = ({ onSelectJob }) => {
         ],
         [],
     );
-
-    const handleApprove = (id) => {
-        console.log(`Approved job with ID: ${id}`);
-        if (window.confirm("Are you sure you want to approve?")) {
-            setSelectedJob((prev) => ({ ...prev, jobStatus: "approved" }));
-        } else {
-            return;
-        }
-    };
-
-    const handleReject = (id) => {
-        console.log(`Rejected job with ID: ${id}`);
-        if (window.confirm("Are you sure you want to reject?")) {
-            setSelectedJob((prev) => ({ ...prev, jobStatus: "rejected" }));
-        } else {
-            return;
-        }
-    };
 
     const {
         getTableProps,
@@ -107,6 +112,14 @@ const JobManagement = ({ onSelectJob }) => {
         setFilter("employerId", value);
         setFilterInput(value);
     };
+
+    if (loading) {
+        return (
+            <Container className="flex items-center justify-center py-16 pt-8">
+                <ClipLoader size={50} color={"red"} loading={loading} />
+            </Container>
+        );
+    }
 
     return (
         <Container className="py-16 pt-8">

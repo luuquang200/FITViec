@@ -15,6 +15,7 @@ import { useNavigate, Navigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import { useEffect } from "react";
+import { saveToken } from "@/cookie/cookie";
 
 const SignIn = () => {
     const { userLoggedIn, setInSingUpInPage } = useAuth();
@@ -69,6 +70,7 @@ const SignIn = () => {
                             toast.success(
                                 "Successfully authenticated from Email & Password account.",
                             );
+                            saveToken(user.accessToken);
                             // Điều hướng tới home sau khi đăng nhập  thành công
                             navigate(`/`);
                         } else {
