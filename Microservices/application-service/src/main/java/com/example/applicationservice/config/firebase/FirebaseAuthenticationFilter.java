@@ -29,6 +29,7 @@ public class FirebaseAuthenticationFilter implements Filter {
     }
     String idToken = httpRequest.getHeader("Authorization");
     if (idToken != null && !idToken.isEmpty()) {
+      httpRequest.setAttribute("accessToken", idToken);
       try {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseToken decodedToken = firebaseAuth.verifyIdToken(idToken);

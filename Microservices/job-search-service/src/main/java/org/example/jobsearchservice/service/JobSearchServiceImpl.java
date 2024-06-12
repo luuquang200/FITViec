@@ -8,13 +8,11 @@ import co.elastic.clients.elasticsearch.core.search.Hit;
 import lombok.AllArgsConstructor;
 import org.example.jobsearchservice.constant.FilterBy;
 import org.example.jobsearchservice.constant.JobStatus;
-import org.example.jobsearchservice.dto.EmployerInfo;
 import org.example.jobsearchservice.dto.EventData;
 import org.example.jobsearchservice.dto.UpdateResponse;
 import org.example.jobsearchservice.repository.JobRepository;
 import org.example.jobsearchservice.repository.model.Job;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -102,28 +100,34 @@ public class JobSearchServiceImpl implements JobSearchService {
   }
 
   private Supplier<Query> CreateSupplierQueryForSearch(String fieldName, String value) {
-    if (fieldName.equals(FilterBy.JOB_SKILLS) || fieldName.equals(FilterBy.JOB_TITLE)
-        || fieldName.equals(FilterBy.COMPANY) || fieldName.equals(FilterBy.COPANY_ID)) {
-      Query query = new MatchQuery.Builder().query(value).field(fieldName).build()._toQuery();
-      Query filterApproved = this.GetQueryForFilterApprovedJobs();
-      BoolQuery boolQuery = QueryBuilders.bool().must(query, filterApproved).build();
-      return () -> Query.of(_q -> _q.bool(boolQuery));
-    } else if (fieldName.equals(FilterBy.LOCATION)) {
-      if (value.equalsIgnoreCase("ho chi minh")
-          || value.toLowerCase(Locale.ROOT).equals("ha noi")
-          || value.toLowerCase(Locale.ROOT).equals("da nang")) {
+    switch (fieldName) {
+      case FilterBy.JOB_SKILLS, FilterBy.JOB_TITLE, FilterBy.COMPANY -> {
         Query query = new MatchQuery.Builder().query(value).field(fieldName).build()._toQuery();
         Query filterApproved = this.GetQueryForFilterApprovedJobs();
         BoolQuery boolQuery = QueryBuilders.bool().must(query, filterApproved).build();
         return () -> Query.of(_q -> _q.bool(boolQuery));
-      } else if (value.toLowerCase(Locale.ROOT).equals("others")) {
-        Query qHcm = new MatchQuery.Builder().query("ho chi minh").field(FilterBy.LOCATION).build()._toQuery();
-        Query qHn = new MatchQuery.Builder().query("ha noi").field(FilterBy.LOCATION).build()._toQuery();
-        Query qDn = new MatchQuery.Builder().query("da nang").field(FilterBy.LOCATION).build()._toQuery();
-        Query query = new BoolQuery.Builder().mustNot(qHcm, qHn, qDn).build()._toQuery();
-        Query filterApproved = this.GetQueryForFilterApprovedJobs();
-        BoolQuery boolQuery = QueryBuilders.bool().must(query, filterApproved).build();
-        return () -> Query.of(_q -> _q.bool(boolQuery));
+      }
+      case FilterBy.COPANY_ID -> {
+        MatchQuery query = new MatchQuery.Builder().query(value).field(fieldName).build();
+        return () -> Query.of(_q -> _q.match(query));
+      }
+      case FilterBy.LOCATION -> {
+        if (value.equalsIgnoreCase("ho chi minh")
+            || value.toLowerCase(Locale.ROOT).equals("ha noi")
+            || value.toLowerCase(Locale.ROOT).equals("da nang")) {
+          Query query = new MatchQuery.Builder().query(value).field(fieldName).build()._toQuery();
+          Query filterApproved = this.GetQueryForFilterApprovedJobs();
+          BoolQuery boolQuery = QueryBuilders.bool().must(query, filterApproved).build();
+          return () -> Query.of(_q -> _q.bool(boolQuery));
+        } else if (value.toLowerCase(Locale.ROOT).equals("others")) {
+          Query qHcm = new MatchQuery.Builder().query("ho chi minh").field(FilterBy.LOCATION).build()._toQuery();
+          Query qHn = new MatchQuery.Builder().query("ha noi").field(FilterBy.LOCATION).build()._toQuery();
+          Query qDn = new MatchQuery.Builder().query("da nang").field(FilterBy.LOCATION).build()._toQuery();
+          Query query = new BoolQuery.Builder().mustNot(qHcm, qHn, qDn).build()._toQuery();
+          Query filterApproved = this.GetQueryForFilterApprovedJobs();
+          BoolQuery boolQuery = QueryBuilders.bool().must(query, filterApproved).build();
+          return () -> Query.of(_q -> _q.bool(boolQuery));
+        }
       }
     }
     return null;
@@ -175,6 +179,7 @@ public class JobSearchServiceImpl implements JobSearchService {
   }
   private void CopyData(EventData data, Job job) {
     job.setJobId(data.getJobId());
+    job.setCreatorId(data.getCreatorId());
     job.setJobStatus(data.getJobStatus());
     job.setEmployerId(data.getEmployerId());
     job.setJobSalary(data.getJobSalary());

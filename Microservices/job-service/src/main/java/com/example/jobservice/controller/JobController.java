@@ -3,6 +3,7 @@ package com.example.jobservice.controller;
 import com.example.jobservice.config.firebase.UserInfo;
 import com.example.jobservice.constant.Roles;
 import com.example.jobservice.dto.CUJobDto;
+import com.example.jobservice.dto.JobInfo;
 import com.example.jobservice.dto.UpdateResponse;
 import com.example.jobservice.repository.dao.Job;
 import com.example.jobservice.service.JobService;
@@ -62,11 +63,20 @@ public class JobController {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
   }
-  @PostMapping("reject/{job-id}")
+  @PostMapping("/reject/{job-id}")
   public ResponseEntity<UpdateResponse> RejectJob(HttpServletRequest request, @PathVariable("job-id") String jobId) {
     UserInfo user = (UserInfo) request.getAttribute("userInfo");
     if (user.getRole().equalsIgnoreCase(Roles.ADMIN)) {
       return ResponseEntity.ok(this.service.RejectJob(jobId));
+    } else {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+  }
+  @GetMapping("/get-info/{job-id}")
+  public ResponseEntity<JobInfo> GetJobInfo(HttpServletRequest request, @PathVariable("job-id") String jobId) {
+    UserInfo user = (UserInfo) request.getAttribute("userInfo");
+    if (user.getRole().equalsIgnoreCase(Roles.USER)) {
+      return ResponseEntity.ok(this.service.GetJobInfo(jobId));
     } else {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
