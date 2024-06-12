@@ -67,6 +67,16 @@ builder.Services.AddHttpContextAccessor();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+	options.AddDefaultPolicy(builder =>
+	{
+		builder.AllowAnyOrigin()
+			   .AllowAnyMethod()
+			   .AllowAnyHeader();
+	});
+});
 
 
 // Configure Swagger/OpenAPI
