@@ -6,7 +6,7 @@ import MainTablet from "@/components/layout/main-tablet";
 import FormApplyJob from "@/components/layout/form-apply-job";
 import SearchSection from "@/components/layout/search-section";
 import TopEmployerSection from "@/components/layout/top-employer-section";
-import SearchResult from "./components/layout/search-result";
+import SearchResult from "./components/Search/search-result";
 import JobDetailGuestPage from "./components/ui/job-detail-guest/job-detail-guest";
 import ProfileManagement from "./components/profile/profile-management";
 
@@ -39,7 +39,7 @@ function App() {
             <div className="h-[88px]" />
             <Routes>
                 <Route path="/employer" element={<EmployerContainer />} />
-                <Route path="/cv-detail/:applicantId" element={<CVViewer/>} />
+                <Route path="/cv-detail/:applicationId" element={<CVViewer/>} />
                 <Route path="/sign_in" element={<SignIn />} />
                 <Route path="/sign_up" element={<SignUp />} />
                 <Route
@@ -94,10 +94,7 @@ function App() {
                         // </ProtectedRouteVerify>
                     }
                 />
-                <Route
-                    path="/admin"
-                    element={<AdminDashboard />}
-                />
+                <Route path="/admin" element={<AdminDashboard />} />
             </Routes>
             <Footer />
         </AuthProvider>

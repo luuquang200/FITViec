@@ -163,7 +163,12 @@ const ProfileManagementCv = () => {
     };
 
     const hasCVChanged = () => {
-        // So sánh fileName của trạng thái hiện tại với trạng thái ban đầu
+        // Trường hợp người dùng mới chưa có CV
+        if (!initialFileInfo && fileInfo) {
+            return true;
+        }
+
+        // Trường hợp người dùng đã có CV
         return (
             fileInfo &&
             initialFileInfo &&
@@ -220,7 +225,7 @@ const ProfileManagementCv = () => {
                                         />
                                         <label
                                             htmlFor="fileInput"
-                                            className="flex cursor-pointer items-center gap-2"
+                                            className={`flex cursor-pointer items-center gap-2 ${uploading ? "pointer-events-none" : ""}`}
                                         >
                                             <Upload className="h-5 w-5 text-blue-400" />
                                             <span className="text-blue-600">
@@ -247,7 +252,7 @@ const ProfileManagementCv = () => {
                                     }
                                 >
                                     <Check className="h-4 w-4 font-bold text-white" />
-                                    {uploading ? "Submit...." : "Submit CVs"}
+                                    {uploading ? "Saving...." : "Saving CV"}
                                 </button>
                             </div>
                         </div>

@@ -44,6 +44,11 @@ const capitalized = (letter) => {
     return letter.charAt(0).toUpperCase() + letter.slice(1);
 };
 
+const formatDate = (dateString) => {
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
+};
+
 const ProfileMain = () => {
     const { currentUser, inSingUpInPage, isGoogleUser } = useAuth();
 
@@ -91,8 +96,12 @@ const ProfileMain = () => {
                                 <p className="text-2xl font-bold text-slate-700">
                                     {capitalized(currentUser?.displayName)}
                                 </p>
-                                <p className="mt-2 text-lg font-bold text-gray-400">
-                                    Your title
+                                <p
+                                    className={`mt-2 text-lg font-bold text-gray-400 ${currentUser.title ? "font-bold text-slate-700" : ""}`}
+                                >
+                                    {currentUser.title
+                                        ? currentUser.title
+                                        : "Your title"}
                                 </p>
                             </div>
                         </div>
@@ -115,7 +124,7 @@ const ProfileMain = () => {
                                     className={`${currentUser.birthday ? "text-slate-800" : ""}`}
                                 >
                                     {currentUser.birthday
-                                        ? currentUser.birthday
+                                        ? formatDate(currentUser.birthday)
                                         : "Your date of birth"}
                                 </span>
                             </div>
@@ -148,17 +157,17 @@ const ProfileMain = () => {
                                     className={`${currentUser.gender ? "text-slate-800" : ""}`}
                                 >
                                     {currentUser.gender
-                                        ? currentUser.gender
+                                        ? capitalized(currentUser.gender)
                                         : "Your gender"}
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center gap-2 text-gray-400">
                                 <Globe className="h-5 w-5" />{" "}
                                 <span
-                                    className={`${currentUser.pLink ? "text-slate-800" : ""}`}
+                                    className={`${currentUser.personalLink ? "text-slate-800" : ""}`}
                                 >
-                                    {currentUser.pLink
-                                        ? currentUser.pLink
+                                    {currentUser.personalLink
+                                        ? currentUser.personalLink
                                         : "Your personal link"}
                                 </span>
                             </div>

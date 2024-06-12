@@ -8,10 +8,10 @@ const Gallery = ({ job_detail }) => {
         <div className="flex justify-center ">
             <div  className="flex-none mr-4">
               <img
-                src={job_detail.employerInfo.image}
-                alt={job_detail.employerInfo.companyName}
+                src={job_detail?.employerInfo.image}
+                alt={job_detail?.employerInfo.companyName}
                 className="cursor-pointer max-w-[300px] h-[184px]"
-                onClick={() => setSelectedImage(job_detail.employerInfo.image)}
+                onClick={() => setSelectedImage(job_detail?.employerInfo.image)}
               />
             </div>
         </div>
@@ -44,6 +44,9 @@ const Gallery = ({ job_detail }) => {
   );
 };
 
+Gallery.propTypes = {
+  job_detail: PropTypes.object.isRequired,
+};
 
 function IconText({ iconSrc, text, alt }) {
     return (
@@ -53,6 +56,12 @@ function IconText({ iconSrc, text, alt }) {
         </div>
     );
 }
+
+IconText.propTypes = {
+  iconSrc: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+  alt: PropTypes.string,
+};
 
 
 function SkillTags() {
@@ -81,11 +90,11 @@ function JobDetails({job_detail}) {
             <div className="job-info">
                 <IconText
                     iconSrc="https://cdn.builder.io/api/v1/image/assets/TEMP/c0626a6a4a2acda85275ab5536f06c95177df1a626adecf3aaca0e4d6ce3e6f2?apiKey=1293b2add2d347908b4e11760098fdbe&"
-                    text={job_detail.jobLocation}
+                    text={job_detail?.jobLocation}
                     alt="Location icon"
                 />
-                {/* <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/bd2125e9fd97fbb5b3b13bcb2bdf6e326626587444b795c48309c9c97f097f40?apiKey=1293b2add2d347908b4e11760098fdbe&"/> */}
-                <IconText  iconSrc="https://cdn.builder.io/api/v1/image/assets/TEMP/6d831fdaf31e8169acfb119810b46f9bf0bba65340e3dda6252b5f6ef449a66b?apiKey=1293b2add2d347908b4e11760098fdbe&" text={job_detail.jobType} alt="Office icon" />
+                
+                <IconText  iconSrc="https://cdn.builder.io/api/v1/image/assets/TEMP/6d831fdaf31e8169acfb119810b46f9bf0bba65340e3dda6252b5f6ef449a66b?apiKey=1293b2add2d347908b4e11760098fdbe&" text={job_detail?.jobType} alt="Office icon" />
                 
             </div>
             <SkillTags />
@@ -93,6 +102,9 @@ function JobDetails({job_detail}) {
     );
 }
 
+JobDetails.propTypes = {
+  job_detail: PropTypes.object.isRequired,
+};
 function BasicInfo( {job_detail}) {
     return (
         <>
@@ -219,4 +231,7 @@ function BasicInfo( {job_detail}) {
     );
 }
 
+BasicInfo.propTypes = {
+  job_detail: PropTypes.object.isRequired,
+};
 export default BasicInfo;
