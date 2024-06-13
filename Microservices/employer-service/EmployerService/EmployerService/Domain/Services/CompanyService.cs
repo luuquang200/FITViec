@@ -1,4 +1,5 @@
-﻿using EmployerService.Domain.DTO;
+﻿using EmployerService.Domain.Dto;
+using EmployerService.Domain.DTO;
 using EmployerService.Domain.Entities;
 using EmployerService.Infrastructure.Repositories;
 using EmployerService.Shared.Dto;
@@ -17,8 +18,8 @@ namespace EmployerService.Domain.Services
 		Task<List<CompanyDto>> GetAllCompaniesAsync();
 		Task<CreateJobResponseDto> PostJobAsync(PostJobRequestDto request);
 		Task<List<JobDto>> GetListJobByEmployerAsync();
-		Task<ApiResult> UpdateJobByEmployerIdAsync(UpdateJobRequest request);
-		Task<ApiResult> DeleteJobByEmployerIdAsync(string employerId, string jobId);
+		Task<UpdateJobReponseDto> UpdateJobByEmployerAsync(UpdateJobRequestDto request);
+		Task<DeleteJobResponseDto> DeleteJobByEmployerAsync(string jobId);
 	}
 	public class CompanyService: ICompanyService
 	{
@@ -151,62 +152,25 @@ namespace EmployerService.Domain.Services
 		}
 
 		// Update job by employer id
-		public async Task<ApiResult> UpdateJobByEmployerIdAsync(UpdateJobRequest request)
+		public async Task<UpdateJobReponseDto> UpdateJobByEmployerAsync(UpdateJobRequestDto request)
 		{
-			//var response = new ApiResult();
-			//try
-			//{
-			//	var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-			//	var result = await _httpClient.PutAsync($"https://job-service.azurewebsites.net/job/update/{request.EmployerId}/{request.JobId}", content);
+			var result = await _jobService.UpdateJobByEmployerAsync(request);
+			if (result.Success)
+			{
+				return result;
+			}
+			else
+			{
+				return new UpdateJobReponseDto { Success = false, Message = result.Message };
 
-			//	if (result.IsSuccessStatusCode)
-			//	{
-			//		response.Data = await result.Content.ReadAsStringAsync();
-			//		response.IsSuccess = true;
-			//	}
-			//	else
-			//	{
-			//		response.ErrorMessage = await result.Content.ReadAsStringAsync();
-			//		response.IsSuccess = false;
-			//	}
-			//}
-			//catch (Exception ex)
-			//{
-			//	response.ErrorMessage = ex.Message;
-			//	response.IsSuccess = false;
-			//}
-
-			//return response;
-			return new ApiResult();
+			}
 		}
 
 		// Delete job by employer id
-		public async Task<ApiResult> DeleteJobByEmployerIdAsync(string employerId, string jobId)
+		public async Task<DeleteJobResponseDto> DeleteJobByEmployerAsync(string jobId)
 		{
-			//var response = new ApiResult();
-			//try
-			//{
-			//	var result = await _httpClient.DeleteAsync($"https://job-service.azurewebsites.net/job/{employerId}/{jobId}");
-
-			//	if (result.IsSuccessStatusCode)
-			//	{
-			//		response.Data = await result.Content.ReadAsStringAsync();
-			//		response.IsSuccess = true;
-			//	}
-			//	else
-			//	{
-			//		response.ErrorMessage = await result.Content.ReadAsStringAsync();
-			//		response.IsSuccess = false;
-			//	}
-			//}
-			//catch (Exception ex)
-			//{
-			//	response.ErrorMessage = ex.Message;
-			//	response.IsSuccess = false;
-			//}
-
-			//return response;
-			return new ApiResult();
+			var result = await _jobService.DeleteJobByEmployerAsync(jobId);
+			return result;
 		}
 
 	}

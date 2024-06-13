@@ -1,4 +1,5 @@
-﻿using EmployerService.Domain.DTO;
+﻿using EmployerService.Domain.Dto;
+using EmployerService.Domain.DTO;
 using EmployerService.Domain.Entities;
 using EmployerService.Domain.Services;
 using EmployerService.Shared.Dto;
@@ -107,28 +108,18 @@ namespace EmployerService.API.Controllers
         // Update job by employer id
         [Route("update-job")]
         [HttpPut]
-        public async Task<IActionResult> UpdateJob(UpdateJobRequest request)
+        public async Task<IActionResult> UpdateJob(UpdateJobRequestDto request)
         {
-            var result = await _employerService.UpdateJobByEmployerIdAsync(request);
-            if (!result.IsSuccess)
-            {
-                return BadRequest(result.ErrorMessage);
-            }
-
+            var result = await _employerService.UpdateJobByEmployerAsync(request);
             return Ok(result);
         }
 
         // Delete job by employer id
         [Route("delete-job")]
         [HttpDelete]
-        public async Task<IActionResult> DeleteJob(string employerId, string jobId)
+        public async Task<IActionResult> DeleteJob(string jobId)
         {
-            var result = await _employerService.DeleteJobByEmployerIdAsync(employerId, jobId);
-            if (!result.IsSuccess)
-            {
-                return BadRequest(result.ErrorMessage);
-            }
-
+            var result = await _employerService.DeleteJobByEmployerAsync(jobId);
             return Ok(result);
         }
     }

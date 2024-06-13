@@ -10,7 +10,7 @@
         "PORT": "8080"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7201;http://localhost:8080"
+      "applicationUrl": "https://localhost:7201;http://localhost:8081"
     },
     "IIS Express": {
       "commandName": "IISExpress",
