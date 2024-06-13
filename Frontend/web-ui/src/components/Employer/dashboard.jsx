@@ -4,8 +4,8 @@ import EmployerProfile from './employer-profile';
 import JobPost from './job-post';
 
 const tabs = [
-  { name: 'Profile nhà tuyển dụng' },
-  { name: 'Đăng bài tuyển dụng' },
+  { name: 'Employer\'s profile' },
+  { name: 'Add a job' },
 ]
 
 const Dashboard = () => {
@@ -27,8 +27,8 @@ const Dashboard = () => {
           </button>
         ))}
       </div>
-      {activeTab === 'Profile nhà tuyển dụng' && <EmployerProfile />}
-      {activeTab === 'Đăng bài tuyển dụng' && <JobPost />}
+      {activeTab === 'Employer\'s profile' && <EmployerProfile />}
+      {activeTab === 'Add a job' && <JobPost />}
     </div>
   );
 };
