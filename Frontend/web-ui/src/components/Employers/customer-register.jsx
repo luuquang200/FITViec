@@ -93,7 +93,7 @@ const CustomerRegister = () => {
                     displayName: fullName,
                     email: user.email,
                     gender: gender,
-                    phoneNumber: phone,
+                    phone: phone,
                     company: companyName,
                     workLocation: workLocation,
                     registrationDate: registrationDate,

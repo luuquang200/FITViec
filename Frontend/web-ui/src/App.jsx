@@ -34,6 +34,7 @@ import EmployeeJobManagment from "./components/Employee/employee-job-managment";
 import SettingsAccount from "./components/Authentications/settingsAccount";
 import EmployeeJobRecent from "./components/Employee/employee-job-recent";
 import EmployeeJobApplied from "./components/Employee/employee-job-applied";
+import ProfileEmployer from "./components/profile/profile-employer";
 
 function App() {
     return (
@@ -104,6 +105,7 @@ function App() {
                     path="/customer/register"
                     element={<CustomerRegister />}
                 />
+                <Route path="/customer/profile" element={<ProfileEmployer />} />
                 <Route
                     path="/customer/notification"
                     element={
