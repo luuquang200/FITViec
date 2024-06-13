@@ -42,10 +42,6 @@ export function AuthProvider({ children }) {
                     ...user,
                     ...userData,
                 };
-                // let role = "user";
-                // if (userDoc.exists()) {
-                //     role = userDoc.data().role;
-                // }
                 setCurrentUser(updatedUser);
 
                 const isEmail = user.providerData.some(

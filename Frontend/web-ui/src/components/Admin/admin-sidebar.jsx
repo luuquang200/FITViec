@@ -12,7 +12,7 @@ const AdminSidebar = ({ onTabChange }) => {
 
     const handleTabChange = (tab) => {
         setActiveTab(tab);
-        onTabChange(tab);
+        onTabChange(tab); // Notify parent component of tab change
     };
 
     const getTabClassName = (tab) =>
@@ -23,7 +23,7 @@ const AdminSidebar = ({ onTabChange }) => {
         }`;
 
     return (
-        <div className="min-h-screen w-64 bg-gray-100 p-6 text-gray-900 shadow-lg">
+        <div className="fixed min-h-screen w-64 bg-gray-100 p-6 text-gray-900 shadow-lg">
             <div className="mb-8 flex items-center">
                 <img
                     src={adminUser.avatar}

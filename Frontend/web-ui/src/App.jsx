@@ -29,6 +29,8 @@ import VerifyEmployer from "./components/Employers/verify-employer";
 import ProfileManagementCv from "./components/profile/profile-management-cv";
 import ProfileManagementJob from "./components/profile/profile-management-job";
 import AdminDashboard from "./components/Admin/admin-dashboard";
+import EmployeeJobManagment from "./components/Employee/employee-job-managment";
+import SettingsAccount from "./components/Authentications/settingsAccount";
 
 function App() {
     return (
@@ -39,7 +41,10 @@ function App() {
             <div className="h-[88px]" />
             <Routes>
                 <Route path="/employer" element={<EmployerContainer />} />
-                <Route path="/cv-detail/:applicantId" element={<CVViewer/>} />
+                <Route
+                    path="/cv-detail/:applicationId"
+                    element={<CVViewer />}
+                />
                 <Route path="/sign_in" element={<SignIn />} />
                 <Route path="/sign_up" element={<SignUp />} />
                 <Route
@@ -69,6 +74,7 @@ function App() {
                     path="/profile-cv/job-preferences"
                     element={<ProfileManagementJob />}
                 />
+                <Route path="/my-jobs/" element={<EmployeeJobManagment />} />
                 <Route
                     path="/verify_email"
                     element={
@@ -95,6 +101,7 @@ function App() {
                     }
                 />
                 <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/settings" element={<SettingsAccount />} />
             </Routes>
             <Footer />
         </AuthProvider>

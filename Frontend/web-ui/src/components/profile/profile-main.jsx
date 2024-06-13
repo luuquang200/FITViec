@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "../ui/button";
 
 import { useAuth } from "../../contexts/authContext";
-
+import { db } from "../../firebase/firebase";
+import { doc, getDoc } from "firebase/firestore";
 import {
     Mail,
     Gift,
@@ -19,6 +20,11 @@ import PersonalInfoPopUp from "./PopupForm/personal-info-popup";
 import WorkExperiencePopup from "./PopupForm/work-experience-popup";
 import AboutMePopup from "./PopupForm/about-me-popup";
 import EducationPopup from "./PopupForm/education-popup";
+import PersonalProjectPopup from "./PopupForm/personal-project-popup";
+import CertificatePopup from "./PopupForm/certificate-popup";
+import AwardPopup from "./PopupForm/award-popup";
+import SkillPopup from "./PopupForm/skill-popup";
+import { toast } from "react-toastify";
 
 const images = {
     aboutImage:
@@ -44,28 +50,69 @@ const capitalized = (letter) => {
     return letter.charAt(0).toUpperCase() + letter.slice(1);
 };
 
+const formatDate = (dateString) => {
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
+};
+
 const ProfileMain = () => {
     const { currentUser, inSingUpInPage, isGoogleUser } = useAuth();
 
+    const [profileUser, setProfileUser] = useState(null);
     const [isOpenPopupPersonal, setIsPopupPersonal] = useState(false);
-    const [isOpenAboutMePopup, setisisOpenAboutMePopup] = useState(false);
+    const [isOpenAboutMePopup, setIsOpenAboutMePopup] = useState(false);
+    const [isOpenEducationMePopup, setIsOpenEducationMePopup] = useState(false);
     const [isOpenWorkExperiencePopup, setisOpenWorkExperiencePopup] =
         useState(false);
-    const [isOpenEducationPopup, setisisOpenEducationPopup] = useState(false);
+
+    const [isOpenPersonalProjectPopup, setIsOpenPersonalProjectPopup] =
+        useState(false);
+    const [isOpenCertificatePopup, setIsOpenCertificatePopup] = useState(false);
+    const [isOpenAwardPopup, setIsOpenAwardPopup] = useState(false);
+    const [isOpenSkillPopup, setisOpenSkillPopup] = useState(false);
+    const [loading, setLoading] = useState(true); // Trạng thái loading
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            setLoading(true);
+            if (currentUser) {
+                try {
+                    const profileDoc = await getDoc(
+                        doc(db, "profiles", currentUser.uid),
+                    );
+                    const profileData = profileDoc.exists()
+                        ? profileDoc.data()
+                        : {};
+                    setProfileUser(profileData);
+                } catch (error) {
+                    toast.error("Something went wrong : ", error);
+                } finally {
+                    setLoading(false);
+                }
+            }
+        };
+
+        fetchUserData();
+    }, [currentUser, isOpenAboutMePopup]);
 
     const handleModifyPersonalClick = () => {
         setIsPopupPersonal(true);
     };
 
     const handleModifyAboutMeClick = () => {
-        setisisOpenAboutMePopup(true);
+        setIsOpenAboutMePopup(true);
     };
     const handleModifyWorkExperiencelClick = () => {
         setisOpenWorkExperiencePopup(true);
     };
     const handleModifyEducationClick = () => {
-        setisisOpenEducationPopup(true);
+        setIsOpenEducationMePopup(true);
     };
+    const handleModifyPersonalProjectClick = () =>
+        setIsOpenPersonalProjectPopup(true);
+    const handleModifyCertificateClick = () => setIsOpenCertificatePopup(true);
+    const handleModifyAwardClick = () => setIsOpenAwardPopup(true);
+    const handleModifySkillClick = () => setisOpenSkillPopup(true);
 
     return (
         <div className="col-span-3 mt-3">
@@ -91,8 +138,12 @@ const ProfileMain = () => {
                                 <p className="text-2xl font-bold text-slate-700">
                                     {capitalized(currentUser?.displayName)}
                                 </p>
-                                <p className="mt-2 text-lg font-bold text-gray-400">
-                                    Your title
+                                <p
+                                    className={`mt-2 text-lg font-bold text-gray-400 ${currentUser.title ? "font-bold text-slate-700" : ""}`}
+                                >
+                                    {currentUser.title
+                                        ? currentUser.title
+                                        : "Your title"}
                                 </p>
                             </div>
                         </div>
@@ -115,7 +166,7 @@ const ProfileMain = () => {
                                     className={`${currentUser.birthday ? "text-slate-800" : ""}`}
                                 >
                                     {currentUser.birthday
-                                        ? currentUser.birthday
+                                        ? formatDate(currentUser.birthday)
                                         : "Your date of birth"}
                                 </span>
                             </div>
@@ -148,17 +199,17 @@ const ProfileMain = () => {
                                     className={`${currentUser.gender ? "text-slate-800" : ""}`}
                                 >
                                     {currentUser.gender
-                                        ? currentUser.gender
+                                        ? capitalized(currentUser.gender)
                                         : "Your gender"}
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center gap-2 text-gray-400">
                                 <Globe className="h-5 w-5" />{" "}
                                 <span
-                                    className={`${currentUser.pLink ? "text-slate-800" : ""}`}
+                                    className={`${currentUser.personalLink ? "text-slate-800" : ""}`}
                                 >
-                                    {currentUser.pLink
-                                        ? currentUser.pLink
+                                    {currentUser.personalLink
+                                        ? currentUser.personalLink
                                         : "Your personal link"}
                                 </span>
                             </div>
@@ -176,10 +227,12 @@ const ProfileMain = () => {
                 content="Introduce your strengths and years of experience"
                 img={images.aboutImage}
                 onModifyClick={handleModifyAboutMeClick}
+                aboutMe={profileUser?.aboutMe}
+                loading={loading}
             />
             <ProfileContent
                 title="Education"
-                content="  Share your background education"
+                content="Share your background education"
                 img={images.educationImage}
                 onModifyClick={handleModifyEducationClick}
             />
@@ -193,25 +246,25 @@ const ProfileMain = () => {
                 title="Skills"
                 content="Showcase your skills and proficiencies"
                 img={images.skillImage}
-                onModifyClick={handleModifyPersonalClick}
+                onModifyClick={handleModifySkillClick}
             />
             <ProfileContent
                 title="Personal Project"
                 content="Showcase your personal project"
                 img={images.projectImage}
-                onModifyClick={handleModifyPersonalClick}
+                onModifyClick={handleModifyPersonalProjectClick}
             />
             <ProfileContent
                 title="Certificates"
                 content="Provides evidence of your specific expertise and skills"
                 img={images.certificateImage}
-                onModifyClick={handleModifyPersonalClick}
+                onModifyClick={handleModifyCertificateClick}
             />
             <ProfileContent
                 title="Awards"
                 content="Highlight your awards or recognitions"
                 img={images.awardsImage}
-                onModifyClick={handleModifyPersonalClick}
+                onModifyClick={handleModifyAwardClick}
             />
             {isOpenPopupPersonal && (
                 <PersonalInfoPopUp
@@ -228,13 +281,38 @@ const ProfileMain = () => {
             {isOpenAboutMePopup && (
                 <AboutMePopup
                     userInfo={currentUser}
-                    onClose={() => setisisOpenAboutMePopup(false)}
+                    aboutMe={profileUser?.aboutMe}
+                    onClose={() => setIsOpenAboutMePopup(false)}
                 />
             )}
-            {isOpenEducationPopup && (
+            {isOpenEducationMePopup && (
                 <EducationPopup
                     userInfo={currentUser}
-                    onClose={() => setisisOpenEducationPopup(false)}
+                    onClose={() => setIsOpenEducationMePopup(false)}
+                />
+            )}
+            {isOpenPersonalProjectPopup && (
+                <PersonalProjectPopup
+                    userInfo={currentUser}
+                    onClose={() => setIsOpenPersonalProjectPopup(false)}
+                />
+            )}
+            {isOpenCertificatePopup && (
+                <CertificatePopup
+                    userInfo={currentUser}
+                    onClose={() => setIsOpenCertificatePopup(false)}
+                />
+            )}
+            {isOpenAwardPopup && (
+                <AwardPopup
+                    userInfo={currentUser}
+                    onClose={() => setIsOpenAwardPopup(false)}
+                />
+            )}
+            {isOpenSkillPopup && (
+                <SkillPopup
+                    userInfo={currentUser}
+                    onClose={() => setisOpenSkillPopup(false)}
                 />
             )}
         </div>

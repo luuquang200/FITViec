@@ -10,7 +10,7 @@ const exCandidateData = {
 };
 const exJobData = {
   jobId: "abca45673",
-  jobStatus: "enable",
+  jobStatus: "pending",
   jobTitle: "Công việc nặng nhọc",
 };
 
@@ -19,9 +19,9 @@ const exApplicationData = {
   employerId: "employerId",
   jobId: "jobId",
   jobSeekerId: "jobSeekerId",
-  applicationStatus: "null",
+  applicationStatus: "in_review",
   applicationName: "applicationName",
-  cvLink: "http://employer-service-otwul2bnna-uc.a.run.app/uploads/1cf32878-8912-467f-be46-538c5d32370d.pdf",
+  cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
   coverLetter: "coverLetter",
   applyAt: "applyAt",
 };
@@ -143,7 +143,7 @@ const CVViewer = () => {
           <div className="mb-4">
             <div className="font-semibold mb-2">Đổi trạng thái CV : </div>
             <div className="flex items-center justify-between">
-              <button onClick={() => updateApplicationStatus('interview')} className="bg-green-100 text-green-700 w-1/2 py-2 rounded mr-2">Hẹn phỏng vấn</button>
+              <button onClick={() => updateApplicationStatus('accepted')} className="bg-green-100 text-green-700 w-1/2 py-2 rounded mr-2">Hẹn phỏng vấn</button>
               <button onClick={() => updateApplicationStatus('rejected')} className="bg-red-100 text-red-700 w-1/2 py-2 rounded">Từ chối</button>
             </div>
           </div>

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 // import { writeEmployee, readEmployee,Employee } from "../employee-transaction";
 import { X } from "lucide-react";
 
-const WorkExperiencePopup = ({ userInfo, onClose }) => {
+const CertificatePopup = ({ userInfo, onClose }) => {
     const popupRef = useRef(null);
 
     // Click background close popup
@@ -18,15 +18,12 @@ const WorkExperiencePopup = ({ userInfo, onClose }) => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [onClose]);
-
     const [formData, setFormData] = useState({
-        jobTitle: "",
-        company: "",
-        currentlyWorking: false,
+        certificateName: "",
+        organization: "",
         fromMonth: "",
         fromYear: "",
-        toMonth: "",
-        toYear: "",
+        certificateURL: "",
         description: "",
     });
     const [errors, setErrors] = useState({});
@@ -42,7 +39,7 @@ const WorkExperiencePopup = ({ userInfo, onClose }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // console.log(formData);
+        console.log(formData);
         // send or handle data in server
         onClose();
     };
@@ -68,39 +65,43 @@ const WorkExperiencePopup = ({ userInfo, onClose }) => {
                 <br></br>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                        <label className="block text-gray-700">Job title</label>
+                        <label className="block text-gray-700">
+                            Certificate Name
+                        </label>
                         <input
                             type="text"
-                            name="jobTitle"
-                            value={formData.jobTitle}
+                            name="certificateName"
+                            value={formData.certificateName}
                             onChange={handleChange}
-                            className={`mt-1 w-full rounded border p-2 ${errors.jobTitle ? "border-red-500" : "border-gray-300"}`}
-                            placeholder="Job title"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Company</label>
-                        <input
-                            type="text"
-                            name="company"
-                            value={formData.company}
-                            onChange={handleChange}
-                            className={`mt-1 w-full rounded border p-2 ${errors.company ? "border-red-500" : "border-gray-300"}`}
-                            placeholder="Company"
+                            className={`mt-1 w-full rounded border p-2 `}
+                            placeholder="certificate Name"
                         />
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700">
-                            <input
-                                type="checkbox"
-                                name="currentlyWorking"
-                                checked={formData.currentlyWorking}
-                                onChange={handleChange}
-                                className="mr-2"
-                            />
-                            I am currently working here
+                            Organization
                         </label>
+                        <input
+                            type="text"
+                            name="organization"
+                            value={formData.organization}
+                            onChange={handleChange}
+                            className={`mt-1 w-full rounded border p-2 `}
+                            placeholder="organization"
+                        />
                     </div>
+                    {/* <div className="mb-4">
+            <label className="block text-gray-700">
+              <input
+                type="checkbox"
+                name="currentlyWorking"
+                checked={formData.currentlyWorking}
+                onChange={handleChange}
+                className="mr-2"
+              />
+              I am currently Working here
+            </label>
+          </div> */}
                     <div className="mb-4 flex">
                         <div className="mr-4">
                             <label className="block text-gray-700">From</label>
@@ -136,65 +137,35 @@ const WorkExperiencePopup = ({ userInfo, onClose }) => {
                                 ))}
                             </select>
                         </div>
-                        {!formData.currentlyWorking && (
-                            <>
-                                <div className="mr-4">
-                                    <label className="block text-gray-700">
-                                        To
-                                    </label>
-                                    <select
-                                        name="toMonth"
-                                        value={formData.toMonth}
-                                        onChange={handleChange}
-                                        className={`mt-1 w-full rounded border p-2 ${errors.toDate ? "border-red-500" : "border-gray-300"}`}
-                                    >
-                                        <option value="">Month</option>
-                                        {/* Add month options */}
-                                        {Array.from({ length: 12 }, (_, i) => (
-                                            <option key={i + 1} value={i + 1}>
-                                                {i + 1}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-gray-700">
-                                        Year
-                                    </label>
-                                    <select
-                                        name="toYear"
-                                        value={formData.toYear}
-                                        onChange={handleChange}
-                                        className={`mt-1 w-full rounded border p-2 ${errors.toDate ? "border-red-500" : "border-gray-300"}`}
-                                    >
-                                        <option value="">Year</option>
-                                        {/* Add year options */}
-                                        {Array.from({ length: 50 }, (_, i) => (
-                                            <option
-                                                key={2024 - i}
-                                                value={2024 - i}
-                                            >
-                                                {2024 - i}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </>
-                        )}
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-base font-semibold text-slate-700">
+                            Certificate URL
+                        </label>
+                        <input
+                            type="text"
+                            name="certificateURL"
+                            value={formData.certificateURL}
+                            onChange={handleChange}
+                            className="mt-1 w-full rounded border-2 p-2 outline-none focus:border-green-500 peer-required:border-red-500"
+                            placeholder="certificate URL"
+                            maxLength="200"
+                        />
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700">
-                            Description
+                            description
                         </label>
                         <textarea
                             name="description"
                             value={formData.description}
                             onChange={handleChange}
                             className={`mt-1 w-full rounded border p-2 ${errors.description ? "border-red-500" : "border-gray-300"}`}
-                            placeholder="Description"
+                            placeholder="description"
                             rows="5"
                         ></textarea>
                     </div>
+
                     <div className="flex justify-end">
                         <button
                             onClick={onClose}
@@ -215,4 +186,4 @@ const WorkExperiencePopup = ({ userInfo, onClose }) => {
     );
 };
 
-export default WorkExperiencePopup;
+export default CertificatePopup;

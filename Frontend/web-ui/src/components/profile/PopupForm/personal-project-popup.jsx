@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 // import { writeEmployee, readEmployee,Employee } from "../employee-transaction";
 import { X } from "lucide-react";
 
-const WorkExperiencePopup = ({ userInfo, onClose }) => {
+const PersonalProjectPopup = ({ userInfo, onClose }) => {
     const popupRef = useRef(null);
 
     // Click background close popup
@@ -18,16 +18,15 @@ const WorkExperiencePopup = ({ userInfo, onClose }) => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [onClose]);
-
     const [formData, setFormData] = useState({
-        jobTitle: "",
-        company: "",
+        projectName: "",
         currentlyWorking: false,
         fromMonth: "",
         fromYear: "",
         toMonth: "",
         toYear: "",
         description: "",
+        projectURL: "",
     });
     const [errors, setErrors] = useState({});
 
@@ -42,7 +41,7 @@ const WorkExperiencePopup = ({ userInfo, onClose }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // console.log(formData);
+        console.log(formData);
         // send or handle data in server
         onClose();
     };
@@ -54,7 +53,7 @@ const WorkExperiencePopup = ({ userInfo, onClose }) => {
         >
             <div
                 ref={popupRef}
-                className="mt-10 flex h-[75%] max-h-[90vh] w-[50%] flex-col justify-between overflow-auto  rounded-lg bg-white p-8 shadow-md transition-all duration-300 ease-in-out"
+                className="mt-10 flex h-[68%] max-h-[90vh] w-[50%] flex-col justify-between overflow-auto  rounded-lg bg-white p-8 shadow-md transition-all duration-300 ease-in-out"
             >
                 <div className="flex items-center justify-between">
                     <h2 className=" text-xl font-semibold text-slate-700">
@@ -68,27 +67,29 @@ const WorkExperiencePopup = ({ userInfo, onClose }) => {
                 <br></br>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                        <label className="block text-gray-700">Job title</label>
+                        <label className="block text-gray-700">
+                            Project Name
+                        </label>
                         <input
                             type="text"
-                            name="jobTitle"
-                            value={formData.jobTitle}
+                            name="projectName"
+                            value={formData.projectName}
                             onChange={handleChange}
-                            className={`mt-1 w-full rounded border p-2 ${errors.jobTitle ? "border-red-500" : "border-gray-300"}`}
-                            placeholder="Job title"
+                            className={`mt-1 w-full rounded border p-2`}
+                            placeholder="Project Name"
                         />
                     </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Company</label>
-                        <input
-                            type="text"
-                            name="company"
-                            value={formData.company}
-                            onChange={handleChange}
-                            className={`mt-1 w-full rounded border p-2 ${errors.company ? "border-red-500" : "border-gray-300"}`}
-                            placeholder="Company"
-                        />
-                    </div>
+                    {/* <div className="mb-4">
+            <label className="block text-gray-700">Major</label>
+            <input
+              type="text"
+              name="major"
+              value={formData.company}
+              onChange={handleChange}
+              className={`w-full mt-1 p-2 border rounded ${errors.company ? 'border-red-500' : 'border-gray-300'}`}
+              placeholder="major"
+            />
+          </div> */}
                     <div className="mb-4">
                         <label className="block text-gray-700">
                             <input
@@ -98,7 +99,7 @@ const WorkExperiencePopup = ({ userInfo, onClose }) => {
                                 onChange={handleChange}
                                 className="mr-2"
                             />
-                            I am currently working here
+                            I am currently Working here
                         </label>
                     </div>
                     <div className="mb-4 flex">
@@ -184,16 +185,30 @@ const WorkExperiencePopup = ({ userInfo, onClose }) => {
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700">
-                            Description
+                            description
                         </label>
                         <textarea
                             name="description"
                             value={formData.description}
                             onChange={handleChange}
                             className={`mt-1 w-full rounded border p-2 ${errors.description ? "border-red-500" : "border-gray-300"}`}
-                            placeholder="Description"
+                            placeholder="description"
                             rows="5"
                         ></textarea>
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-base font-semibold text-slate-700">
+                            Personal Link
+                        </label>
+                        <input
+                            type="text"
+                            name="personalLink"
+                            value={formData.personalLink}
+                            onChange={handleChange}
+                            className="mt-1 w-full rounded border-2 p-2 outline-none focus:border-green-500 peer-required:border-red-500"
+                            placeholder="Personal Link"
+                            maxLength="200"
+                        />
                     </div>
                     <div className="flex justify-end">
                         <button
@@ -215,4 +230,4 @@ const WorkExperiencePopup = ({ userInfo, onClose }) => {
     );
 };
 
-export default WorkExperiencePopup;
+export default PersonalProjectPopup;
