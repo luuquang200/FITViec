@@ -1,0 +1,53 @@
+name: Build and deploy application-service to Cloud Run
+
+on:
+  push:
+    branches:
+      - application-service
+
+env:
+  GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+  CONFIGURATION: Release
+  WORKING_DIRECTORY: ./Microservices/application-service
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17' 
+
+      - name: Build the project with Maven
+        run: mvn -f ${{ env.WORKING_DIRECTORY }}/pom.xml clean install
+
+      - name: Publish the project (Optional if you want to push to a package repository)
+        run: mvn -f ${{ env.WORKING_DIRECTORY }}/pom.xml deploy
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Configure gcloud CLI
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Build and push Docker image
+        run: |
+          cd ${{ env.WORKING_DIRECTORY }}
+          IMAGE_NAME=gcr.io/${{ env.GCP_PROJECT }}/application-service
+          gcloud builds submit --tag $IMAGE_NAME .
+
+      - name: Deploy to Cloud Run
+        run: |
+          IMAGE_NAME=gcr.io/${{ env.GCP_PROJECT }}/application-service
+          gcloud run deploy application-service --image $IMAGE_NAME --region us-central1 --platform managed --allow-unauthenticated
