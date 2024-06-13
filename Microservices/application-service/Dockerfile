@@ -4,7 +4,6 @@ FROM openjdk:17
 WORKDIR /app
 
 # Copy the project's jar file to the container
-ADD target/application-service-0.0.1-SNAPSHOT.jar application-service-0.0.1-SNAPSHOT.jar
 COPY target/application-service-0.0.1-SNAPSHOT.jar /app/application-service-0.0.1-SNAPSHOT.jar
 
 # Run the jar file
