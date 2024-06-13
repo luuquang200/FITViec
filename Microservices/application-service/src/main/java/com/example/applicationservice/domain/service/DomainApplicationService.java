@@ -3,9 +3,9 @@ package com.example.applicationservice.domain.service;
 import com.example.applicationservice.config.firebase.UserInfo;
 import com.example.applicationservice.domain.ApplicationService;
 import com.example.applicationservice.domain.client.JobServiceClient;
-import com.example.applicationservice.domain.entity.JobInfo;
-import com.example.applicationservice.domain.repository.ApplicationRepository;
-import com.example.applicationservice.domain.value_object.ContactInfo;
+import com.example.applicationservice.infrastructure.entity.JobInfo;
+import com.example.applicationservice.infrastructure.repository.ApplicationRepository;
+import com.example.applicationservice.infrastructure.value_object.ContactInfo;
 import com.example.applicationservice.dto.CreateApplicationDto;
 import com.example.applicationservice.infrastructure.dao.Application;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,12 @@ public class DomainApplicationService implements ApplicationService {
   }
   @Override
   public Application getApplicationById(String applicationId) {
-    return this.repository.findById(applicationId).orElse(null);
+    Application application = this.repository.findById(applicationId).orElse(null);
+    if (application != null) {
+      application.formatData();
+      return application;
+    }
+    return null;
   }
   @Override
   public List<Application> getApplicationsByJob(String jobId) {

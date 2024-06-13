@@ -1,6 +1,6 @@
 package com.example.applicationservice.infrastructure.converter;
 
-import com.example.applicationservice.domain.entity.JobInfo;
+import com.example.applicationservice.infrastructure.entity.JobInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.AttributeConverter;
