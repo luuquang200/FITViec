@@ -169,7 +169,7 @@ const SearchResult = () => {
                         {/* Total jobs headline */}
                         <h1 className="text-3xl font-bold text-foreground">
                             {jobs.length}{" "}
-                            <span className={keyword && "text-red-500"}>
+                            <span className={keyword && "text-primary"}>
                                 {keyword || "IT"}
                             </span>{" "}
                             {jobs.length == 1 ? "job" : "jobs"} in {city_label}
