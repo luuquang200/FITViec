@@ -33,9 +33,11 @@ const AdminDashboard = () => {
     };
 
     return (
-        <div className="flex">
+        <div className="flex bg-gray-100">
             <AdminSidebar onTabChange={handleTabChange} />
-            <div className="ml-64 w-4/5 p-4">{renderContent()}</div>
+            <div className="ml-64 min-h-[80%] w-4/5  p-4 shadow">
+                {renderContent()}
+            </div>
         </div>
     );
 };

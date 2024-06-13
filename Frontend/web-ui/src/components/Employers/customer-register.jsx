@@ -27,6 +27,13 @@ import { setDoc, doc } from "firebase/firestore";
 
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
+// Get the current date and format it
+const currentDate = new Date();
+const day = String(currentDate.getDate()).padStart(2, "0");
+const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+const year = currentDate.getFullYear();
+const registrationDate = `${day}/${month}/${year}`;
+
 const CustomerRegister = () => {
     const { userLoggedIn, setIsRegistered, setInSingUpInPage } = useAuth();
 
@@ -89,6 +96,8 @@ const CustomerRegister = () => {
                     phoneNumber: phone,
                     company: companyName,
                     workLocation: workLocation,
+                    registrationDate: registrationDate,
+                    status: "pending",
                     role: "employer", // role employer
                 });
                 setIsRegistered(true);
@@ -134,7 +143,7 @@ const CustomerRegister = () => {
 
     const validateEmail = (email) => {
         if (!email) {
-            setEmailError("Can't be blank");
+            setEmailError("Please enter your email");
             return false;
         } else {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -150,7 +159,7 @@ const CustomerRegister = () => {
 
     const validatePassword = (password) => {
         if (!password) {
-            setPasswordError("Can't be blank");
+            setPasswordError("Please enter your password");
             return false;
         } else {
             const passwordRegex =
@@ -169,7 +178,7 @@ const CustomerRegister = () => {
 
     const validateConfirmPassword = (pw) => {
         if (!pw) {
-            setConfirmPasswordError("Can't be blank");
+            setConfirmPasswordError("Please enter confirm your password");
             return false;
         } else {
             const passwordRegex =
@@ -193,7 +202,7 @@ const CustomerRegister = () => {
 
     const validateName = (name) => {
         if (!name) {
-            setFullNameError("Can't be blank");
+            setFullNameError("Please enter your full name");
             return false;
         } else {
             setFullNameError("");
@@ -203,7 +212,7 @@ const CustomerRegister = () => {
 
     const validatePhone = (phone) => {
         if (!phone) {
-            setPhoneError("Can't be blank");
+            setPhoneError("Please enter your phone");
             return false;
         } else if (phone.length < 10 || phone.length > 11) {
             setPhoneError("Phone number must be between 10 and 11 characters");
@@ -216,7 +225,7 @@ const CustomerRegister = () => {
 
     const validateCompanyName = (name) => {
         if (!name) {
-            setCompanyNameError("Can't be blank");
+            setCompanyNameError("Please enter your company name");
             return false;
         } else {
             setCompanyNameError("");
@@ -226,7 +235,7 @@ const CustomerRegister = () => {
 
     const validateLocation = (location) => {
         if (!location) {
-            setWorkLocationError("Can't be blank");
+            setWorkLocationError("Please enter your work location");
             return false;
         } else {
             setWorkLocationError("");
@@ -361,7 +370,9 @@ const CustomerRegister = () => {
                                         onBlur={() => {
                                             if (!email) {
                                                 // Kiểm tra nếu ô input trống sau khi mất focus
-                                                setEmailError("Can't be blank");
+                                                setEmailError(
+                                                    "Please enter your email",
+                                                );
                                             }
                                         }}
                                         required
@@ -436,7 +447,7 @@ const CustomerRegister = () => {
                                             if (!password) {
                                                 // Kiểm tra nếu ô input trống sau khi mất focus
                                                 setPasswordError(
-                                                    "Can't be blank",
+                                                    "Please enter your password",
                                                 );
                                             }
                                         }}
@@ -515,7 +526,7 @@ const CustomerRegister = () => {
                                             if (!confirmPassword) {
                                                 // Kiểm tra nếu ô input trống sau khi mất focus
                                                 setConfirmPasswordError(
-                                                    "Can't be blank",
+                                                    "Please enter confirm your password",
                                                 );
                                             }
                                         }}
@@ -571,7 +582,7 @@ const CustomerRegister = () => {
                                                 if (!fullName) {
                                                     // Kiểm tra nếu ô input trống sau khi mất focus
                                                     setFullNameError(
-                                                        "Can't be blank",
+                                                        "Please enter your full name",
                                                     );
                                                 }
                                             }}
@@ -657,7 +668,9 @@ const CustomerRegister = () => {
                                         onBlur={() => {
                                             if (!phone) {
                                                 // Kiểm tra nếu ô input trống sau khi mất focus
-                                                setPhoneError("Can't be blank");
+                                                setPhoneError(
+                                                    "Please enter your phone",
+                                                );
                                             }
                                         }}
                                         onKeyPress={(e) => {
@@ -712,7 +725,7 @@ const CustomerRegister = () => {
                                             if (!companyName) {
                                                 // Kiểm tra nếu ô input trống sau khi mất focus
                                                 setCompanyNameError(
-                                                    "Can't be blank",
+                                                    "Please enter your company name",
                                                 );
                                             }
                                         }}
@@ -758,7 +771,7 @@ const CustomerRegister = () => {
                                             if (!workLocation) {
                                                 // Kiểm tra nếu ô input trống sau khi mất focus
                                                 setWorkLocationError(
-                                                    "Can't be blank",
+                                                    "Please enter your work location",
                                                 );
                                             }
                                         }}
