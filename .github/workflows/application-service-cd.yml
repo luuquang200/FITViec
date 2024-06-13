@@ -25,7 +25,7 @@ jobs:
           java-version: '17' 
 
       - name: Build the project with Maven
-        run: mvn -f ${{ env.WORKING_DIRECTORY }}/pom.xml clean install
+        run: mvn -f ${{ env.WORKING_DIRECTORY }}/pom.xml clean package
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
