@@ -8,7 +8,7 @@ const adminUser = {
 };
 
 const AdminSidebar = ({ onTabChange }) => {
-    const [activeTab, setActiveTab] = useState("job-management");
+    const [activeTab, setActiveTab] = useState("employer-management");
 
     const handleTabChange = (tab) => {
         setActiveTab(tab);
