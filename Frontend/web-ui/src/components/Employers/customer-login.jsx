@@ -68,7 +68,7 @@ const CustomerLogin = () => {
                             );
                             console.log(user);
                             // Điều hướng tới home sau khi đăng nhập  thành công, để tạm tại vì chưa có UI employer
-                            navigate(`/`);
+                            navigate(`/employer`);
                         } else {
                             toast.error(
                                 "Please wait An administrator verify your information & contact with you  ! ",

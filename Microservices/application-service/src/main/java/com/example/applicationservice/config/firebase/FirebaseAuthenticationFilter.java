@@ -55,8 +55,9 @@ public class FirebaseAuthenticationFilter implements Filter {
       String fullName = document.getString("displayName");
       String email = document.getString("email");
       String role = document.getString("role");
-      return new UserInfo(userId, fullName, email, role);
+      String avatar = decodedToken.getPicture();
+      return new UserInfo(userId, fullName, email, role, avatar);
     }
-    return new UserInfo("", "", "", "");
+    return new UserInfo("", "", "", "", "");
   }
 }

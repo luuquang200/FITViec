@@ -320,23 +320,28 @@ const FormApplyJob = () => {
                         </div>
                     </div>
 
-                    {/* Input với nội dung từ 500 từ */}
-                    <div className="mb-4">
-                        <label className="block mb-3 ">
-                            <span className="text-lg font-bold  "> Cover Leter</span>
-                            <span className="text-gray-400 "> (Optional)</span>
-                        </label>
-                        <div className="my-2">What skills, work projects or achievements make you a strong candidate?</div>
-                        <textarea
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
-                            rows="6"
-                            maxLength={"500"}
-                            placeholder="Details and specific examples will make your application stronger..."
-                            value={coverLetter}
-                            onChange={handleCoverLetterChange}
-                        ></textarea>
-                        <div className=" text-gray-400">{500 - coverLetter.length} of 500 characters remaining</div>
+                  {/* Input với nội dung từ 500 từ */}
+                  <div className="mb-4">
+                    <label className="block mb-3 ">
+                      <span className="text-lg font-bold  "> Cover Leter</span>
+                      <span className="text-gray-400 "> (Optional)</span>
+                    </label>
+                    <div className="my-2">
+                      What skills, work projects or achievements make you a
+                      strong candidate?
                     </div>
+                    <textarea
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
+                      rows="6"
+                      maxLength={"500"}
+                      placeholder="Details and specific examples will make your application stronger..."
+                      value={coverLetter}
+                      onChange={handleCoverLetterChange}
+                    ></textarea>
+                    <div className=" text-gray-400">
+                      {500 - coverLetter.length} of 500 characters remaining
+                    </div>
+                  </div>
 
                     {/* Button gửi form */}
                     <div className="flex items-center justify-center mt-6">
@@ -349,6 +354,38 @@ const FormApplyJob = () => {
                     </div>
                 </form>
             </div>
+
+            {/* Input với nội dung từ 500 từ */}
+            <div className="mb-4">
+              <label className="mb-3 block ">
+                <span className="text-lg font-bold  "> Cover Leter</span>
+                <span className="text-gray-400 "> (Optional)</span>
+              </label>
+              <div className="my-2">
+                What skills, work projects or achievements make you a strong
+                candidate?
+              </div>
+              <textarea
+                className="focus:outline-solid w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow  focus:outline focus:outline-[4px] focus:outline-green-200"
+                rows="6"
+                maxLength={"500"}
+                placeholder="Details and specific examples will make your application stronger..."
+              ></textarea>
+              <div className=" text-gray-400">
+                500 of 500 characters remaining
+              </div>
+            </div>
+
+            {/* Button gửi form */}
+            <div className="mt-6 flex items-center justify-center">
+              <button
+                className="focus:shadow-outline w-full rounded bg-[#ED1B2F] px-4 py-3 font-bold text-white hover:bg-red-600 focus:outline-none"
+                type="submit"
+              >
+                Send my CV
+              </button>
+            </div>
+          </form>
         </div>
         </div>
     );
