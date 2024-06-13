@@ -1,11 +1,12 @@
 import { Routes, Route } from "react-router-dom";
+
 // Components
+import HomePage from "@/components/HomePage";
+
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import MainTablet from "@/components/layout/main-tablet";
 import FormApplyJob from "@/components/layout/form-apply-job";
-import SearchSection from "@/components/layout/search-section";
-import TopEmployerSection from "@/components/layout/top-employer-section";
 import SearchResult from "./components/Search/search-result";
 import JobDetailGuestPage from "./components/ui/job-detail-guest/job-detail-guest";
 import ProfileManagement from "./components/profile/profile-management";
@@ -42,21 +43,22 @@ function App() {
             <Header />
             <div className="h-[88px]" />
             <Routes>
-                <Route path="/employer" element={<EmployerContainer />} />
+                <Route path="/" element={<HomePage />} />
+
+                <Route
+                    path="/employer"
+                    element={
+                        <ProtectedRouteVerify roleToProtect="employer">
+                            <EmployerContainer />
+                        </ProtectedRouteVerify>
+                    }
+                />
                 <Route
                     path="/cv-detail/:applicationId"
                     element={<CVViewer />}
                 />
                 <Route path="/sign_in" element={<SignIn />} />
                 <Route path="/sign_up" element={<SignUp />} />
-                <Route
-                    path="/"
-                    element={
-                        <>
-                            <SearchSection /> <TopEmployerSection />
-                        </>
-                    }
-                />
                 <Route path="/job-detail" element={<JobDetailGuestPage />} />
                 <Route
                     path="/form-apply-job/:jobId"

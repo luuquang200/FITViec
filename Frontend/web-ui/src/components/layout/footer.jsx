@@ -135,7 +135,7 @@ const Footer = () => {
 
             <Container>
                 <h3 className="py-3 text-center text-xs text-muted-foreground">
-                    Copyright &copy; IT VIEC SJC
+                    &copy; 2024 FIT VIEC - HCMUS
                 </h3>
             </Container>
         </footer>
