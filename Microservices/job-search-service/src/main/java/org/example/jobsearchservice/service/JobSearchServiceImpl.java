@@ -108,6 +108,7 @@ public class JobSearchServiceImpl implements JobSearchService {
         return () -> Query.of(_q -> _q.bool(boolQuery));
       }
       case FilterBy.COPANY_ID -> {
+        System.out.println("I'm here");
         MatchQuery query = new MatchQuery.Builder().query(value).field(fieldName).build();
         return () -> Query.of(_q -> _q.match(query));
       }
