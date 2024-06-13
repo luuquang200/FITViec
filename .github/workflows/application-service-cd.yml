@@ -27,9 +27,6 @@ jobs:
       - name: Build the project with Maven
         run: mvn -f ${{ env.WORKING_DIRECTORY }}/pom.xml clean install
 
-      - name: Publish the project (Optional if you want to push to a package repository)
-        run: mvn -f ${{ env.WORKING_DIRECTORY }}/pom.xml deploy
-
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
         with:
