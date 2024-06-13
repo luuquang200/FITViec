@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import CompanyInfo from "@/components/ui/job-detail-guest/company-info";
 import JobDetailsSection from "@/components/ui/job-detail-guest/job-details-section";
 import BasicInfo from "@/components/ui/job-detail-guest/basic-info";
-import { getToken } from "@/cookie/cookie"; // Adjust import as necessary
+import { useAuth } from "@/contexts/authContext"; // Adjust import as necessary
 import ClipLoader from "react-spinners/ClipLoader"; // Import the spinner
 
 const JobDetail = ({ job, onBack }) => {
     const [isSticky, setIsSticky] = useState(true);
     const [jobStatus, setJobStatus] = useState(job.jobStatus);
     const [loading, setLoading] = useState(false);
+    const { currentUser } = useAuth();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -32,7 +33,7 @@ const JobDetail = ({ job, onBack }) => {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
-                            Authorization: `${getToken()}`,
+                            Authorization: `${currentUser.accessToken}`,
                         },
                     },
                 );
@@ -63,7 +64,7 @@ const JobDetail = ({ job, onBack }) => {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
-                            Authorization: `${getToken()}`,
+                            Authorization: `${currentUser.accessToken}`,
                         },
                     },
                 );

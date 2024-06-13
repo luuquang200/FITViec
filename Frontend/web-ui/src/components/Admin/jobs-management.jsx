@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+
 import Container from "@/components/layout/container";
 import { useTable, usePagination, useSortBy, useFilters } from "react-table";
 import {
@@ -7,22 +8,24 @@ import {
     EyeIcon,
 } from "@heroicons/react/solid";
 import { ClipLoader } from "react-spinners"; // Import the ClipLoader
-import { getToken } from "@/cookie/cookie";
+import { useAuth } from "@/contexts/authContext";
 
 const JobManagement = ({ onSelectJob }) => {
     const [selectedJob, setSelectedJob] = useState(null);
     const [filterInput, setFilterInput] = useState("");
     const [jobData, setJobData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { currentUser } = useAuth();
 
     useEffect(() => {
+        setLoading(true);
         const fetchJobs = async () => {
             try {
                 const response = await fetch(
                     "https://job-search-service.azurewebsites.net/job-elastic/admin",
                     {
                         headers: {
-                            Authorization: `${getToken()}`,
+                            Authorization: `${currentUser.accessToken}`,
                         },
                     },
                 );
@@ -41,7 +44,7 @@ const JobManagement = ({ onSelectJob }) => {
         };
 
         fetchJobs();
-    }, []);
+    }, [currentUser]);
 
     const data = useMemo(() => jobData, [jobData]);
 
