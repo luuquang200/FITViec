@@ -70,7 +70,6 @@ const SignIn = () => {
                             toast.success(
                                 "Successfully authenticated from Email & Password account.",
                             );
-                            console.log(user);
                             saveToken(user.accessToken);
                             // Điều hướng tới home sau khi đăng nhập  thành công
                             navigate(`/`);
