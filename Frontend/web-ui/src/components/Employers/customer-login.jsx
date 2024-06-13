@@ -8,7 +8,14 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 
 import { auth, db } from "../../firebase/firebase";
 
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+    collection,
+    query,
+    where,
+    getDocs,
+    getDoc,
+    doc,
+} from "firebase/firestore";
 
 import { useNavigate, Navigate } from "react-router-dom";
 
@@ -62,16 +69,22 @@ const CustomerLogin = () => {
                         password,
                     ).then(async (userCred) => {
                         const user = userCred.user;
-                        if (user.emailVerified) {
-                            toast.success(
-                                "Successfully authenticated ! Welcome to the FITviec employer page",
+
+                        // Lấy thông tin từ Firestore
+                        const userDoc = await getDoc(
+                            doc(db, "users", user.uid),
+                        );
+                        const userData = userDoc.data();
+                        const { status } = userData;
+                        if (status === "approved") {
+                            toast.success("Welcome to FITviec for employers ");
+                        } else if (status === "rejected") {
+                            toast.error(
+                                "Oops ! Your application has been rejected by admin ! please contact us again ! ",
                             );
-                            console.log(user);
-                            // Điều hướng tới home sau khi đăng nhập  thành công, để tạm tại vì chưa có UI employer
-                            navigate(`/employer`);
                         } else {
                             toast.error(
-                                "Please wait An administrator verify your information & contact with you  ! ",
+                                "Please wait An administrator verify your information & contact with you !",
                             );
                         }
                     });

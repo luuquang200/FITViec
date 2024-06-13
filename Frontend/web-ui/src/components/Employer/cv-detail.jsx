@@ -2,38 +2,34 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from "../../contexts/authContext";
-import PropTypes from "prop-types";
-import { storage } from "../../firebase/firebase";
-import { db } from "../../firebase/firebase";
-import { setDoc, doc, getDoc } from "firebase/firestore";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ChevronLeft } from 'lucide-react';
 
-const exJobSeekerData = {
-  jobSeekerId: "0963271f6612e330867f84eddab1542",
-  applicationName: "Nguyễn Việt Anh",
-  email: "nv.anh933@gmail.com",
-  photoUrl: "", 
-};
 
-
-const exApplicationData = {
-  applicationId: "applicationId",
-  employerId: "employerId",
-  jobId: "jobId",
-  jobSeekerId: "jobSeekerId",
-  applicationStatus: "in_review",
-  applicationName: "applicationName",
-  cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
-  coverLetter: "coverLetter",
-  applyAt: "applyAt",
-};
+const applicationDto = {
+  "applicationId": "557aeef1-134e-4f00-afe2-e929560c9920",
+  "employerId": "hansentechnologies",
+  "jobId": "5fa75d44-28f8-478a-ae5f-297546abeb9e",
+  "jobSeekerId": "nR2D25v2cQVw4gYRtNaE8kqhZgp1",
+  "applicationStatus": "in_review",
+  "applicationName": "Nguyễn Hữu Trực",
+  "cvLink": "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+  "coverLetter": "cover_letter",
+  "applyAt": "06/12/2024 22:13",
+  "jobInfo": {
+      "jobId": "5fa75d44-28f8-478a-ae5f-297546abeb9e",
+      "jobTitle": "Software Developer (Java)"
+  },
+  "contactInfo": {
+      "email": "nguyenhuutruc947@gmail.com"
+  }
+}
 
 const CVViewer = () => {
   const {applicationId} = useParams();
-  const [JobSeekerData, setJobSeekerData] = useState(exJobSeekerData);
-  const [applicationData, setApplicationData] = useState(exApplicationData);
+  const [applicationData, setApplicationData] = useState(applicationDto);
   const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState(false);
   const { currentUser } = useAuth();
 
   console.log("applicationId: ", applicationId);
@@ -42,7 +38,7 @@ const CVViewer = () => {
   const fetchApplicationData = async (applicationId) => { 
     setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:5173/application/${applicationId}`);
+      const response = await fetch(`https://application-service-otwul2bnna-uc.a.run.app/application/${applicationId}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -55,27 +51,13 @@ const CVViewer = () => {
     }
   };
 
-  
-  //Dữ liệu liên quan đến việc thông tin người ứng tuyển
-  const fetchJobSeekerData = async (applicationId) => { 
-    setIsLoading(true);
-    try {
-      const response = await fetch(`http://localhost:5173/application/job-seeker-info/${applicationId}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      setJobSeekerData(data);
-    } catch (error) {
-      console.error('Error fetching JobSeeker data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  useEffect(()=>{
+    //fetchApplicationData(applicationId);
+    console.log("applicationData", applicationData);
+  },[status]);
 
-
-  const copyCodeToClipboard = () => {
-    navigator.clipboard.writeText(JobSeekerData.id);
+  const copyCodeToClipboard = (id) => {
+    navigator.clipboard.writeText(id);
     toast.success("Copy successfully!")
   };
   
@@ -93,16 +75,16 @@ const CVViewer = () => {
     if (!applicationData) return;
     //update applicant status (need verify employerId <-> currentUser.uid)
     try {
-      const response = await fetch(`http://localhost:1200/application/${newStatus}/${applicationId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      // const response = await fetch(`http://localhost:1200/application/${newStatus}/${applicationId}`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      // });
 
-      if (!response.ok) {
-        throw new Error("Failed to update status");
-      }
+      // if (!response.ok) {
+      //   throw new Error("Failed to update status");
+      // }
 
       setApplicationData((prevData) => ({
         ...prevData,
@@ -152,15 +134,10 @@ const CVViewer = () => {
       {/* Right Section for CV Details and Actions */}
       <div className="w-1/3 p-4">
         <div className="bg-white shadow-lg p-4">
-          <div className="flex items-center mb-4">
-            <div className="bg-primary text-white rounded-full h-10 w-10 flex items-center justify-center mr-4">
-            <img src={JobSeekerData?.photoUrl} alt="avatar" className="w-10 h-10 mr-2" />
-            </div>
+          <div className="items-center mb-4">
+              <div className="font-bold">{applicationData?.applicationName}</div>
+              <div className="text-sm text-gray-600">{applicationData?.contactInfo.email} </div>
             
-            <div>
-              <div className="font-bold">{JobSeekerData?.applicationName}</div>
-              <div className="text-sm text-gray-600">{JobSeekerData.email} </div>
-            </div>
           </div>
           <div className="mb-4">
             <div className="font-semibold mb-2">Change CV status : </div>
@@ -177,7 +154,7 @@ const CVViewer = () => {
             
             <button onClick={downloadCV} className="bg-gray-200 text-gray-700 px-4 py-2 rounded w-full mb-2 hover:bg-blue-500 hover:text-white ">Download CV PDF</button>
             <div className="text-gray-600 my-2">Applicant ID</div>
-            <div className="bg-gray-100 text-gray-800 px-4 py-2 mb-2 text-center border-gray-300 border-2 rounded overflow-hidden text-ellipsis whitespace-nowrap">{JobSeekerData?.jobSeekerId}</div>
+            <div className="bg-gray-100 text-gray-800 px-4 py-2 mb-2 text-center border-gray-300 border-2 rounded overflow-hidden text-ellipsis whitespace-nowrap">{applicationData?.jobSeekerId}</div>
             <button onClick={copyCodeToClipboard} className="bg-gray-200 text-gray-700 px-4 py-2 rounded w-full mb-2 hover:bg-blue-500 hover:text-white"> Copy code to clipboard </button>
           </div>
         </div>
