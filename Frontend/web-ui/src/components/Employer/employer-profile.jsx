@@ -59,36 +59,23 @@ const EmployerProfile = () => {
     formState: { errors },
   } = useForm();
 
-  const [companyType, setCompanyType] = useState(companyTypeData[0].value);
-  const [companySize, setCompanySize] = useState(companySizeData[0].value);
-  const [workingDays, setWorkingDays] = useState(workingDaysData[0].value);
-  const [overtimePolicy, setOvertimePolicy] = useState(overtimePolicyData[0].value);
+  const [companyType, setCompanyType] = useState(companyTypeData[0]);
+  const [companySize, setCompanySize] = useState(companySizeData[0]);
+  const [workingDays, setWorkingDays] = useState(workingDaysData[0]);
+  const [overtimePolicy, setOvertimePolicy] = useState(overtimePolicyData[0]);
   const [companyOverview, setCompanyOverview] = useState("");
   const [whyLoveWorkingHere, setWhyLoveWorkingHere] = useState("");
-  const [errorCompanyOverview, setErrorCompanyOverview] = useState(false);
-  const [errorWhyLoveWorkingHere, setErrorWhyLoveWorkingHere] = useState(false);
 
   const onSubmit = (data) => {
-    if (companyOverview === "") {
-      setErrorCompanyOverview(true);
-    }
-    if (whyLoveWorkingHere === "") {
-      setErrorWhyLoveWorkingHere(true);
-    }
-    if (errorCompanyOverview || errorWhyLoveWorkingHere) {
-      return;
-    } else { 
-
       // Here, you can send the form data to the server using fetch or Axios
-    data.companyType = companyType;
-    data.companySize = companySize;
-    data.workingDays = workingDays;
-    data.overtimePolicy = overtimePolicy;
+    data.companyType = companyType.value;
+    data.companySize = companySize.value;
+    data.workingDays = workingDays.value;
+    data.overtimePolicy = overtimePolicy.value;
     data.companyOverview = companyOverview;
     data.whyLoveWorkingHere = whyLoveWorkingHere;
     console.log(data);
   }
-};
 
   return (
     <>
@@ -123,14 +110,13 @@ const EmployerProfile = () => {
               className="block mb-2 font-medium"
             >
               Company Overview
-              <span className="text-red-500 ml-1">*</span>
             </label>
             <CKEditor
               onReady={(editor) => {
                 editor.editing.view.change((writer) => {
                   writer.setStyle(
                     "height",
-                    "16rem",
+                    "15rem",
                     editor.editing.view.document.getRoot()
                   );
                 });
@@ -139,14 +125,10 @@ const EmployerProfile = () => {
               data=""
               onChange={(event, editor) => {
                 setCompanyOverview(editor.getData());
-                setErrorCompanyOverview(false);
               }}
               id="company_overview"
               className="border border-gray-300 rounded-lg"
             />
-            {errorCompanyOverview && (
-              <span className="text-red-600 px-3">This field is required</span>
-            )}
           </div>
 
           <div>
@@ -155,14 +137,13 @@ const EmployerProfile = () => {
               className="block mb-2 font-medium"
             >
               Why People Would Love To Work At Your Company
-              <span className="text-red-500 ml-1">*</span>
             </label>
             <CKEditor
               onReady={(editor) => {
                 editor.editing.view.change((writer) => {
                   writer.setStyle(
                     "height",
-                    "16rem",
+                    "15rem",
                     editor.editing.view.document.getRoot()
                   );
                 });
@@ -171,21 +152,17 @@ const EmployerProfile = () => {
               data=""
               onChange={(event, editor) => {
                 setWhyLoveWorkingHere(editor.getData());
-                setErrorWhyLoveWorkingHere(false);
               }}
               id="why_love_working_here"
               className="border border-gray-300 rounded-lg"
             />
-            {errorWhyLoveWorkingHere && (
-              <span className="text-red-600 px-3">This field is required</span>
-            )}
           </div>
         </div>
 
         <div className="space-y-6">
           <div className="relative w-full border border-gray-300 rounded-lg bg-white">
             <Select
-              value={companyTypeData[0]}
+              value={companyType}
               styles={{
                 control: (provided) => ({
                   ...provided,
@@ -202,7 +179,7 @@ const EmployerProfile = () => {
               className="peer block w-full px-2 pt-8 pb-2 focus:outline-[4px] focus:outline-green-200 focus:outline focus:outline-solid"
               placeholder="Company Type"
               onChange={(val) => {
-                setCompanyType(val.value);
+                setCompanyType(val);
               }}
               options={companyTypeData}
             />
@@ -220,7 +197,7 @@ const EmployerProfile = () => {
 
           <div className="relative w-full border border-gray-300 rounded-lg bg-white">
             <Select
-              value={companySizeData[0]}
+              value={companySize}
               styles={{
                 control: (provided) => ({
                   ...provided,
@@ -237,7 +214,7 @@ const EmployerProfile = () => {
               className="peer block w-full px-2 pt-8 pb-2 focus:outline-[4px] focus:outline-green-200 focus:outline focus:outline-solid"
               placeholder="Company Size"
               onChange={(val) => {
-                setCompanySize(val.value);
+                setCompanySize(val);
               }}
               options={companySizeData}
             />
@@ -276,7 +253,7 @@ const EmployerProfile = () => {
 
           <div className="relative w-full border border-gray-300 rounded-lg bg-white">
             <Select
-              value={workingDaysData[0]}
+              value={workingDays}
               styles={{
                 control: (provided) => ({
                   ...provided,
@@ -293,7 +270,7 @@ const EmployerProfile = () => {
               className="peer block w-full px-2 pt-8 pb-2 focus:outline-[4px] focus:outline-green-200 focus:outline focus:outline-solid"
               placeholder="Working Days"
               onChange={(val) => {
-                setWorkingDays(val.value);
+                setWorkingDays(val);
               }}
               options={workingDaysData}
             />
@@ -311,7 +288,7 @@ const EmployerProfile = () => {
 
           <div className="relative w-full border border-gray-300 rounded-lg bg-white">
             <Select
-              value={overtimePolicyData[0]}
+              value={overtimePolicy}
               styles={{
                 control: (provided) => ({
                   ...provided,
@@ -328,7 +305,7 @@ const EmployerProfile = () => {
               className="peer block w-full px-2 pt-8 pb-2 focus:outline-[4px] focus:outline-green-200 focus:outline focus:outline-solid"
               placeholder="Overtime Policy"
               onChange={(val) => {
-                setOvertimePolicy(val.value);
+                setOvertimePolicy(val);
               }}
               options={overtimePolicyData}
             />
@@ -341,7 +318,7 @@ const EmployerProfile = () => {
             </label>
           </div>
           {overtimePolicy === "" && (
-            <span className="text-red-600">This field is required</span>
+            <span className="text-red-600 px-3">This field is required</span>
           )}
 
           <div className="relative mb-6">

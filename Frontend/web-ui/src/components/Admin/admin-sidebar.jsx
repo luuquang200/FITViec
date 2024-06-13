@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/authContext";
 
 const AdminSidebar = ({ onTabChange }) => {
     const { currentUser } = useAuth();
-    const [activeTab, setActiveTab] = useState("job-management");
+    const [activeTab, setActiveTab] = useState("employer-management");
 
     const handleTabChange = (tab) => {
         setActiveTab(tab);

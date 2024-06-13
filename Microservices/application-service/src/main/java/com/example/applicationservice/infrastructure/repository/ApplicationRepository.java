@@ -1,4 +1,4 @@
-package com.example.applicationservice.domain.repository;
+package com.example.applicationservice.infrastructure.repository;
 
 import com.example.applicationservice.infrastructure.dao.Application;
 import org.springframework.data.jpa.repository.JpaRepository;

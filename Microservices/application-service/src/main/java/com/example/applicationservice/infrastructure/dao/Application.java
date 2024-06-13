@@ -1,8 +1,8 @@
 package com.example.applicationservice.infrastructure.dao;
 
 import com.example.applicationservice.constant.ApplicationStatus;
-import com.example.applicationservice.domain.entity.JobInfo;
-import com.example.applicationservice.domain.value_object.ContactInfo;
+import com.example.applicationservice.infrastructure.entity.JobInfo;
+import com.example.applicationservice.infrastructure.value_object.ContactInfo;
 import com.example.applicationservice.dto.CreateApplicationDto;
 import com.example.applicationservice.infrastructure.converter.ContactInfoConverter;
 import com.example.applicationservice.infrastructure.converter.JobInfoConverter;
@@ -12,6 +12,9 @@ import jakarta.persistence.Id;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Entity
@@ -52,5 +55,14 @@ public class Application {
   private String createApplyTime() {
     LocalDateTime now = LocalDateTime.now();
     return now.toString();
+  }
+  private String changeApplyTimeFormat(String stringTime) {
+    LocalDateTime timeValue = LocalDateTime.parse(stringTime);
+    ZonedDateTime zonedDateTime = timeValue.atZone(ZoneId.of("Asia/Ho_Chi_Minh"));
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
+    return zonedDateTime.format(formatter);
+  }
+  public void formatData() {
+    this.setApplyAt(this.changeApplyTimeFormat(this.getApplyAt()));
   }
 }

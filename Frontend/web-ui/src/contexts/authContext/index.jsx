@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { auth, db } from "../../firebase/firebase";
-import { GoogleAuthProvider } from "firebase/auth";
+import { GoogleAuthProvider, sendEmailVerification } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 
@@ -51,8 +51,26 @@ export function AuthProvider({ children }) {
 
                 setUserLoggedIn(true);
             } else {
-                // If email is not verified, sign out the user and prompt verification
-                await auth.signOut();
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                const userData = userDoc.exists() ? userDoc.data() : {};
+
+                if (userData.status === "approved") {
+                    const updatedUser = {
+                        ...user,
+                        ...userData,
+                    };
+                    setCurrentUser(updatedUser);
+
+                    const isEmail = user.providerData.some(
+                        (provider) => provider.providerId === "password",
+                    );
+                    setIsEmailUser(isEmail);
+
+                    setUserLoggedIn(true);
+                } else {
+                    // If email is not verified & status employer === approved && === rejected, sign out the user and prompt verification
+                    await auth.signOut();
+                }
             }
         } else {
             setCurrentUser(null);

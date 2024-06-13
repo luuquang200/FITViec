@@ -1,4 +1,4 @@
-package com.example.applicationservice.domain.value_object;
+package com.example.applicationservice.infrastructure.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContactInfo {
-  private String email;
+public class JobInfo {
+  private String jobId;
+  private String jobTitle;
 }

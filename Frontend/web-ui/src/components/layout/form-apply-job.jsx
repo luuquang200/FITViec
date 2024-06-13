@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { storage } from "../../firebase/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
+import ClipLoader from "react-spinners/ClipLoader";
 
 // const job_detail = {
 //   "employerId": "hansentechnologies",
@@ -220,7 +221,14 @@ const FormApplyJob = () => {
 
 
     if (isLoading) {
-        return <div className="flex justify-center items-center h-screen">Loading...</div>;
+        return <div className="flex h-screen items-center justify-center">
+            <ClipLoader
+                color="rgba(239, 68, 68, 1)"
+                size={40}
+                speedMultiplier={1}
+                className="mt-4 "
+            />
+        </div>;
       }
     return (
         <div className=" p-[30px] pb-[150px] bg-gray-200 bg-opacity-50">
@@ -312,23 +320,28 @@ const FormApplyJob = () => {
                         </div>
                     </div>
 
-                    {/* Input với nội dung từ 500 từ */}
-                    <div className="mb-4">
-                        <label className="block mb-3 ">
-                            <span className="text-lg font-bold  "> Cover Leter</span>
-                            <span className="text-gray-400 "> (Optional)</span>
-                        </label>
-                        <div className="my-2">What skills, work projects or achievements make you a strong candidate?</div>
-                        <textarea
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
-                            rows="6"
-                            maxLength={"500"}
-                            placeholder="Details and specific examples will make your application stronger..."
-                            value={coverLetter}
-                            onChange={handleCoverLetterChange}
-                        ></textarea>
-                        <div className=" text-gray-400">{500 - coverLetter.length} of 500 characters remaining</div>
+                  {/* Input với nội dung từ 500 từ */}
+                  <div className="mb-4">
+                    <label className="block mb-3 ">
+                      <span className="text-lg font-bold  "> Cover Leter</span>
+                      <span className="text-gray-400 "> (Optional)</span>
+                    </label>
+                    <div className="my-2">
+                      What skills, work projects or achievements make you a
+                      strong candidate?
                     </div>
+                    <textarea
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
+                      rows="6"
+                      maxLength={"500"}
+                      placeholder="Details and specific examples will make your application stronger..."
+                      value={coverLetter}
+                      onChange={handleCoverLetterChange}
+                    ></textarea>
+                    <div className=" text-gray-400">
+                      {500 - coverLetter.length} of 500 characters remaining
+                    </div>
+                  </div>
 
                     {/* Button gửi form */}
                     <div className="flex items-center justify-center mt-6">

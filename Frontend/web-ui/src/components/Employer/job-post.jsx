@@ -31,36 +31,16 @@ const JobPost = () => {
   const [jobDescription, setJobDescription] = useState("");
   const [jobResponsibility, setJobResponsibility] = useState("");
   const [jobRequirements, setJobRequirements] = useState("");
-  const [errorJobDescription, setErrorJobDescription] = useState(false);
-  const [errorJobResponsibility, setErrorJobResponsibility] = useState(false);
-  const [errorJobRequirements, setErrorJobRequirements] = useState(false);
 
   const onSubmit = (data) => {
-    if (jobDescription === "") {
-      setErrorJobDescription(true);
-    }
-
-    if (jobResponsibility === "") {
-      setErrorJobResponsibility(true);
-    }
-
-    if (jobRequirements === "") {
-      setErrorJobRequirements(true);
-    }
-
-    // Here, you can send the form data to the server using fetch or Axios
-    if (errorJobDescription || errorJobResponsibility || errorJobRequirements) return
-    else {
-      data.job_description = jobDescription;
-      data.job_responsibility = jobResponsibility;
-      data.job_requirements = jobRequirements;
-      console.log(data);
-    }
+    data.job_description = jobDescription;
+    data.job_responsibility = jobResponsibility;
+    data.job_requirements = jobRequirements;
+    console.log(data);
   };
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-4">Post a Job</h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-1 md:grid-cols-2 gap-8"
@@ -210,7 +190,6 @@ const JobPost = () => {
           <div>
             <label htmlFor="job_description" className="block mb-2 font-medium">
               Job Description
-              <span className="text-red-500 ml-1">*</span>
             </label>
             <CKEditor
               onReady={(editor) => {
@@ -226,13 +205,9 @@ const JobPost = () => {
               data=""
               onChange={(event, editor) => {
                 setJobDescription(editor.getData());
-                setErrorJobDescription(false);
               }}
               className="border border-gray-300 rounded-lg"
             />
-            {errorJobDescription && (
-              <span className="text-red-600">This field is required</span>
-            )}
           </div>
 
           <div>
@@ -241,7 +216,6 @@ const JobPost = () => {
               className="block mb-2 font-medium"
             >
               Job Responsibility
-              <span className="text-red-500 ml-1">*</span>
             </label>
             <CKEditor
               onReady={(editor) => {
@@ -257,13 +231,9 @@ const JobPost = () => {
               data=""
               onChange={(event, editor) => {
                 setJobResponsibility(editor.getData());
-                setErrorJobResponsibility(false);
               }}
               className="border border-gray-300 rounded-lg"
             />
-            {errorJobResponsibility && (
-              <span className="text-red-600">This field is required</span>
-            )}
           </div>
 
           <div>
@@ -272,7 +242,6 @@ const JobPost = () => {
               className="block mb-2 font-medium"
             >
               Job Requirements
-              <span className="text-red-500 ml-1">*</span>
             </label>
             <CKEditor
               onReady={(editor) => {
@@ -288,13 +257,9 @@ const JobPost = () => {
               data=""
               onChange={(event, editor) => {
                 setJobRequirements(editor.getData());
-                setErrorJobRequirements(false);
               }}
               className="border border-gray-300 rounded-lg"
             />
-            {errorJobRequirements && (
-              <span className="text-red-600">This field is required</span>
-            )}
           </div>
         </div>
 
