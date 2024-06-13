@@ -31,6 +31,8 @@ import ProfileManagementJob from "./components/profile/profile-management-job";
 import AdminDashboard from "./components/Admin/admin-dashboard";
 import EmployeeJobManagment from "./components/Employee/employee-job-managment";
 import SettingsAccount from "./components/Authentications/settingsAccount";
+import EmployeeJobRecent from "./components/Employee/employee-job-recent";
+import EmployeeJobApplied from "./components/Employee/employee-job-applied";
 
 function App() {
     return (
@@ -75,6 +77,14 @@ function App() {
                     element={<ProfileManagementJob />}
                 />
                 <Route path="/my-jobs/" element={<EmployeeJobManagment />} />
+                <Route
+                    path="/my-jobs/applied"
+                    element={<EmployeeJobApplied />}
+                />
+                <Route
+                    path="/my-jobs/recent-viewed"
+                    element={<EmployeeJobRecent />}
+                />
                 <Route
                     path="/verify_email"
                     element={
