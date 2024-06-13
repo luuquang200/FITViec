@@ -1,197 +1,216 @@
 import { useState, useEffect } from 'react';
-import {  ChevronFirst, ChevronLast, ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import {   ChevronLeftIcon,  ChevronRightIcon, Search } from 'lucide-react';
 import CandidateItem from './candidate-item';
+import ClipLoader from "react-spinners/ClipLoader";
 
 const exCandidates = [
   {
-    initials: 'MA',
-    id: '12345abc',
-    name: 'Nguyễn Thu Huyền',
-    jobName: 'Chiến dịch tuyển Nhà , Tuyển nhân viên kế toán Ngân hàng ABCD...',
+    photoUrl: 'MA',
+    jobSeekerId: '12345abc',
+    applicationName: 'Nguyễn Thu Huyền',
+    jobTittle: 'Chiến dịch tuyển Nhà , Tuyển nhân viên kế toán Ngân hàng ABCD...',
     jobId: '#408580',
     email: 'banglangtim@gmail.com',
-    appliedAt: '05/06/2023 14:38',
-    status: 'CV tiếp nhận',
+    applyAt: '05/06/2023 14:38',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'TK',
-    id: '12345abc',
-    name: 'Trần Hữu Khoa',
-    jobName: 'Tuyển nhân viên kế toán Ngân hàng ABCD ...',
+    photoUrl: 'TK',
+    jobSeekerId: '12345abc',
+    applicationName: 'Trần Hữu Khoa',
+    jobTittle: 'Tuyển nhân viên kế toán Ngân hàng ABCD ...',
     jobId: '#408583',
     email: 'thuukhoa@gmail.com',
-    appliedAt: '01/06/2023 15:59',
-    status: 'CV tiếp nhận',
+    applyAt: '01/06/2023 15:59',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'MA',
-    id: '12345abc',
-    name: 'Nguyễn Thanh Thúy',
-    jobName: 'Chiến dịch tuyển Chọn ...',
+    photoUrl: 'MA',
+    jobSeekerId: '12345abc',
+    applicationName: 'Nguyễn Thanh Thúy',
+    jobTittle: 'Chiến dịch tuyển Chọn ...',
     jobId: '#408580',
     email: 'banglthanhthuy@gmail.com',
-    appliedAt: '05/06/2023 14:38',
-    status: 'CV tiếp nhận',
+    applyAt: '05/06/2023 14:38',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'VB',
-    id: '12345abc',
-    name: 'Trần Văn Bá',
-    jobName: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng ABCD Tuyển nhân viên kinh',
+    photoUrl: 'VB',
+    jobSeekerId: '12345abc',
+    applicationName: 'Trần Văn Bá',
+    jobTittle: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng ABCD Tuyển nhân viên kinh',
     jobId: '#408583',
     email: 'thanh.vb@gmail.com',
-    appliedAt: '01/06/2023 15:59',
-    status: 'CV tiếp nhận',
+    applyAt: '01/06/2023 15:59',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'TT',
-    id: '12345abc',
-    name: 'Trần Thanh Tâm',
-    jobName: 'Tuyển Tester',
+    photoUrl: 'TT',
+    jobSeekerId: '12345abc',
+    applicationName: 'Trần Thanh Tâm',
+    jobTittle: 'Tuyển Tester',
     jobId: '#408580',
     email: 'thanh.td@gmail.com',
-    appliedAt: '01/06/2023 15:59',
-    status: 'CV tiếp nhận',
+    applyAt: '01/06/2023 15:59',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'BT',
-    id: '12345abc',
-    name: 'Phạm Quang Bình',
-    jobName: 'Tuyển C&B',
+    photoUrl: 'BT',
+    jobSeekerId: '12345abc',
+    applicationName: 'Phạm Quang Bình',
+    jobTittle: 'Tuyển C&B',
     jobId: '#408589',
     email: 'binhpham@gmail.net',
-    appliedAt: '01/06/2023 15:59',
-    status: 'CV tiếp nhận',
+    applyAt: '01/06/2023 15:59',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'MA',
-    id: '12345abc',
-    name: 'Nguyễn Thu Huyền',
-    jobName: 'Chiến dịch tuyển Nhà , Tuyển nhân viên kế toán Ngân hàng ABCD...',
+    photoUrl: 'MA',
+    jobSeekerId: '12345abc',
+    applicationName: 'Nguyễn Thu Huyền',
+    jobTittle: 'Chiến dịch tuyển Nhà , Tuyển nhân viên kế toán Ngân hàng ABCD...',
     jobId: '#408580',
     email: 'banglangtim@gmail.com',
-    appliedAt: '05/06/2023 14:38',
-    status: 'CV tiếp nhận',
+    applyAt: '05/06/2023 14:38',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'TK',
-    id: '12345abc',
-    name: 'Trần Hữu Khoa',
-    jobName: 'Tuyển nhân viên kế toán Ngân hàng ABCD ...',
+    photoUrl: 'TK',
+    jobSeekerId: '12345abc',
+    applicationName: 'Trần Hữu Khoa',
+    jobTittle: 'Tuyển nhân viên kế toán Ngân hàng ABCD ...',
     jobId: '#408583',
     email: 'thuukhoa@gmail.com',
-    appliedAt: '01/06/2023 15:59',
-    status: 'CV tiếp nhận',
+    applyAt: '01/06/2023 15:59',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'MA',
-    id: '12345abc',
-    name: 'Nguyễn Thanh Thúy',
-    jobName: 'Chiến dịch tuyển Chọn ...',
+    photoUrl: 'MA',
+    jobSeekerId: '12345abc',
+    applicationName: 'Nguyễn Thanh Thúy',
+    jobTittle: 'Chiến dịch tuyển Chọn ...',
     jobId: '#408580',
     email: 'banglthanhthuy@gmail.com',
-    appliedAt: '05/06/2023 14:38',
-    status: 'CV tiếp nhận',
+    applyAt: '05/06/2023 14:38',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'VB',
-    id: '12345abc',
-    name: 'Trần Văn Bá',
-    jobName: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng ABCD Tuyển nhân viên kinh',
+    photoUrl: 'VB',
+    jobSeekerId: '12345abc',
+    applicationName: 'Trần Văn Bá',
+    jobTittle: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng ABCD Tuyển nhân viên kinh',
     jobId: '#408583',
     email: 'thanh.vb@gmail.com',
-    appliedAt: '01/06/2023 15:59',
-    status: 'CV tiếp nhận',
+    applyAt: '01/06/2023 15:59',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'TT',
-    id: '12345abc',
-    name: 'Trần Thanh Tâm',
-    jobName: 'Tuyển Tester',
+    photoUrl: 'TT',
+    jobSeekerId: '12345abc',
+    applicationName: 'Trần Thanh Tâm',
+    jobTittle: 'Tuyển Tester',
     jobId: '#408580',
     email: 'thanh.td@gmail.com',
-    appliedAt: '01/06/2023 15:59',
-    status: 'CV tiếp nhận',
+    applyAt: '01/06/2023 15:59',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'BT',
-    id: '12345abc',
-    name: 'Phạm Quang Bình',
-    jobName: 'Tuyển C&B',
+    photoUrl: 'BT',
+    jobSeekerId: '12345abc',
+    applicationName: 'Phạm Quang Bình',
+    jobTittle: 'Tuyển C&B',
     jobId: '#408589',
     email: 'binhpham@gmail.net',
-    appliedAt: '01/06/2023 15:59',
-    status: 'CV tiếp nhận',
+    applyAt: '01/06/2023 15:59',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'MA',
-    id: '12345abc',
-    name: 'Nguyễn Thu Huyền',
-    jobName: 'Chiến dịch tuyển Nhà , Tuyển nhân viên kế toán Ngân hàng ABCD...',
+    photoUrl: 'MA',
+    jobSeekerId: '12345abc',
+    applicationName: 'Nguyễn Thu Huyền',
+    jobTittle: 'Chiến dịch tuyển Nhà , Tuyển nhân viên kế toán Ngân hàng ABCD...',
     jobId: '#408580',
     email: 'banglangtim@gmail.com',
-    appliedAt: '05/06/2023 14:38',
-    status: 'CV tiếp nhận',
+    applyAt: '05/06/2023 14:38',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'TK',
-    id: '12345abc',
-    name: 'Trần Hữu Khoa',
-    jobName: 'Tuyển nhân viên kế toán Ngân hàng ABCD ...',
+    photoUrl: 'TK',
+    jobSeekerId: '12345abc',
+    applicationName: 'Trần Hữu Khoa',
+    jobTittle: 'Tuyển nhân viên kế toán Ngân hàng ABCD ...',
     jobId: '#408583',
     email: 'thuukhoa@gmail.com',
-    appliedAt: '01/06/2023 15:59',
-    status: 'CV tiếp nhận',
+    applyAt: '01/06/2023 15:59',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'MA',
-    id: '12345abc',
-    name: 'Nguyễn Thanh Thúy',
-    jobName: 'Chiến dịch tuyển Chọn ...',
+    photoUrl: 'MA',
+    jobSeekerId: '12345abc',
+    applicationName: 'Nguyễn Thanh Thúy',
+    jobTittle: 'Chiến dịch tuyển Chọn ...',
     jobId: '#408580',
     email: 'banglthanhthuy@gmail.com',
-    appliedAt: '05/06/2023 14:38',
-    status: 'CV tiếp nhận',
+    applyAt: '05/06/2023 14:38',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'VB',
-    id: '12345abc',
-    name: 'Trần Văn Bá',
-    jobName: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng ABCD Tuyển nhân viên kinh',
+    photoUrl: 'VB',
+    jobSeekerId: '12345abc',
+    applicationName: 'Trần Văn Bá',
+    jobTittle: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng ABCD Tuyển nhân viên kinh',
     jobId: '#408583',
     email: 'thanh.vb@gmail.com',
-    appliedAt: '01/06/2023 15:59',
-    status: 'CV tiếp nhận',
+    applyAt: '01/06/2023 15:59',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'TT',
-    id: '12345abc',
-    name: 'Trần Thanh Tâm',
-    jobName: 'Tuyển Tester',
+    photoUrl: 'TT',
+    jobSeekerId: '12345abc',
+    applicationName: 'Trần Thanh Tâm',
+    jobTittle: 'Tuyển Tester',
     jobId: '#408580',
     email: 'thanh.td@gmail.com',
-    appliedAt: '01/06/2023 15:59',
-    status: 'CV tiếp nhận',
+    applyAt: '01/06/2023 15:59',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
   {
-    initials: 'BT',
-    id: '12345abc',
-    name: 'Phạm Quang Bình',
-    jobName: 'Tuyển C&B',
+    photoUrl: 'BT',
+    jobSeekerId: '12345abc',
+    applicationName: 'Phạm Quang Bình',
+    jobTittle: 'Tuyển C&B',
     jobId: '#408589',
     email: 'binhpham@gmail.net',
-    appliedAt: '01/06/2023 15:59',
-    status: 'CV tiếp nhận',
+    applyAt: '01/06/2023 15:59',
+    coverLetter: 'coverLetter',
+    applicationStatus: 'CV recieved',
   },
 ];
 
 const statusOptions = {
-  'CV tiếp nhận': 'cv-received',
-  'Hẹn phỏng vấn': 'interview',
-  'Từ chối': 'rejected'
+  'CV received': 'in_review',
+  'Interview': 'accepted',
+  'Reject': 'rejected'
 };
 
-const jobOptions = [
+const exJobOptions = [
   {
     jobId: 'J001',
     jobName: 'Nhân viên kinh doanh '
@@ -217,10 +236,11 @@ const jobOptions = [
 const Candidates = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
+  const [jobOptions, setJobOptions] = useState(exJobOptions); //exapmle jobOptions
   const [selectedJob, setSelectedJob] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState([]);
-  const [candidates, setCandidates] = useState([]);
+  const [candidates, setCandidates] = useState(exCandidates); //example candidates
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const candidatesPerPage = 5;
@@ -229,12 +249,25 @@ const Candidates = () => {
     // const fetchCandidates = async () => {
     //   setLoading(true);
     //   try {
-    //     const response = await fetch(`your-api-endpoint?page=${currentPage}&perPage=${candidatesPerPage}`);
+    //     const response = await fetch(`https://localhost:9999/application?page=${currentPage}&perPage=${candidatesPerPage}`);
     //     const data = await response.json();
     //     setCandidates(data.candidates);
     //     setTotalPages(data.totalPages);
     //   } catch (error) {
     //     console.error('Error fetching candidates:', error);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
+
+    // const fetchJob = async () => {
+    //   setLoading(true);
+    //   try {
+    //     const response = await fetch(`https://job-search-service.azurewebsites.net/job-elastic/jobs-by-employer-id/${employerId}`);
+    //     const data = await response.json();
+    //     setJobOptions(data);
+    //   } catch (error) {
+    //     console.error('Error fetching JobOptions:', error);
     //   } finally {
     //     setLoading(false);
     //   }
@@ -250,7 +283,7 @@ const Candidates = () => {
   }, [currentPage]);
 
   const handleSearch = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       console.log("searchQuery: ", searchQuery, "- selctedStatus: ", selectedStatus);
       const filteredCandidates = exCandidates.filter(candidate =>
@@ -261,7 +294,7 @@ const Candidates = () => {
     } catch (error) {
       console.error('Error fetching search results:', error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -278,25 +311,22 @@ const Candidates = () => {
   };
 
   const handlePageChange = (newPage) => {
-    console.log("currentPage after change: ", newPage);
     if (newPage > 0 && newPage <= totalPages) {
       setCurrentPage(newPage);
       
     }
   };
-  console.log("currentPage render: ", currentPage);
-  console.log("totalPage render: ", totalPages);
   return (
     <div className="p-4 bg-white mb-[60px]">
-      <h2 className="text-lg font-bold">Quản lý CV ứng viên</h2>
+      <h2 className="text-lg font-bold">CV Management</h2>
       <br/>
       <div className="flex justify-between items-center mb-4">
         <div className="w-1/2">
-          <p>Tìm kiếm: </p>
+          <p>Search: </p>
           <div className="flex space-x-2 items-center my-2">
             <input
               type="text"
-              placeholder="Tìm kiếm tên, email, số điện thoại"
+              placeholder="Search by name, email,..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="border rounded px-2 py-1 text-sm w-full"
@@ -309,13 +339,13 @@ const Candidates = () => {
         </div>
         <div className="flex w-2/5 space-x-2">
           <div className="w-1/2">
-            <p>Trạng thái: </p>
+            <p>Status: </p>
             <select 
               value={selectedStatus} 
               onChange={handleStatusChange} 
               className="border rounded px-2 py-1 my-2 text-sm w-full"
             >
-              <option value="">Tất cả</option>
+              <option value="all">All</option>
               {Object.keys(statusOptions).map((status) => (
                 <option key={status} value={statusOptions[status]}>
                   {status}
@@ -324,13 +354,13 @@ const Candidates = () => {
             </select>
           </div>
           <div className="w-1/2">
-            <p>Bài đăng: </p>
+            <p>Job: </p>
             <select 
               value={selectedJob} 
               onChange={handleJobChange} 
               className="border rounded px-2 py-1 my-2 text-sm w-full"
             >
-              <option value="">Tất cả</option>
+              <option value="all">All</option>
               {jobOptions.map((job) => (
                 <option key={job.jobId} value={job.jobId} title={job.jobName}>
                   {truncateText(job.jobName, 50)}
@@ -341,20 +371,25 @@ const Candidates = () => {
         </div>
       </div>
 
-      {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <div className="loader">Loading...</div>
+      {isLoading ? (
+        <div className="flex h-screen items-center justify-center">
+            <ClipLoader
+                color="rgba(239, 68, 68, 1)"
+                size={40}
+                speedMultiplier={1}
+                className="mt-4 "
+            />
         </div>
       ) : (
         <div className="overflow-auto">
           <table className="min-w-full border rounded">
             <thead>
               <tr className="bg-gray-100">
-                <th className="p-2 text-left">Ứng viên</th>
-                <th className="p-2 text-left">Bài đăng</th>
-                <th className="p-2 text-left">Thông tin liên hệ</th>
-                <th className="p-2 text-left">Ngày tiếp nhận</th>
-                <th className="p-2 text-left">Trạng thái</th>
+                <th className="p-2 text-left">Applicant</th>
+                <th className="p-2 text-left">Job</th>
+                <th className="p-2 text-left">Information</th>
+                <th className="p-2 text-left">Apply At</th>
+                <th className="p-2 text-left">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -363,56 +398,37 @@ const Candidates = () => {
               ))}
               {results.length === 0 && candidates.length === 0 && (
                 <tr>
-                  <td colSpan="5" className="p-2 text-center">Không có kết quả tìm kiếm.</td>
+                  <td colSpan="5" className="p-2 text-center">Have no result.</td>
                 </tr>
               )}
             </tbody>
           </table>
           {/* Pagination */}
-          <div className="flex justify-center mt-4 space-x-2 sticky bottom-0">
-            <button
-              onClick={() => handlePageChange(1)}
-              className={`px-2 py-2 ${currentPage === 1 ? 'bg-gray-200' : 'bg-blue-500 text-white'}`}
-            >
-              <ChevronFirst />
-            </button>
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              className={`px-2 py-2 ${currentPage === 1 ? 'bg-gray-200' : 'bg-blue-500 text-white'}`}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft />
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => {
-              if (i + 1 === currentPage || i + 1 === 1 || i + 1 === totalPages) {
-                return (
-                  <button
-                    key={i}
-                    onClick={() => handlePageChange(i + 1)}
-                    className={`px-4 py-2 ${currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-                  >
-                    {i + 1}
-                  </button>
-                );
-              } else if (i + 1 === currentPage - 2 || i + 1 === currentPage + 2) {
-                return <span key={i} className="px-4 py-2">...</span>;
-              }
-              return null;
-            })}
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              className={`px-2 py-2 ${currentPage === totalPages ? 'bg-gray-200' : 'bg-blue-500 text-white'}`}
-              disabled={currentPage === totalPages}
-            >
-              <ChevronRight />
-            </button>
-            <button
-              onClick={() => handlePageChange(totalPages)}
-              className={`px-2 py-2 ${currentPage === totalPages ? 'bg-gray-200' : 'bg-blue-500 text-white'}`}
-            >
-             <ChevronLast />
-            </button>
-          </div>
+          
+          <div className="mt-4 flex items-center justify-between">
+                <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="flex items-center rounded-lg bg-red-600 px-3 py-2 text-white disabled:opacity-50"
+                >
+                    <ChevronLeftIcon className="h-5 w-5" />
+                    <span className="ml-2">Previous</span>
+                </button>
+                <span className="text-sm text-gray-700">
+                    Page{" "}
+                    <strong>
+                        {currentPage } of {totalPages}
+                    </strong>
+                </span>
+                <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="flex items-center rounded-lg bg-red-600 px-3 py-2 text-white disabled:opacity-50"
+                >
+                    <span className="mr-2">Next</span>
+                    <ChevronRightIcon className="h-5 w-5" />
+                </button>
+            </div>
         </div>
       )}
     </div>

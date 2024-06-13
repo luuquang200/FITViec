@@ -6,6 +6,7 @@ import BasicInfo from "@/components/ui/job-detail-guest/basic-info";
 import JobCardSimilar from "@/components/ui/job-detail-guest/job-card";
 import { useAuth } from "../../../contexts/authContext";
 import { toast } from "react-toastify";
+import ClipLoader from "react-spinners/ClipLoader";
 
 // const job_detail = {
 //   "employerId": "hansentechnologies",
@@ -44,29 +45,30 @@ const JobDetailGuestPage = () => {
   const { currentUser}  = useAuth();
   console.log("currentUser: ", currentUser);
   //Call API get job infor
+  const fetchJobData = async (jobId) => {
+    setIsLoading(true);
+    try {
+      console.log(`https://job-search-service.azurewebsites.net/job-elastic/job-by-id/${jobId}`);
+        const response = await fetch(`https://job-search-service.azurewebsites.net/job-elastic/job-by-id/${jobId}`);
+        console.log("response: ", response);
+        if (!response.ok) {
+          toast.error("Network response was not ok");
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log("data: ", data);  
+        setJobData(data);
+        toast.success("Fetching JobData was OK!!!");
+        setIsLoading(false);
+        
+    } catch (error) {
+      toast.error("Error fetching JobData:");
+      console.error('Error fetching JobData:', error);
+    }
+  };
   useEffect(()=>{
-    const fetchJobData = async (jobId) => {
-      setIsLoading(true);
-      try {
-          const response = await fetch(`https://job-search-service.azurewebsites.net/job-elastic/job-by-id/${jobId}`);
-  
-          if (!response.ok) {
-            toast.error("Network response was not ok");
-            throw new Error('Network response was not ok');
-          }
-          const data = await response.json();
-          console.log(data);
-          setJobData(data);
-          toast.success("Fetching JobData was OK!!!");
-          setIsLoading(false);
-          
-      } catch (error) {
-        toast.error("Error fetching JobData:");
-        console.error('Error fetching JobData:', error);
-      }
-    };
-    console.log("call fetch");
-    fetchJobData("7e34bcf6-c679-4f60-b00f-61c525c87397");
+    
+    fetchJobData("5fa75d44-28f8-478a-ae5f-297546abeb9e");
 
     const handleScroll = () => {
       if (window.scrollY > 800) {
@@ -168,7 +170,14 @@ const JobDetailGuestPage = () => {
           </div>
         </div>
       </div> 
-      : <div className="flex justify-center items-center h-screen">Loading...</div> }
+      : <div className="flex h-screen items-center justify-center">
+          <ClipLoader
+              color="rgba(239, 68, 68, 1)"
+              size={40}
+              speedMultiplier={1}
+              className="mt-4 "
+          />
+      </div> }
       <style >{`
         
         .similar-jobs-title {

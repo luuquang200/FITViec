@@ -10,14 +10,14 @@ const CandidateItem = ({ candidate }) => {
         <div
           className={`w-10 h-10 flex items-center justify-center bg-gray-300 rounded-full text-white font-bold mr-2`}
         >
-          {candidate.initials}
+          {candidate.photoUrl}
         </div>
         <div>
-          <p className='text-wrap'>{candidate.name}</p>
+          <p className='text-wrap'>{candidate.applicationName}</p>
         </div>
       </td>
       <td className="p-2">
-        <p className=''>{candidate.jobName}</p>
+        <p className=''>{candidate.jobTittle}</p>
         <p className="text-xs text-gray-500">{candidate.jobId}</p>
       </td>
       <td className="p-2">
@@ -30,13 +30,13 @@ const CandidateItem = ({ candidate }) => {
       </td>
       <td className="p-2">
         
-        <p className='text-sm'>{candidate.appliedAt}</p>
+        <p className='text-sm'>{candidate.applyAt}</p>
         
       </td>
       <td className="p-2">
-        <Link to={`/cv-detail/${candidate.id}`}>
+        <Link to={`/cv-detail/${candidate.jobSeekerId}`}>
           <button className="text-blue-500 border border-blue-500 rounded px-2 py-1">
-            {candidate.status}
+            {candidate.applicationStatus}
           </button>
         </Link>
       </td>
@@ -48,14 +48,14 @@ const CandidateItem = ({ candidate }) => {
 
 CandidateItem.propTypes = {
     candidate: PropTypes.shape({
-      initials: PropTypes.string.isRequired,
-      id:  PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      jobName: PropTypes.string.isRequired,
+      photoUrl: PropTypes.string.isRequired,
+      jobSeekerId:  PropTypes.string.isRequired,
+      applicationName: PropTypes.string.isRequired,
+      jobTittle: PropTypes.string.isRequired,
       jobId: PropTypes.string.isRequired,
       email: PropTypes.string.isRequired,
-      appliedAt: PropTypes.string.isRequired,
-      status: PropTypes.string.isRequired,
+      applyAt: PropTypes.string.isRequired,
+      applicationStatus: PropTypes.string.isRequired,
     }).isRequired,
   };
 export default CandidateItem;

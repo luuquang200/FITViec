@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { storage } from "../../firebase/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
+import ClipLoader from "react-spinners/ClipLoader";
 
 // const job_detail = {
 //   "employerId": "hansentechnologies",
@@ -220,7 +221,14 @@ const FormApplyJob = () => {
 
 
     if (isLoading) {
-        return <div className="flex justify-center items-center h-screen">Loading...</div>;
+        return <div className="flex h-screen items-center justify-center">
+            <ClipLoader
+                color="rgba(239, 68, 68, 1)"
+                size={40}
+                speedMultiplier={1}
+                className="mt-4 "
+            />
+        </div>;
       }
     return (
         <div className=" p-[30px] pb-[150px] bg-gray-200 bg-opacity-50">
