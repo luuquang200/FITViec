@@ -284,6 +284,7 @@ const Header = () => {
                                     <MenubarItem
                                         onClick={() => {
                                             doSignOut();
+                                            navigate("/");
                                         }}
                                     >
                                         <LogOut className="mr-2 h-5 w-5 text-muted-foreground" />

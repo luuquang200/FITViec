@@ -69,7 +69,7 @@ const SignIn = () => {
                             toast.success(
                                 "Successfully authenticated from Email & Password account.",
                             );
-                            console.log(user);
+                            saveToken(user.accessToken);
                             if (role === "admin")
                                 navigate(`/admin`)
                             else
