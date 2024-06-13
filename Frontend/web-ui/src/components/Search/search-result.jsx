@@ -12,7 +12,7 @@ import {
     StoreRecentViewedJob,
     StoreSavedJob,
     CheckIsSavedJob,
-} from "../Employee/employee-job-managment";
+} from "../Employee/employee-job-management";
 
 // Components
 import Container from "@/components/layout/container";

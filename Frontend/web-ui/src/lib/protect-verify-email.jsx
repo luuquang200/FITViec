@@ -2,8 +2,8 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
 
-const ProtectedRouteVerify = ({ children, allowedRole }) => {
-    const { isRegistered, currentUser } = useAuth();
+const ProtectedRouteVerify = ({ children }) => {
+    const { isRegistered } = useAuth();
 
     if (!isRegistered) {
         return <Navigate to="/" />;

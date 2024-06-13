@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useAuth } from "../../contexts/authContext";
 
-
 // firebase
 import { db } from "@/firebase/firebase";
 import { setDoc, getDoc, doc } from "firebase/firestore";
-import { StoreRecentViewedJob, StoreSavedJob, CheckIsSavedJob } from "../Employee/employee-job-managment";
+import {
+    StoreRecentViewedJob,
+    StoreSavedJob,
+    CheckIsSavedJob,
+} from "../Employee/employee-job-management";
 
 // Components
 import {
@@ -28,10 +31,10 @@ const JobDetail = ({ job }) => {
     const [reload, setReload] = useState(0);
 
     const handleLiked = () => {
-        job.isSaved = !job.isSaved
-        StoreSavedJob(job,currentUser,job.isSaved)
+        job.isSaved = !job.isSaved;
+        StoreSavedJob(job, currentUser, job.isSaved);
         // use setReload to reload this component after user like the job
-        setReload(reload + 1)
+        setReload(reload + 1);
     };
 
     if (!job) {
@@ -72,9 +75,13 @@ const JobDetail = ({ job }) => {
                         onClick={handleLiked}
                     >
                         {/* <Heart className={isLiked && "fill-current"} /> */}
-                        <Heart 
-                            className={(job.isSaved != null && job.isSaved) ? "fill-current" : ""} />
-
+                        <Heart
+                            className={
+                                job.isSaved != null && job.isSaved
+                                    ? "fill-current"
+                                    : ""
+                            }
+                        />
                     </Button>
                 </div>
             </CardHeader>

@@ -30,11 +30,13 @@ import VerifyEmployer from "./components/Employers/verify-employer";
 import ProfileManagementCv from "./components/profile/profile-management-cv";
 import ProfileManagementJob from "./components/profile/profile-management-job";
 import AdminDashboard from "./components/Admin/admin-dashboard";
-import EmployeeJobManagment from "./components/Employee/employee-job-managment";
+import EmployeeJobManagement from "./components/Employee/employee-job-management";
 import SettingsAccount from "./components/Authentications/settingsAccount";
 import EmployeeJobRecent from "./components/Employee/employee-job-recent";
 import EmployeeJobApplied from "./components/Employee/employee-job-applied";
 import ProfileEmployer from "./components/profile/profile-employer";
+
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 function App() {
     return (
@@ -45,15 +47,23 @@ function App() {
             <div className="h-[88px]" />
             <Routes>
                 <Route path="/" element={<HomePage />} />
-
                 <Route
                     path="/employer"
                     element={
-                        <ProtectedRouteVerify roleToProtect="employer">
+                        <ProtectedRoute allowedRole="employer">
                             <EmployerContainer />
-                        </ProtectedRouteVerify>
+                        </ProtectedRoute>
                     }
                 />
+                <Route
+                    path="/admin"
+                    element={
+                        <ProtectedRoute allowedRole="admin">
+                            <AdminDashboard />
+                        </ProtectedRoute>
+                    }
+                />
+
                 <Route
                     path="/cv-detail/:applicationId"
                     element={<CVViewer />}
@@ -79,7 +89,7 @@ function App() {
                     path="/profile-cv/job-preferences"
                     element={<ProfileManagementJob />}
                 />
-                <Route path="/my-jobs/" element={<EmployeeJobManagment />} />
+                <Route path="/my-jobs/" element={<EmployeeJobManagement />} />
                 <Route
                     path="/my-jobs/applied"
                     element={<EmployeeJobApplied />}
@@ -114,7 +124,6 @@ function App() {
                         // </ProtectedRouteVerify>
                     }
                 />
-                <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/settings" element={<SettingsAccount />} />
             </Routes>
             <Footer />

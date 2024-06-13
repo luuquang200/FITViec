@@ -37,11 +37,15 @@ const TopEmployerSection = () => {
                 Top Employers
             </h1>
 
-            <div className="grid grid-cols-3 gap-6">
-                {employers.map((employer, index) => (
-                    <EmployerCard key={index} employer={employer} />
-                ))}
-            </div>
+            {employers.length === 0 ? (
+                <p>Fetching Top Employers...</p>
+            ) : (
+                <div className="grid grid-cols-3 gap-6">
+                    {employers.map((employer, index) => (
+                        <EmployerCard key={index} employer={employer} />
+                    ))}
+                </div>
+            )}
         </Container>
     );
 };

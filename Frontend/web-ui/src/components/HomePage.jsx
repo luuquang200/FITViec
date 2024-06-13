@@ -10,18 +10,16 @@ function HomePage() {
     const { currentUser } = useAuth();
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     if (currentUser) {
-    //     if (currentUser.role === "employer") {
-    //         console.log("homepage/employer");
-    //         navigate("/employer");
-    //     } else if (currentUser.role === "admin") {
-    //         console.log("homepage/admin");
-    //         navigate("/admin");
-    //     }
-    //     }
-    // }, [currentUser]);
-    
+    useEffect(() => {
+        if (currentUser) {
+            if (currentUser.role === "employer") {
+                navigate("/employer");
+            } else if (currentUser.role === "admin") {
+                navigate("/admin");
+            }
+        }
+    }, [currentUser]);
+
     return (
         <>
             <SearchSection /> <TopEmployerSection />
