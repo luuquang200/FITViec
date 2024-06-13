@@ -1,13 +1,10 @@
 import { useState } from "react";
 import { User, Briefcase, LayoutDashboard } from "lucide-react";
 
-const adminUser = {
-    avatar: "https://cdn-icons-png.flaticon.com/512/9703/9703596.png",
-    name: "Adminstrator",
-    email: "fitviec@gmail.com",
-};
+import { useAuth } from "@/contexts/authContext";
 
 const AdminSidebar = ({ onTabChange }) => {
+    const { currentUser } = useAuth();
     const [activeTab, setActiveTab] = useState("job-management");
 
     const handleTabChange = (tab) => {
@@ -26,13 +23,17 @@ const AdminSidebar = ({ onTabChange }) => {
         <div className="fixed min-h-screen w-64 bg-gray-100 p-6 text-gray-900 shadow-lg">
             <div className="mb-8 flex items-center">
                 <img
-                    src={adminUser.avatar}
+                    src={currentUser?.photoURL}
                     alt="Avatar"
                     className="mr-3 h-12 w-12 rounded-full border-2 border-gray-300"
                 />
                 <div>
-                    <p className="text-base font-semibold">{adminUser.name}</p>
-                    <p className="text-sm text-gray-500">{adminUser.email}</p>
+                    <p className="text-base font-semibold">
+                        {currentUser?.displayName}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                        {currentUser?.email}
+                    </p>
                 </div>
             </div>
             <ul className="space-y-3">

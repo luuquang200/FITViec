@@ -32,7 +32,6 @@ const JobDetail = ({ job, onBack }) => {
                     {
                         method: "POST",
                         headers: {
-                            "Content-Type": "application/json",
                             Authorization: `${currentUser.accessToken}`,
                         },
                     },
