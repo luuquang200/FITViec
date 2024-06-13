@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 const EmployerContainer = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const {currentUser, loading} = useAuth();
-  console.log("currentUser: ", currentUser);
   const navigate = useNavigate();
   // useEffect(()=>{
   //   if (loading) {

@@ -214,7 +214,6 @@ const Header = () => {
                                 navigate("/employer");
                             }}
                             className="h-min p-0 text-white hover:no-underline"
-                            // onClick={() => navigate("/for-employers")}
                         >
                             For Employers
                         </Button>
@@ -291,39 +290,8 @@ const Header = () => {
                                         <MenubarItem
                                             onClick={() => {
                                                 doSignOut();
-    
-                                            // Count down from 3
-                                            let counter = 3;
-                                            toast(
-                                                `You will be redirected to the home page in ${counter} seconds`,
-                                                {
-                                                    toastId: "customId",
-                                                },
-                                            );
-                                            const intervalId = setInterval(
-                                                () => {
-                                                    counter--;
-                                                    if (counter > 0) {
-                                                        toast.update(
-                                                            "customId",
-                                                            {
-                                                                render: `You will be redirected to the home page in ${counter} seconds`,
-                                                            },
-                                                        );
-                                                    } else {
-                                                        clearInterval(
-                                                            intervalId,
-                                                        );
-                                                    }
-                                                },
-                                                1000,
-                                            );
-
-                                            // Navigate to home page after 3 seconds
-                                            setTimeout(() => {
                                                 navigate("/");
-                                            }, 3000);
-                                        }}
+                                            }}
                                         >
                                             <LogOut className="mr-2 h-5 w-5 text-muted-foreground" />
                                             Sign Out
