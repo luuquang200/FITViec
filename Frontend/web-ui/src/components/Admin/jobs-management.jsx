@@ -48,11 +48,17 @@ const JobManagement = ({ onSelectJob }) => {
     const columns = useMemo(
         () => [
             {
-                Header: "Title",
-                accessor: "jobTitle",
+                Header: "Company",
+                accessor: "employerInfo.companyName",
+                Filter: ColumnFilter,
             },
             {
-                Header: "Employer",
+                Header: "Job Title",
+                accessor: "jobTitle",
+                Filter: ColumnFilter,
+            },
+            {
+                Header: "EmployerID",
                 accessor: "employerId",
                 Filter: ColumnFilter,
             },
@@ -109,7 +115,7 @@ const JobManagement = ({ onSelectJob }) => {
 
     const handleFilterChange = (e) => {
         const value = e.target.value || undefined;
-        setFilter("employerId", value);
+        setFilter("employerInfo.companyName", value);
         setFilterInput(value);
     };
 
@@ -132,7 +138,7 @@ const JobManagement = ({ onSelectJob }) => {
                 <input
                     value={filterInput}
                     onChange={handleFilterChange}
-                    placeholder={"Search by employerId"}
+                    placeholder={"Search by company"}
                     className="w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <select
