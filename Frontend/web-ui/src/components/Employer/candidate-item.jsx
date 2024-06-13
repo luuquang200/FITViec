@@ -3,7 +3,7 @@ import { Mail} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PropTypes from "prop-types";
 
-const CandidateItem = ({ candidate }) => {
+const CandidateItem = ({ candidate , statusOptions}) => {
   return (
     <tr className="border-t">
       <td className="p-2 flex items-center">
@@ -36,7 +36,7 @@ const CandidateItem = ({ candidate }) => {
       <td className="p-2">
         <Link to={`/cv-detail/${candidate.jobSeekerId}`}>
           <button className="text-blue-500 border border-blue-500 rounded px-2 py-1">
-            {candidate.applicationStatus}
+            {statusOptions[candidate.applicationStatus]}
           </button>
         </Link>
       </td>
@@ -57,5 +57,6 @@ CandidateItem.propTypes = {
       applyAt: PropTypes.string.isRequired,
       applicationStatus: PropTypes.string.isRequired,
     }).isRequired,
+    statusOptions: PropTypes.object.isRequired
   };
 export default CandidateItem;

@@ -28,7 +28,7 @@ const AdminDashboard = () => {
             case "job-management":
                 return <JobManagement onSelectJob={setSelectedJob} />;
             default:
-                return <JobManagement onSelectJob={setSelectedJob} />;
+                return <EmployerManagement />;
         }
     };
 
