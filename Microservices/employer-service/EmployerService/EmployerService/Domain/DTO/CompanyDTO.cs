@@ -27,7 +27,7 @@ namespace EmployerService.Domain.DTO
 		// constructor
 		public CompanyDto(Company company)
 		{
-			EmployerId = company.EmployerId;
+			EmployerId = company.CompanyId;
 			CompanyName = company.CompanyName;
 			CompanyType = company.CompanyType;
 			CompanySize = company.CompanySize;

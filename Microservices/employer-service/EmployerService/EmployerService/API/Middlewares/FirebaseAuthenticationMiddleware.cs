@@ -19,7 +19,16 @@ namespace EmployerService.API.Middlewares
 
 		public async Task InvokeAsync(HttpContext context)
 		{
-			if (context.Request.Path.StartsWithSegments("/uploads"))
+			var path = context.Request.Path.Value?.ToLower();
+
+			// List of paths to exclude from authentication
+			var excludedPaths = new List<string>
+			{
+				"/uploads",
+				"/employers/get-all",
+			};
+
+			if (excludedPaths.Any(p => path != null && path.Contains(path)))
 			{
 				await _next(context);
 				return;
