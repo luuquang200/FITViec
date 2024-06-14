@@ -209,7 +209,7 @@ namespace EmployerService.Domain.Services
 				}
 			};
 
-			var requestMessage = new HttpRequestMessage(HttpMethod.Put, $"{_jobServiceUrl}/update/{request.JobId}")
+			var requestMessage = new HttpRequestMessage(HttpMethod.Post, $"{_jobServiceUrl}/update/{request.JobId}")
 			{
 				Content = JsonContent.Create(jobRequest)
 			};
