@@ -23,7 +23,10 @@ export const doSignInWithGoogle = async () => {
             await setDoc(doc(db, "users", user.uid), {
                 role: "user",
                 email: user.email,
+                photoURL: user.photoURL,
                 displayName: user.displayName,
+                googleAuth: true,
+                state: "enable",
             });
         }
         return user;
