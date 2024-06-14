@@ -23,9 +23,11 @@ import React from "react";
 import Select from "react-select";
 import { toast } from "react-toastify"
 import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+
 import { useAuth } from "@/contexts/authContext";
-import { Input } from "../ui/input";
-import { useForm, Controller, set } from "react-hook-form";
+
+import { Input } from "../ui/input.jsx"
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { ClipLoader } from "react-spinners";
@@ -60,22 +62,27 @@ const EmployerProfile = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
   const { currentUser } = useAuth();
 
-  const [employerData, setEmployerData] = useState({});
-
+  const [companyName, setCompanyName] = useState("");
   const [companyType, setCompanyType] = useState(companyTypeData[0]);
   const [companySize, setCompanySize] = useState(companySizeData[0]);
+  const [country, setCountry] = useState("")
   const [workingDays, setWorkingDays] = useState(workingDaysData[0]);
   const [overtimePolicy, setOvertimePolicy] = useState(overtimePolicyData[0]);
   const [companyOverview, setCompanyOverview] = useState("");
   const [whyLoveWorkingHere, setWhyLoveWorkingHere] = useState("");
+  const [keyskills, setKeyskills] = useState("")
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [location, setLocation] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
   const onSubmit = (data) => {
     // Here, you can send the form data to the server using fetch or Axios
+    data.employerId = currentUser.uid;
     data.companyType = companyType.value;
     data.companySize = companySize.value;
     data.workingDays = workingDays.value;
@@ -83,6 +90,7 @@ const EmployerProfile = () => {
     data.companyOverview = companyOverview;
     data.whyLoveWorkingHere = whyLoveWorkingHere;
     console.log(data);
+    updateProfile(data)
   }
 
   const getEmployerInfo = async () => {
@@ -99,9 +107,16 @@ const EmployerProfile = () => {
       );
       if (response.status === 200) {
         const data = await response.json();
-        setEmployerData(data);
-        console.log("data:", data);
-        console.log("employerData: ", employerData)
+        setCompanyName(data?.companyName)
+        setCompanyOverview(data?.companyOverview)
+        setCompanySize(companySizeData.filter((value) => value.value === data?.companySize)[0])
+        setCompanyType(companyTypeData.filter((value) => value.value.includes(data?.companyType))[0])
+        setWorkingDays(workingDaysData.filter((value) => value.value === data?.workingDays)[0])
+        setCountry(data?.country)
+        setKeyskills(data?.keySkills)
+        setLocation(data?.location)
+        setOvertimePolicy(overtimePolicyData.filter((value) => value.value.includes(data?.overtimePolicy))[0])
+        setWhyLoveWorkingHere(data?.whyLoveWorkingHere)
       } else {
         toast.error("Something happened while fetching the data")
       }
@@ -110,10 +125,66 @@ const EmployerProfile = () => {
     }
   };
 
+  const updateProfile = async (data) => {
+    try {
+      const response = await fetch(
+        `https://employer-service-otwul2bnna-uc.a.run.app/employer/update`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${currentUser?.accessToken}`,
+          },
+          body: JSON.stringify(data)
+        }
+      )
+      if (response.status === 200) {
+        toast.success("Profile updated successfully")
+      } else {
+        toast.error("Update profile failed")
+      }
+    } catch {
+      toast.error("Something happened while updating profile")
+    }
+  }
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+    updateLogo()
+};
+
+  const updateLogo = async () => {
+const formData = new FormData();
+  formData.append('file', selectedFile);
+
+  try {
+    const response = await fetch(
+`https://employer-service-otwul2bnna-uc.a.run.app/images/upload`, {
+        method: 'POST',
+        headers: {
+          Authorization: `${currentUser?.accessToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      body: formData,
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const link = data.link
+      console.log('File link:', link);
+    } else {
+      toast.error('Failed to convert file to link');
+    }
+  } catch (error) {
+    toast.error('Error:', error);
+  }
+  }
+
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true)
       const res = await getEmployerInfo()
+      reset(res)
       setIsLoading(false)
     }
     fetchData()
@@ -131,8 +202,6 @@ const EmployerProfile = () => {
           />
         </div>
       ) : (
-
-
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="grid grid-cols-1 md:grid-cols-3 gap-4"
@@ -143,8 +212,8 @@ const EmployerProfile = () => {
                 type="text"
                 id="company_name"
                 {...register("companyName", { required: true })}
-                className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
-                placeholder=" "
+                  className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
+                  defaultValue={companyName}
               />
               <label
                 htmlFor="company_name"
@@ -174,9 +243,10 @@ const EmployerProfile = () => {
                       editor.editing.view.document.getRoot()
                     );
                   });
+                    editor.setData(companyOverview)
                 }}
                 editor={ClassicEditor}
-                data=""
+                data={companyOverview}
                 onChange={(event, editor) => {
                   setCompanyOverview(editor.getData());
                 }}
@@ -201,9 +271,10 @@ const EmployerProfile = () => {
                       editor.editing.view.document.getRoot()
                     );
                   });
+                  editor.setData(whyLoveWorkingHere)
                 }}
                 editor={ClassicEditor}
-                data=""
+                data={whyLoveWorkingHere}
                 onChange={(event, editor) => {
                   setWhyLoveWorkingHere(editor.getData());
                 }}
@@ -291,7 +362,7 @@ const EmployerProfile = () => {
                 id="country"
                 {...register("country", { required: true })}
                 className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
-                placeholder=" "
+                defaultValue={country}
               />
               <label
                 htmlFor="country"
@@ -381,7 +452,7 @@ const EmployerProfile = () => {
                 id="key_skills"
                 {...register("keySkills", { required: true })}
                 className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
-                placeholder=" "
+                defaultValue={keyskills}
               />
               <label
                 htmlFor="key_skills"
@@ -395,13 +466,14 @@ const EmployerProfile = () => {
               )}
             </div>
 
-            <div className="relative w-full border border-gray-300 rounded-lg bg-white px-3 pt-6 pb-2">
+            {/* <div className="relative w-full border border-gray-300 rounded-lg bg-white px-3 pt-6 pb-2">
               <Input
                 type="file"
                 id="logo_url"
                 {...register("logoUrl", { required: true })}
                 className="peer block w-full focus:outline-[4px] border-none focus:outline-green-200  focus:outline focus:outline-solid"
-                placeholder=" "
+                  placeholder=" "
+                  onChange={handleFileChange}
               />
               <label
                 htmlFor="logo_url"
@@ -413,7 +485,7 @@ const EmployerProfile = () => {
             </div>
             {errors.logoUrl && (
               <span className="text-red-600 px-3">This field is required</span>
-            )}
+            )} */}
 
             <div className="relative mb-6">
               <input
@@ -421,7 +493,7 @@ const EmployerProfile = () => {
                 id="location"
                 {...register("location", { required: true })}
                 className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
-                placeholder=" "
+                defaultValue={location}
               />
               <label
                 htmlFor="location"
