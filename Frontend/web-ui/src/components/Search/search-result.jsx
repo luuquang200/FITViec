@@ -57,6 +57,7 @@ const SearchResult = () => {
     const keyword = searchParams.get("keyword").toLowerCase();
 
     const [jobs, setJobs] = useState([]);
+    const [firstjobs, setFirstJobs] = useState([]);
     const [selectedJob, setSelectedJob] = useState(null);
     // const [isSelectedJobSave, setIsSelectedJobSave] = useState(false);
 
@@ -67,12 +68,38 @@ const SearchResult = () => {
     const handleApplyFilters = (newFilters) => {
         console.log('Applied Filters:', newFilters);
         setFilters(newFilters);
+        ApplyFiltersToJobs();
         // Apply filters to your data or state
     };
+    const ApplyFiltersToJobs = () => {
+        if (filters) {
+            
+            if (filters.selectedLevel) {
+                console.log("Filter Level: " + filters.selectedLevel);
+                const filterJobs = jobs.filter(job => {
+                    console.log("Job level: " + job.level);
+                    return filters.selectedLevel.some(level => job.level.includes(level));
+                });
+                console.log("Filter Jobs: ", filterJobs);
+                setJobs(filterJobs);
+            }
+            if (filters.selectedWorkingModel) {
+                console.log("Filter selectedWorkingModel: " + filters.selectedWorkingModel);
+                const filterJobs = jobs.filter(job => {
+                    console.log("Job Working Model: " + job.working_model);
+                    return filters.selectedWorkingModel.some(workingModel => job.working_model.includes(workingModel));
+                });
+                console.log("Filter Jobs: ", filterJobs);
+                setJobs(filterJobs);
+            }
+           
+        }
 
+    };
     const handleResetFilters = () => {
         console.log('Filters reset');
         setFilters(null);
+        setJobs(firstjobs);
         // Reset filters in your data or state
     };
 
@@ -130,6 +157,7 @@ const SearchResult = () => {
                     currentUser,
                 );
                 setJobs(updatedData);
+                setFirstJobs(updatedData);
                 if (!selectedJob && updatedData.length > 0)
                     setSelectedJob(updatedData[0]);
             } catch (error) {
