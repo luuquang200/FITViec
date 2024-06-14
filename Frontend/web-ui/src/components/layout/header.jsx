@@ -211,7 +211,7 @@ const Header = () => {
                         <Button
                             variant="link"
                             onClick={() => {
-                                navigate("/employer");
+                                navigate("/for-employers");
                             }}
                             className="h-min p-0 text-white hover:no-underline"
                         >

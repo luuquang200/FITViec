@@ -5,7 +5,11 @@ import { useAuth } from "../../contexts/authContext";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ChevronLeft } from 'lucide-react';
 
-
+const statusOptions = {
+  'in_review': 'CV received' ,
+  'accepted': 'Accepted',
+  'rejected': 'Rejected'
+};
 const applicationDto = {
   "applicationId": "557aeef1-134e-4f00-afe2-e929560c9920",
   "employerId": "hansentechnologies",
@@ -29,7 +33,6 @@ const CVViewer = () => {
   const {applicationId} = useParams();
   const [applicationData, setApplicationData] = useState(applicationDto);
   const [isLoading, setIsLoading] = useState(false);
-  const [status, setStatus] = useState(false);
   const { currentUser } = useAuth();
 
   console.log("applicationId: ", applicationId);
@@ -54,10 +57,10 @@ const CVViewer = () => {
   useEffect(()=>{
     //fetchApplicationData(applicationId);
     console.log("applicationData", applicationData);
-  },[status]);
+  },[]);
 
-  const copyCodeToClipboard = (id) => {
-    navigator.clipboard.writeText(id);
+  const copyCodeToClipboard = () => {
+    navigator.clipboard.writeText(applicationData?.jobSeekerId);
     toast.success("Copy successfully!")
   };
   
@@ -73,9 +76,8 @@ const CVViewer = () => {
 
   const updateApplicationStatus = async (newStatus) => {
     if (!applicationData) return;
-    //update applicant status (need verify employerId <-> currentUser.uid)
     try {
-      // const response = await fetch(`http://localhost:1200/application/${newStatus}/${applicationId}`, {
+      // const response = await fetch(`https://application-service-otwul2bnna-uc.a.run.app/application/${newStatus}/${applicationId}`, {
       //   method: 'POST',
       //   headers: {
       //     'Content-Type': 'application/json',
@@ -88,8 +90,9 @@ const CVViewer = () => {
 
       setApplicationData((prevData) => ({
         ...prevData,
-        status: newStatus,
+        applicationStatus: newStatus + "ed",
       }));
+
 
       toast.success(`CV status has been updated to "${newStatus}"`);
     } catch (error) {
@@ -142,13 +145,13 @@ const CVViewer = () => {
           <div className="mb-4">
             <div className="font-semibold mb-2">Change CV status : </div>
             <div className="flex items-center justify-between">
-              <button onClick={() => updateApplicationStatus('accepted')} className="bg-green-100 text-green-700 w-1/2 py-2 rounded mr-2">Interview</button>
+              <button onClick={() => updateApplicationStatus('accepted')} className="bg-green-100 text-green-700 w-1/2 py-2 rounded mr-2">Accept</button>
               <button onClick={() => updateApplicationStatus('rejected')} className="bg-red-100 text-red-700 w-1/2 py-2 rounded">Reject</button>
             </div>
           </div>
           <div className="mb-4 flex">
             <div className="font-semibold mb-2">CV status:</div>
-            <span className="text-gray-600 ml-4">{applicationData.applicationStatus}</span>
+            <span className="text-gray-600 ml-4">{statusOptions[applicationData.applicationStatus]}</span>
           </div>
           <div>
             
