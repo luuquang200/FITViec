@@ -65,4 +65,9 @@ public class Application {
   public void formatData() {
     this.setApplyAt(this.changeApplyTimeFormat(this.getApplyAt()));
   }
+  public void updateJobInfo(JobInfo newInfo) {
+    if (!this.getJobInfo().getJobTitle().equals(newInfo.getJobTitle())) {
+      this.getJobInfo().setJobTitle(newInfo.getJobTitle());
+    }
+  }
 }
