@@ -69,6 +69,7 @@ const CustomerLogin = () => {
                         password,
                     ).then(async (userCred) => {
                         const user = userCred.user;
+                        console.log(user);
 
                         // Lấy thông tin từ Firestore
                         const userDoc = await getDoc(
