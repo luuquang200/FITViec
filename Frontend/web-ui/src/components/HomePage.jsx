@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 // Components
 import SearchSection from "@/components/layout/search-section";
 import TopEmployerSection from "@/components/layout/top-employer-section";
-import ForEmployerSection from "@/components/layout/for-employer-section";
+import UserProFileSection from "@/components/layout/user-profile-section";
 
 function HomePage() {
-    const { isRegistered, currentUser } = useAuth();
+    const { userLoggedIn, currentUser } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,10 +24,10 @@ function HomePage() {
     return (
         <>
             <SearchSection />
-            <TopEmployerSection />
 
-            {/* {(!isRegistered || currentUser?.role === "user") && <ForEmployerSection />} */}
-            {!isRegistered && <ForEmployerSection />}
+            {userLoggedIn && <UserProFileSection />}
+
+            <TopEmployerSection />
         </>
     );
 }

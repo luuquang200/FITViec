@@ -1,9 +1,10 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
+import { toast } from "react-toastify";
 
 const ProtectedRoute = ({ children, allowedRole = "none" }) => {
-    const { isRegistered, currentUser } = useAuth();
+    const { userLoggedIn, currentUser } = useAuth();
 
     if (currentUser?.role !== allowedRole) {
         if (currentUser?.role === "admin") {

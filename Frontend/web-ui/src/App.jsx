@@ -36,7 +36,7 @@ import EmployeeJobRecent from "./components/Employee/employee-job-recent";
 import EmployeeJobApplied from "./components/Employee/employee-job-applied";
 import ProfileEmployer from "./components/profile/profile-employer";
 
-import ProtectedRoute from "@/components/ProtectedRoute";
+import ProtectedRoute from "@/components/protected-route";
 
 function App() {
     return (
@@ -80,23 +80,53 @@ function App() {
                     path="/job-detail-guest"
                     element={<JobDetailGuestPage />}
                 />
-                <Route path="/profile-cv" element={<ProfileManagement />} />
+                <Route
+                    path="/profile-cv"
+                    element={
+                        <ProtectedRoute allowedRole="user">
+                            <ProfileManagement />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route
                     path="/profile-cv/manage-cv"
-                    element={<ProfileManagementCv />}
+                    element={
+                        <ProtectedRoute allowedRole="user">
+                            <ProfileManagementCv />
+                        </ProtectedRoute>
+                    }
                 />
                 <Route
                     path="/profile-cv/job-preferences"
-                    element={<ProfileManagementJob />}
+                    element={
+                        <ProtectedRoute allowedRole="user">
+                            <ProfileManagementJob />
+                        </ProtectedRoute>
+                    }
                 />
-                <Route path="/my-jobs/" element={<EmployeeJobManagement />} />
+                <Route
+                    path="/my-jobs/"
+                    element={
+                        <ProtectedRoute allowedRole="user">
+                            <EmployeeJobManagement />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route
                     path="/my-jobs/applied"
-                    element={<EmployeeJobApplied />}
+                    element={
+                        <ProtectedRoute allowedRole="user">
+                            <EmployeeJobApplied />
+                        </ProtectedRoute>
+                    }
                 />
                 <Route
                     path="/my-jobs/recent-viewed"
-                    element={<EmployeeJobRecent />}
+                    element={
+                        <ProtectedRoute allowedRole="user">
+                            <EmployeeJobRecent />
+                        </ProtectedRoute>
+                    }
                 />
                 <Route
                     path="/verify_email"

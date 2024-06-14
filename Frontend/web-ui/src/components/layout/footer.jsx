@@ -26,8 +26,8 @@ const aboutUsHeadings = [
     { title: "FAQ", link: "/" },
 ];
 const yourCareerHeadings = [
-    { title: "Your CV", link: "/profile-cv" },
-    { title: "Manage Your  CVs", link: "/profile-cv/manage-cv" },
+    { title: "Profile CV", link: "/profile-cv" },
+    { title: "Manage CVs", link: "/profile-cv/manage-cv" },
     { title: "Saved Jobs", link: "/my-jobs" },
     { title: "Applied Jobs", link: "/my-jobs/applied" },
 ];
