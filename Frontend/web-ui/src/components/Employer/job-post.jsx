@@ -61,9 +61,9 @@ const JobPost = () => {
               Job Title
               <span className="text-red-500 ml-1">*</span>
             </label>
-          {errors.job_title && (
-            <span className="px-3 text-red-600">This field is required</span>
-          )}
+            {errors.job_title && (
+              <span className="px-3 text-red-600">This field is required</span>
+            )}
           </div>
 
           <div className="relative mb-6">
@@ -145,11 +145,13 @@ const JobPost = () => {
           </div>
 
           <div className="relative mb-6">
-            <input
+            <textarea
+
+              rows={3}
               type="text"
               id="job_top_reasons"
               {...register("job_top_reasons", { required: true })}
-              className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
+              className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid whitespace-pre-wrap"
               placeholder=" "
             />
             <label
@@ -170,7 +172,7 @@ const JobPost = () => {
               type="text"
               id="job_benefits"
               {...register("job_benefits", { required: true })}
-              className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px] focus:outline-green-200 focus:outline focus:outline-solid"
+              className="whitespace-pre-wrap peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px] focus:outline-green-200 focus:outline focus:outline-solid"
               placeholder=" "
             />
             <label
