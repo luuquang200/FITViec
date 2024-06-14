@@ -366,6 +366,7 @@ const statusOptions = {
 
 const Candidates = ({onCVViewer}) => {
   const {currentUser} = useAuth();
+  console.log("currentUser: ", currentUser);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
   const [jobOptions, setJobOptions] = useState([]); //exapmle jobOptions
@@ -377,17 +378,33 @@ const Candidates = ({onCVViewer}) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const candidatesPerPage = 3;
+
+  const fetchCompanyData  = async ()=>{
+    try {
+      const response = await fetch(`https://employer-service-otwul2bnna-uc.a.run.app/employer/get`, {
+        headers: {
+          "Authorization": currentUser?.accessToken,
+        }
+      });
+      const data = await response.json(); 
+      console.log("data company: ", data);
+      return data.employerId;
+    } catch (error) {
+      console.error('Error fetching candidates:', error);
+      return null;
+    } 
+  }
   const fetchCandidates = async (employerId) => {
     setIsLoading(true);
     try {
-      // const response = await fetch(`https://application-service-otwul2bnna-uc.a.run.app/application/by-employer/${employerId}`, {
-      //   headers: {
-      //     "Authorization": currentUser?.accessToken,
+      const response = await fetch(`https://application-service-otwul2bnna-uc.a.run.app/application/by-employer/${employerId}`, {
+        headers: {
+          "Authorization": currentUser?.accessToken,
           
-      //   }
-      // });
-      // const data = await response.json(); 
-      const data = exCandidates;
+        }
+      });
+      const data = await response.json(); 
+      //const data = exCandidates;
       console.log("data candidate: ", data);
       setCandidates(data);
       const exJobOptions = [];
@@ -411,7 +428,13 @@ const Candidates = ({onCVViewer}) => {
   };
 
   useEffect(() => {
-    fetchCandidates(currentUser?.uid);
+    const getEmployerIdAndFetchCandidates = async () => {
+      const employerId = await fetchCompanyData();
+      if (employerId) {
+        fetchCandidates(employerId);
+      }
+    }
+    getEmployerIdAndFetchCandidates();
   }, []);
 
   useEffect(()=>{

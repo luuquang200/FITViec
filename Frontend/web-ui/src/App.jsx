@@ -70,7 +70,7 @@ function App() {
                 />
                 <Route path="/sign_in" element={<SignIn />} />
                 <Route path="/sign_up" element={<SignUp />} />
-                <Route path="/job-detail" element={<JobDetailGuestPage />} />
+                <Route path="/job-detail/:jobId" element={<JobDetailGuestPage />} />
                 <Route
                     path="/form-apply-job/:jobId"
                     element={<FormApplyJob />}

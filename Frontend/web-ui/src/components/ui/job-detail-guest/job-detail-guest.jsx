@@ -7,6 +7,7 @@ import JobCardSimilar from "@/components/ui/job-detail-guest/job-card";
 import { useAuth } from "../../../contexts/authContext";
 import { toast } from "react-toastify";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useParams } from "react-router-dom";
 
 // const job_detail = {
 //   "employerId": "hansentechnologies",
@@ -39,6 +40,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 //   }
 // }
 const JobDetailGuestPage = () => {
+  const {jobId} = useParams();
   const [isSticky, setIsSticky] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [jobData, setJobData] = useState(null);
@@ -67,8 +69,9 @@ const JobDetailGuestPage = () => {
     }
   };
   useEffect(()=>{
-    
-    fetchJobData("5fa75d44-28f8-478a-ae5f-297546abeb9e");
+    fetchJobData(jobId);
+    //fetchJobData("f50d430a-3e5c-4a21-be2b-075b3a790e13");
+    //fetchJobData("ce4a22d5-34cd-44aa-ab8e-cd90fd59b96b");
 
     const handleScroll = () => {
       if (window.scrollY > 800) {
