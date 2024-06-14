@@ -68,38 +68,68 @@ const SearchResult = () => {
     const handleApplyFilters = (newFilters) => {
         console.log('Applied Filters:', newFilters);
         setFilters(newFilters);
-        ApplyFiltersToJobs();
+
         // Apply filters to your data or state
     };
+    /*
     const ApplyFiltersToJobs = () => {
         if (filters) {
-            
+            setJobs(firstjobs);
+            firstjobs.filter((job)=>{
+                console.log("Fisrt Job id: " + job.id);
+            });
+            jobs.filter((job)=>{
+                console.log("Job id: " + job.id);
+            });
             if (filters.selectedLevel) {
-                console.log("Filter Level: " + filters.selectedLevel);
+              //  console.log("Filter Level: " + filters.selectedLevel);
                 const filterJobs = jobs.filter(job => {
-                    console.log("Job level: " + job.level);
+              //      console.log("Job level: " + job.level);
                     return filters.selectedLevel.some(level => job.level.includes(level));
                 });
-                console.log("Filter Jobs: ", filterJobs);
+              //  console.log("Filter Jobs: ", filterJobs);
                 setJobs(filterJobs);
             }
             if (filters.selectedWorkingModel) {
-                console.log("Filter selectedWorkingModel: " + filters.selectedWorkingModel);
+              //  console.log("Filter selectedWorkingModel: " + filters.selectedWorkingModel);
                 const filterJobs = jobs.filter(job => {
-                    console.log("Job Working Model: " + job.working_model);
+              //      console.log("Job Working Model: " + job.working_model);
                     return filters.selectedWorkingModel.some(workingModel => job.working_model.includes(workingModel));
                 });
-                console.log("Filter Jobs: ", filterJobs);
+              //  console.log("Filter Jobs: ", filterJobs);
                 setJobs(filterJobs);
             }
            
         }
 
+    };*/
+    const ApplyFiltersToJobs = () => {
+        if (!filters) {
+            setJobs(firstjobs);
+            return;
+        }
+
+        let filteredJobs = firstjobs;
+        if (filters.selectedLevel) {
+            filteredJobs = firstjobs.filter(job =>
+                filters.selectedLevel.some(level => job.level.includes(level))
+            );
+        }
+
+        if (filters.selectedWorkingModel) {
+            filteredJobs = firstjobs.filter(job =>
+                filters.selectedWorkingModel.some(workingModel => job.working_model.includes(workingModel))
+            );
+        }
+
+        setJobs(filteredJobs);
     };
+    useEffect(() => {
+        ApplyFiltersToJobs();
+    }, [filters]);
     const handleResetFilters = () => {
         console.log('Filters reset');
         setFilters(null);
-        setJobs(firstjobs);
         // Reset filters in your data or state
     };
 

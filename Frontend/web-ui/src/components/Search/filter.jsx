@@ -11,7 +11,7 @@ const FilterForm = ({ onApply, onReset }) => {
         'IT Outsourcing', 'IT Product', 'Headhunt',
         'IT Service and IT Consulting', 'Non-IT'
     ];
-    const workingModels = ['At office', 'Remote', 'Hybrid'];
+    const workingModels = ['At Office', 'Remote', 'Hybrid'];
 
     const handleToggleSelection = (item, setSelectedItems, selectedItems) => {
         setSelectedItems(
