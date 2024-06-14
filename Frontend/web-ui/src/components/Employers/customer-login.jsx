@@ -22,6 +22,8 @@ import { useNavigate, Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 
+import Logo from "../../assets/logo-fitviec-black.webp";
+
 const CustomerLogin = () => {
     const { userLoggedIn, setInSingUpInPage } = useAuth();
 
@@ -194,11 +196,7 @@ const CustomerLogin = () => {
                 <div className="h-full w-full">
                     <div className="mx-auto mb-10 mt-[16vh]  max-w-[580px] ">
                         <div className="flex items-center gap-x-3">
-                            <img
-                                src="https://itviec.com/assets/logo_black_text-04776232a37ae9091cddb3df1973277252b12ad19a16715f4486e603ade3b6a4.png"
-                                className="w-24"
-                                alt=""
-                            />
+                            <img src={Logo} className="w-24" alt="" />
                             <h3 className="text-2xl font-bold">
                                 CUSTOMER ADMIN SITE
                             </h3>
