@@ -17,6 +17,8 @@ import {
     FaPhoneAlt,
     FaLocationArrow,
     FaGoogle,
+    FaLink,
+    FaUserFriends,
 } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { ClipLoader, MoonLoader } from "react-spinners"; // Import the ClipLoader
@@ -44,8 +46,8 @@ const UserManagement = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [filterInput, setFilterInput] = useState("");
 
-    const [approving, setApproving] = useState(false);
-    const [rejecting, setRejecting] = useState(false);
+    const [enabling, setEnabling] = useState(false);
+    const [disabling, setDisabling] = useState(false);
 
     const data = useMemo(() => users, [users]);
 
@@ -71,7 +73,6 @@ const UserManagement = () => {
 
             // Set the state with the list of users
             setUsers(usersList);
-            console.log(usersList);
         } catch (error) {
             console.error("Error getting users: ", error);
         } finally {
@@ -149,22 +150,22 @@ const UserManagement = () => {
     );
 
     const handleEnable = async (id) => {
-        if (window.confirm("Are you sure you want to approve?")) {
-            setApproving(true);
+        if (window.confirm("Are you sure you want to enable this account ?")) {
+            setEnabling(true);
             try {
                 // Create a reference to the document
                 const userRef = doc(db, "users", id);
 
                 // Update the status field
-                await updateDoc(userRef, { status: "approved" });
-                toast.success("Approve account user successfully ! ");
+                await updateDoc(userRef, { state: "enable" });
+                toast.success("Enable account user successfully ! ");
                 setSelectedUser(null);
                 // Call getUsers again to update the list after approval
                 getUsers();
             } catch (error) {
-                toast.error("Error approving user: ", error);
+                toast.error("Error enabling user: ", error);
             } finally {
-                setApproving(false);
+                setEnabling(false);
             }
         } else {
             return;
@@ -172,22 +173,22 @@ const UserManagement = () => {
     };
 
     const handleDisable = async (id) => {
-        if (window.confirm("Are you sure you want to reject?")) {
-            setRejecting(true);
+        if (window.confirm("Are you sure you want to disable this account?")) {
+            setDisabling(true);
             try {
                 // Create a reference to the document
                 const userRef = doc(db, "users", id);
 
                 // Update the status field
-                await updateDoc(userRef, { status: "rejected" });
-                toast.success("Reject account user successfully ! ");
+                await updateDoc(userRef, { state: "disable" });
+                toast.success("Disable account user successfully ! ");
                 setSelectedUser(null);
                 // Call getUsers again to update the list after approval
                 getUsers();
             } catch (error) {
-                toast.error("Error rejecting user: ", error);
+                toast.error("Error disabling user: ", error);
             } finally {
-                setRejecting(false);
+                setDisabling(false);
             }
         } else {
             return;
@@ -413,7 +414,7 @@ const UserManagement = () => {
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
-                                <FaCalendarAlt className="mr-2 text-gray-600" />
+                                <FaLink className="mr-2 text-gray-600" />
                                 <strong>Personal Link:</strong>
                                 <span className="ml-2">
                                     {selectedUser.personalLink
@@ -422,7 +423,7 @@ const UserManagement = () => {
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
-                                <FaCalendarAlt className="mr-2 text-gray-600" />
+                                <FaUserFriends className="mr-2 text-gray-600" />
                                 <strong>Role:</strong>
                                 <span className="ml-2">
                                     {capitalized(selectedUser?.role)}
@@ -439,7 +440,16 @@ const UserManagement = () => {
                             </div>
                         </div>
                         <div className="mt-6 ">
-                            {selectedUser?.state === "enable" ? (
+                            {selectedUser?.googleAuth ? (
+                                <div className="flex justify-end ">
+                                    <button
+                                        onClick={() => setSelectedUser(null)}
+                                        className="flex items-center justify-center rounded-lg bg-slate-700 px-4 py-2 text-white transition duration-150 hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-50"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            ) : selectedUser?.state === "enable" ? (
                                 <div className="flex justify-end space-x-4">
                                     <div className="flex justify-end ">
                                         <button
@@ -455,9 +465,11 @@ const UserManagement = () => {
                                         onClick={() =>
                                             handleDisable(selectedUser?.id)
                                         }
+                                        disabled={disabling}
                                         className="flex items-center justify-center rounded-lg bg-red-500 px-4 py-2 text-white transition duration-150 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
                                     >
-                                        <FaTimes className="mr-2" /> Disable
+                                        <FaTimes className="mr-2" />
+                                        {disabling ? "Disabling..." : "Disable"}
                                     </button>
                                 </div>
                             ) : (
@@ -476,9 +488,11 @@ const UserManagement = () => {
                                         onClick={() =>
                                             handleEnable(selectedUser?.id)
                                         }
+                                        disabled={enabling}
                                         className="flex items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-white transition duration-150 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
                                     >
-                                        <FaTimes className="mr-2" /> Enable
+                                        <FaTimes className="mr-2" />
+                                        {enabling ? "Enabling..." : "Enable"}
                                     </button>
                                 </div>
                             )}
