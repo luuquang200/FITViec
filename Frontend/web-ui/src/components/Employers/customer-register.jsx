@@ -97,6 +97,8 @@ const CustomerRegister = () => {
                     company: companyName,
                     workLocation: workLocation,
                     registrationDate: registrationDate,
+                    googleAuth: false,
+                    state: "enable",
                     status: "pending",
                     role: "employer", // role employer
                 });

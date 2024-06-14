@@ -69,11 +69,11 @@ const SignIn = () => {
                             toast.success(
                                 "Successfully authenticated from Email & Password account.",
                             );
-                            if (role === "admin")
-                                navigate(`/admin`)
-                            else
-                            // Điều hướng tới home sau khi đăng nhập  thành công
+                            if (role === "admin") {
+                                navigate(`/admin`);
+                            } else {
                                 navigate(`/`);
+                            }
                         } else {
                             toast.error(
                                 " Please verify your email before login",

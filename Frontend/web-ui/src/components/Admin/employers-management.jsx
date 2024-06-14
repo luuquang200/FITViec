@@ -341,7 +341,7 @@ const EmployerManagement = () => {
                                 <FaPhoneAlt className="mr-2 text-gray-600" />
                                 <strong>Personal Phone Number:</strong>
                                 <span className="ml-2">
-                                    {selectedEmployer?.phoneNumber}
+                                    {selectedEmployer?.phone}
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
