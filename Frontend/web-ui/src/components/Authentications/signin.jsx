@@ -69,7 +69,6 @@ const SignIn = () => {
                             toast.success(
                                 "Successfully authenticated from Email & Password account.",
                             );
-                            saveToken(user.accessToken);
                             if (role === "admin")
                                 navigate(`/admin`)
                             else

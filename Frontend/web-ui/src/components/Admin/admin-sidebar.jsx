@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/authContext";
 
 const AdminSidebar = ({ onTabChange }) => {
     const { currentUser } = useAuth();
-    const [activeTab, setActiveTab] = useState("employer-management");
+    const [activeTab, setActiveTab] = useState("user-management");
 
     const handleTabChange = (tab) => {
         setActiveTab(tab);
@@ -37,6 +37,13 @@ const AdminSidebar = ({ onTabChange }) => {
                 </div>
             </div>
             <ul className="space-y-3">
+                <li
+                    className={getTabClassName("user-management")}
+                    onClick={() => handleTabChange("user-management")}
+                >
+                    <User className="mr-4 h-5 w-5" />
+                    <span className="flex-grow">Users Management</span>
+                </li>
                 <li
                     className={getTabClassName("employer-management")}
                     onClick={() => handleTabChange("employer-management")}
