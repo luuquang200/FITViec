@@ -78,7 +78,15 @@ const CustomerLogin = () => {
                         const userData = userDoc.data();
                         const { status } = userData;
                         if (status === "approved") {
-                            toast.success("Welcome to FITviec for employers ");
+                            if (userData.state === "enable") {
+                                toast.success(
+                                    "Welcome to FITviec for employers ",
+                                );
+                            } else {
+                                toast.error(
+                                    "Oops ! Your account has been locked by an administrator.",
+                                );
+                            }
                         } else if (status === "rejected") {
                             toast.error(
                                 "Oops ! Your application has been rejected by admin ! please contact us again ! ",

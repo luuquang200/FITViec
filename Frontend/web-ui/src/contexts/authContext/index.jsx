@@ -33,28 +33,14 @@ export function AuthProvider({ children }) {
                     provider.providerId === GoogleAuthProvider.PROVIDER_ID,
             );
             setIsGoogleUser(isGoogle);
+            // User bình thường đăng nhập
             if (user.emailVerified) {
                 // Fetch the user's role from Firestore
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 const userData = userDoc.exists() ? userDoc.data() : {};
 
-                const updatedUser = {
-                    ...user,
-                    ...userData,
-                };
-                setCurrentUser(updatedUser);
-
-                const isEmail = user.providerData.some(
-                    (provider) => provider.providerId === "password",
-                );
-                setIsEmailUser(isEmail);
-
-                setUserLoggedIn(true);
-            } else {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                const userData = userDoc.exists() ? userDoc.data() : {};
-
-                if (userData.status === "approved") {
+                // Tài khoản không bị khóa
+                if (userData.state === "enable") {
                     const updatedUser = {
                         ...user,
                         ...userData,
@@ -67,6 +53,32 @@ export function AuthProvider({ children }) {
                     setIsEmailUser(isEmail);
 
                     setUserLoggedIn(true);
+                } else {
+                    // Nếu tài khoản bị khóa
+                    await auth.signOut();
+                }
+                // Employer đăng nhập
+            } else {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                const userData = userDoc.exists() ? userDoc.data() : {};
+                if (userData.status === "approved") {
+                    if (userData.state === "enable") {
+                        const updatedUser = {
+                            ...user,
+                            ...userData,
+                        };
+                        setCurrentUser(updatedUser);
+
+                        const isEmail = user.providerData.some(
+                            (provider) => provider.providerId === "password",
+                        );
+                        setIsEmailUser(isEmail);
+
+                        setUserLoggedIn(true);
+                    } else {
+                        // Nếu tài khoản bị khóa
+                        await auth.signOut();
+                    }
                 } else {
                     // If email is not verified & status employer === approved && === rejected, sign out the user and prompt verification
                     await auth.signOut();

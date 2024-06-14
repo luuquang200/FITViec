@@ -383,17 +383,21 @@ const EmployerManagement = () => {
                                         onClick={() =>
                                             handleApprove(selectedEmployer?.id)
                                         }
+                                        disabled={approving}
                                         className="flex items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-white transition duration-150 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
                                     >
-                                        <FaCheck className="mr-2" /> Approve
+                                        <FaCheck className="mr-2" />{" "}
+                                        {approving ? "Approving..." : "Approve"}
                                     </button>
                                     <button
                                         onClick={() =>
                                             handleReject(selectedEmployer?.id)
                                         }
+                                        disabled={rejecting}
                                         className="flex items-center justify-center rounded-lg bg-red-500 px-4 py-2 text-white transition duration-150 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
                                     >
-                                        <FaTimes className="mr-2" /> Reject
+                                        <FaTimes className="mr-2" />{" "}
+                                        {rejecting ? "Rejecting..." : "Reject"}
                                     </button>
                                 </div>
                             ) : selectedEmployer?.status === "approved" ? (
@@ -413,9 +417,11 @@ const EmployerManagement = () => {
                                         onClick={() =>
                                             handleApprove(selectedEmployer?.id)
                                         }
+                                        disabled={approving}
                                         className="flex items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-white transition duration-150 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
                                     >
-                                        <FaCheck className="mr-2" /> Approve
+                                        <FaCheck className="mr-2" />{" "}
+                                        {approving ? "Approving..." : "Approve"}
                                     </button>
                                 </div>
                             )}
