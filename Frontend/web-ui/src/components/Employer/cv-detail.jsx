@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from "../../contexts/authContext";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ChevronLeft } from 'lucide-react';
-
+import {PropTypes} from 'prop-types'
 const statusOptions = {
   'in_review': 'CV received' ,
   'accepted': 'Accepted',
   'rejected': 'Rejected'
 };
-const applicationDto = {
+const applicationDto2 = {
   "applicationId": "557aeef1-134e-4f00-afe2-e929560c9920",
   "employerId": "hansentechnologies",
   "jobId": "5fa75d44-28f8-478a-ae5f-297546abeb9e",
@@ -29,30 +29,30 @@ const applicationDto = {
   }
 }
 
-const CVViewer = () => {
-  const {applicationId} = useParams();
+const CVViewer = ({onTabChange, applicationDto}) => {
+  //const {applicationId} = useParams();
   const [applicationData, setApplicationData] = useState(applicationDto);
   const [isLoading, setIsLoading] = useState(false);
   const { currentUser } = useAuth();
 
-  console.log("applicationId: ", applicationId);
+  console.log("applicationDto: ", applicationData);
   console.log("currentUser: ", currentUser);
   //Dữ liệu liên quan đến việc ứng tuyển công việc
-  const fetchApplicationData = async (applicationId) => { 
-    setIsLoading(true);
-    try {
-      const response = await fetch(`https://application-service-otwul2bnna-uc.a.run.app/application/${applicationId}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      setApplicationData(data);
-    } catch (error) {
-      console.error('Error fetching Applicant data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const fetchApplicationData = async (applicationId) => { 
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await fetch(`https://application-service-otwul2bnna-uc.a.run.app/application/${applicationId}`);
+  //     if (!response.ok) {
+  //       throw new Error("Network response was not ok");
+  //     }
+  //     const data = await response.json();
+  //     setApplicationData(data);
+  //   } catch (error) {
+  //     console.error('Error fetching Applicant data:', error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   useEffect(()=>{
     //fetchApplicationData(applicationId);
@@ -87,7 +87,10 @@ const CVViewer = () => {
       // if (!response.ok) {
       //   throw new Error("Failed to update status");
       // }
-
+      console.log("preData: ", {
+        ...applicationData,
+        applicationStatus: newStatus + "ed",
+      });
       setApplicationData((prevData) => ({
         ...prevData,
         applicationStatus: newStatus + "ed",
@@ -118,11 +121,10 @@ const CVViewer = () => {
   return (
     <>
     <div className="h-[40px] ">
-        <Link to="/employer" className="ml-8 mt-6 flex  "> 
-        <button className="flex items-center rounded-lg bg-red-600 px-3 py-2 text-white disabled:opacity-50">
+        <button onClick={() => onTabChange('cv-management')} className="flex items-center rounded-lg bg-red-600 px-3 py-2 text-white disabled:opacity-50">
           <ChevronLeft className="h-5 w-5" />
           <span className="ml-2">Back</span>
-        </button></Link>
+        </button>
     </div>
     <div className="flex p-4 h-screen">
       {/* Left Section for PDF Content */}
@@ -145,8 +147,20 @@ const CVViewer = () => {
           <div className="mb-4">
             <div className="font-semibold mb-2">Change CV status : </div>
             <div className="flex items-center justify-between">
-              <button onClick={() => updateApplicationStatus('accepted')} className="bg-green-100 text-green-700 w-1/2 py-2 rounded mr-2">Accept</button>
-              <button onClick={() => updateApplicationStatus('rejected')} className="bg-red-100 text-red-700 w-1/2 py-2 rounded">Reject</button>
+              <button 
+                disabled={applicationData.applicationStatus === 'accepted'} 
+                onClick={() => updateApplicationStatus('accept')} 
+                className={`w-1/2 py-2 rounded mr-2 ${applicationData.applicationStatus === 'accepted'
+                  ? 'bg-green-100 text-green-700 cursor-not-allowed' : 'bg-green-100 text-green-700 hover:bg-green-200'}`}>
+                Accept
+              </button>
+              <button 
+                disabled={applicationData.applicationStatus === 'rejected'} 
+                onClick={() => updateApplicationStatus('reject')} 
+                className={`w-1/2 py-2 rounded mr-2 ${applicationData.applicationStatus === 'rejected'
+                  ? 'bg-red-100 text-red-700 cursor-not-allowed' : 'bg-red-100 text-red-700 hover:bg-red-200'}`}>
+                  Reject
+              </button>
             </div>
           </div>
           <div className="mb-4 flex">
@@ -166,6 +180,9 @@ const CVViewer = () => {
     </>
   );
 }
-
+CVViewer.propTypes = {
+  onTabChange: PropTypes.func,
+  applicationDto: PropTypes.object
+}
 
 export default CVViewer;
