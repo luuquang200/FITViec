@@ -1,17 +1,16 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { LayoutDashboard, FileText, CircleUserRound } from 'lucide-react';
 import { useAuth } from "../../contexts/authContext";
 import PropTypes from "prop-types"
 const EmployerSidebar = ({ onTabChange }) => {
-  const { currentUser} = useAuth();
+  const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('dashboard');
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     onTabChange(tab);
   };
   const getTabClassName = (tab) => (
-    `flex items-center cursor-pointer p-2 rounded ${
-      activeTab === tab ? 'text-primary bg-red-100' : 'text-gray-800 hover:bg-gray-200'
+    `flex items-center cursor-pointer p-2 rounded ${activeTab === tab ? 'text-primary bg-red-100' : 'text-gray-800 hover:bg-gray-200'
     }`
   );
   return (
@@ -30,7 +29,7 @@ const EmployerSidebar = ({ onTabChange }) => {
           </span>
           <span className="flex-grow">Dashboard</span>
         </li>
-        <li className={getTabClassName('job-post')} onClick={() => handleTabChange('job-post')}>
+        <li className={getTabClassName('job-management')} onClick={() => handleTabChange('job-management')}>
           <span className="mr-4">
             <FileText />
           </span>

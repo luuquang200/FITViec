@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify"
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/authContext";
 import { Button } from "@/components/ui/button";
@@ -26,8 +27,16 @@ import { ClipLoader } from "react-spinners";
 
 const JobList = () => {
   const { currentUser } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [jobs, setJobs] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
+  const [jobDescription, setJobDescription] = useState("");
+  const [jobResponsibility, setJobResponsibility] = useState("");
+  const [jobRequirements, setJobRequirements] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const getJobList = async () => {
@@ -43,9 +52,13 @@ const JobList = () => {
         }
       );
       if (response.status === 200) {
-        return response.json().then((data) => {
-          return data;
+        const result = response.json().then((data) => {
+          console.log(data)
+          setJobs(data);
+          setSearchResults(data);
         });
+      } else {
+
       }
     } catch {
       console.log("Error");
@@ -66,13 +79,44 @@ const JobList = () => {
       );
       if (response.status === 200) {
         return response.json().then((data) => {
+          toast.success("Success!")
           return data;
         });
+      } else {
+        toast.error("An error occurred while trying to delete the job. Please try again")
       }
     } catch {
       console.log("Error");
     }
   };
+
+  const updateJob = async (data) => {
+    try {
+      const response = await fetch(
+        `https://employer-service-otwul2bnna-uc.a.run.app/employer/update-job`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${currentUser.accessToken}`,
+          },
+          body: JSON.stringify(data)
+        }
+      );
+      if (response.status === 200) {
+        return response.json().then((data) => {
+          toast.success("Update successfully!")
+          return data;
+        });
+      } else {
+        return response.json().then((data) => {
+          toast.error(data.title)
+        })
+      }
+    } catch {
+      console.log("Error");
+    }
+  }
 
   const handleSearch = (value) => {
     const results = jobs.filter((item) => {
@@ -89,28 +133,19 @@ const JobList = () => {
     await deleteJob(currentUser.uid, id);
   };
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const [jobDescription, setJobDescription] = useState("");
-  const [jobResponsibility, setJobResponsibility] = useState("");
-  const [jobRequirements, setJobRequirements] = useState("");
-
-  const onSubmit = (data) => {
-    data.job_description = jobDescription;
-    data.job_responsibility = jobResponsibility;
-    data.job_requirements = jobRequirements;
-    console.log(data);
+  const onSubmit = (data, id) => {
+    data.jobId = id
+    data.employerId = currentUser.uid
+    data.jobDescription = jobDescription;
+    data.jobResponsibility = jobResponsibility;
+    data.jobRequirement = jobRequirements;
+    updateJob(data)
   };
 
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
       const res = await getJobList();
-      setJobs(res);
-      setSearchResults(res);
       setIsLoading(false);
     }
     fetchData();
@@ -124,7 +159,7 @@ const JobList = () => {
             type="text"
             onInput={(e) => handleSearch(e.target.value)}
             placeholder="Search"
-            className="w-4/5 px-3 py-2 border rounded"
+            className="px-3 py-2 border rounded"
           />
         </div>
       </div>
@@ -166,8 +201,8 @@ const JobList = () => {
                     item.jobStatus === "approved"
                       ? "text-green-600"
                       : item.jobStatus === "pending"
-                      ? "text-gray-600"
-                      : "text-red-600"
+                        ? "text-gray-600"
+                        : "text-red-600"
                   }
                 >
                   {item.jobStatus}
@@ -189,7 +224,7 @@ const JobList = () => {
                             <input
                               type="text"
                               id="job_title"
-                              {...register("job_title", { required: true })}
+                              {...register("jobTitle", { required: true })}
                               className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px] focus:outline-green-200 focus:outline focus:outline-solid"
                               defaultValue={item.jobTitle}
                             />
@@ -200,7 +235,7 @@ const JobList = () => {
                               Job Title
                               <span className="text-red-500 ml-1">*</span>
                             </label>
-                            {errors.job_title && (
+                            {errors.jobTitle && (
                               <span className="px-3 text-red-600">
                                 This field is required
                               </span>
@@ -211,7 +246,7 @@ const JobList = () => {
                             <input
                               type="text"
                               id="job_location"
-                              {...register("job_location", { required: true })}
+                              {...register("jobLocation", { required: true })}
                               className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
                               defaultValue={item.jobLocation}
                             />
@@ -222,7 +257,7 @@ const JobList = () => {
                               Job Location
                               <span className="text-red-500 ml-1">*</span>
                             </label>
-                            {errors.job_location && (
+                            {errors.jobLocation && (
                               <span className="px-3 text-red-600">
                                 This field is required
                               </span>
@@ -232,7 +267,7 @@ const JobList = () => {
                             <input
                               type="text"
                               id="job_type"
-                              {...register("job_type", { required: true })}
+                              {...register("jobType", { required: true })}
                               className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
                               defaultValue={item.jobType}
                             />
@@ -243,7 +278,7 @@ const JobList = () => {
                               Job Type
                               <span className="text-red-500 ml-1">*</span>
                             </label>
-                            {errors.job_type && (
+                            {errors.jobType && (
                               <span className="px-3 text-red-600">
                                 This field is required
                               </span>
@@ -253,7 +288,7 @@ const JobList = () => {
                             <input
                               type="text"
                               id="job_salary"
-                              {...register("job_salary", { required: true })}
+                              {...register("jobSalary", { required: true })}
                               className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
                               defaultValue={item.jobSalary}
                             />
@@ -264,7 +299,7 @@ const JobList = () => {
                               Job Salary
                               <span className="text-red-500 ml-1">*</span>
                             </label>
-                            {errors.job_salary && (
+                            {errors.jobSalary && (
                               <span className="px-3 text-red-600">
                                 This field is required
                               </span>
@@ -275,7 +310,7 @@ const JobList = () => {
                             <input
                               type="text"
                               id="job_skills"
-                              {...register("job_skills", { required: true })}
+                              {...register("jobSkills", { required: true })}
                               className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
                               defaultValue={item.jobSkills}
                             />
@@ -286,7 +321,7 @@ const JobList = () => {
                               Job Skills
                               <span className="text-red-500 ml-1">*</span>
                             </label>
-                            {errors.job_skills && (
+                            {errors.jobSkills && (
                               <span className="px-3 text-red-600">
                                 This field is required
                               </span>
@@ -294,13 +329,14 @@ const JobList = () => {
                           </div>
 
                           <div className="relative mb-6">
-                            <input
+                            <textarea
+                              rows={3}
                               type="text"
                               id="job_top_reasons"
-                              {...register("job_top_reasons", {
+                              {...register("jobTopReasons", {
                                 required: true,
                               })}
-                              className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
+                              className="whitespace-pre-wrap peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
                               defaultValue={item.jobTopReasons}
                             />
                             <label
@@ -310,7 +346,7 @@ const JobList = () => {
                               Job Top Reasons
                               <span className="text-red-500 ml-1">*</span>
                             </label>
-                            {errors.job_top_reasons && (
+                            {errors.jobTopReasons && (
                               <span className="px-3 text-red-600">
                                 This field is required
                               </span>
@@ -322,8 +358,8 @@ const JobList = () => {
                               rows={5}
                               type="text"
                               id="job_benefits"
-                              {...register("job_benefits", { required: true })}
-                              className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px] focus:outline-green-200 focus:outline focus:outline-solid"
+                              {...register("jobBenefit", { required: true })}
+                              className="whitespace-pre-wrap peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px] focus:outline-green-200 focus:outline focus:outline-solid"
                               defaultValue={item.jobBenefits}
                             />
                             <label
@@ -333,7 +369,7 @@ const JobList = () => {
                               Job Benefits
                               <span className="text-red-500 ml-1">*</span>
                             </label>
-                            {errors.job_benefits && (
+                            {errors.jobBenefit && (
                               <span className="px-3 text-red-600">
                                 This field is required
                               </span>
@@ -360,7 +396,7 @@ const JobList = () => {
                                 });
                               }}
                               editor={ClassicEditor}
-                              data=""
+                              data={item.jobDescription}
                               onChange={(event, editor) => {
                                 setJobDescription(editor.getData());
                               }}
@@ -386,7 +422,7 @@ const JobList = () => {
                                 });
                               }}
                               editor={ClassicEditor}
-                              data=""
+                              data={item.jobResponsibility}
                               onChange={(event, editor) => {
                                 setJobResponsibility(editor.getData());
                               }}
@@ -412,7 +448,7 @@ const JobList = () => {
                                 });
                               }}
                               editor={ClassicEditor}
-                              data=""
+                              data={item.jobRequirement}
                               onChange={(event, editor) => {
                                 setJobRequirements(editor.getData());
                               }}
@@ -422,7 +458,7 @@ const JobList = () => {
                         </div>
                       </div>
                       <DialogFooter>
-                        <Button type="submit" onClick={handleSubmit(onSubmit)}>
+                        <Button type="submit" onClick={handleSubmit((data) => { onSubmit(data, item.jobId) })}>
                           Save changes
                         </Button>
                       </DialogFooter>
