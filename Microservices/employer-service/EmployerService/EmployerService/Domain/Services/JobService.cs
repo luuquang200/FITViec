@@ -120,7 +120,7 @@ namespace EmployerService.Domain.Services
 		}
 
 
-		// get jobs by employer id
+		// get jobs by employer
 		public async Task<List<JobDto>> GetListJobByEmployerAsync()
 		{
 			var employerId = _currentUserService.GetUserId();

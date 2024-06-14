@@ -45,10 +45,10 @@ namespace EmployerService.Domain.Services
 			{
 				return new CreateEmployerResult { IsSuccess = false, ErrorMessage = "Company already exists" };
 			}
-			
+			var companyId = Guid.NewGuid().ToString();
 			var company = new Company
 			{
-				CompanyId = Guid.NewGuid().ToString(),
+				CompanyId = companyId,
 				EmployerId = employerId,
 				CompanyName = request.CompanyName,
 				CompanyType = request.CompanyType,
@@ -68,7 +68,7 @@ namespace EmployerService.Domain.Services
 			// Save to database
 			await _companyRepository.AddAsync(company);
 
-			return new CreateEmployerResult { IsSuccess = true, EmployerId = employerId };
+			return new CreateEmployerResult { IsSuccess = true, EmployerId = employerId, CompanyId = companyId };
 		}
 
 		// Update company by employer id
@@ -97,7 +97,7 @@ namespace EmployerService.Domain.Services
 
 			await _companyRepository.UpdateAsync(company);
 
-			return new UpdateEmployerResult { IsSuccess = true };
+			return new UpdateEmployerResult { IsSuccess = true, EmployerId = employerId, CompanyId = company.CompanyId };
 		}
 
 		// Get company by employer 
@@ -187,5 +187,6 @@ namespace EmployerService.Domain.Services
 			return result;
 		}
 
+		
 	}
 }
