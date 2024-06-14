@@ -29,6 +29,8 @@ import { CircleDollarSign, Heart, MapPin, Laptop, Clock } from "lucide-react";
 const JobDetail = ({ job }) => {
     const { currentUser } = useAuth();
     const [reload, setReload] = useState(0);
+    // const [isLike, setisLike] = useState(false); => use job.isSaved props instead of use isLike with useState
+
 
     const handleLiked = () => {
         job.isSaved = !job.isSaved;

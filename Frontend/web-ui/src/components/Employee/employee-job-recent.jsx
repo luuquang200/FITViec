@@ -70,8 +70,8 @@ const EmployeeJobRecent = () => {
           <div className="bg-white mt-10 mr-32 ml-32">
               <div className="">
 
-                  {profileUser && profileUser.jobRecentView ? (
-                          <EmployeeViewJobCard jobs={profileUser.jobRecentView}/>
+                  {profileUser && profileUser.jobRecentView && profileUser.jobRecentView.length != 0 ? (
+                          <EmployeeViewJobCard jobs={profileUser.jobRecentView} location="job-recent"/>
                   ) : (
                     <div className="flex flex-col h-72 justify-center">
                     <div className="self-center"><img src={images.jobImage} alt="JOB Folder" /></div>

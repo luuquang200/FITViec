@@ -16,6 +16,7 @@ const StoreRecentViewedJob = async (job, currentUser) => {
 
         if (docSnap.exists()) {
             const profileData = docSnap.data();
+            console.log(profileData)
             const jobRecentView = profileData.jobRecentView || [];
 
             // Check if the job is already in the jobRecentView array
@@ -29,7 +30,7 @@ const StoreRecentViewedJob = async (job, currentUser) => {
                     jobRecentView: arrayUnion(job),
                 });
             } else {
-                console.log("Job is already in the recent view list");
+                // console.log("Job is already in the recent view list");
             }
         } else {
             // If the document does not exist, create it with the new job
@@ -38,9 +39,9 @@ const StoreRecentViewedJob = async (job, currentUser) => {
             });
         }
 
-        toast.success("Job viewed successfully!");
+        toast.success("Job viewed has saved successfully!");
     } catch (error) {
-        toast.error("Error updating StoreRecentViewedJob:", error);
+        console.log(error)
     }
 };
 
@@ -63,7 +64,7 @@ const StoreSavedJob = async (job, currentUser, isSaved) => {
                 await updateDoc(docRef, {
                     jobSaved: jobSaved,
                 });
-                toast.success("Job updated successfully!");
+                toast.success("Saved job is updated successfully!");
             } else {
                 // Append the new job to the existing array
                 await updateDoc(docRef, {
@@ -83,21 +84,59 @@ const StoreSavedJob = async (job, currentUser, isSaved) => {
     }
 };
 
+// const StoreAppliedJob = async (job, currentUser) => {
+//     try {
+//         const docRef = doc(db, "employeeJobInfo", currentUser.uid);
+//         const docSnap = await getDoc(docRef);
+
+//         if (docSnap.exists()) {
+//             const profileData = docSnap.data();
+//             const jobApply = profileData.jobApplied || [];
+
+//             // Check if the job is already in the jobRecentView array
+//             const jobExists = jobApply.some(
+//                 (jobApplied) => jobApplied.id === job.id,
+//             );
+
+//             if (!jobExists) {
+//                 // Append the new job to the existing array
+//                 await updateDoc(docRef, {
+//                     jobApplied: arrayUnion(job),
+//                 });
+//             } else {
+//                 console.log("Job is already in the applied view list");
+//             }
+//         } else {
+//             // If the document does not exist, create it with the new job
+//             await setDoc(docRef, {
+//                 jobApplied: [job],
+//             });
+//         }
+
+//         toast.success("Job applied successfully!");
+//     } catch (error) {
+//         toast.error("Error updating StoreRecentViewedJob:", error);
+//     }
+// };
+
 const CheckIsSavedJob = async (job, currentUser) => {
     try {
         if (currentUser) {
             const profileDoc = await getDoc(
                 doc(db, "employeeJobInfo", currentUser.uid),
             );
+            
             const profileData = profileDoc.exists() ? profileDoc.data() : {};
-            const targetJob = profileData.jobSaved.find(
+            const jobSaved = Array.isArray(profileData.jobSaved) ? profileData.jobSaved : [];
+            const targetJob = jobSaved.find(
                 (jobSaving) => jobSaving.id === job.id,
             );
-            return targetJob.isSaved;
+            return targetJob ? targetJob.isSaved : false;
         }
         return false;
     } catch (error) {
-        toast.error("Error updating StoreRecentViewedJob:", error);
+        console.error("Error checking saved job:", error);
+        return false
     }
 };
 

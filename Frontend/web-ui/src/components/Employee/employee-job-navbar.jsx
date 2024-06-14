@@ -17,7 +17,7 @@ const EmployeeJobNavbar = () => {
               <NavLink to="/my-jobs/recent-viewed" className={Hover}>
                 Recent Viewed Jobs
               </NavLink>
-              <NavLink to="/" className={Hover}>
+              <NavLink to="/my-jobs/applied" className={Hover}>
                 Applied Jobs
               </NavLink>
           </div>

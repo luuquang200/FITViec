@@ -11,6 +11,8 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import ClipLoader from "react-spinners/ClipLoader";
 
+// import { StoreAppliedJob } from "../Employee/employee-job-management";
+
 // const job_detail = {
 //   "employerId": "hansentechnologies",
 //   "jobStatus": "pending",
@@ -207,6 +209,11 @@ const FormApplyJob = () => {
                 method: 'POST',
                 body: formData,
             });
+
+            // Lưu lại job đã apply 
+            if (response.ok) {
+                console.log("job data : ", jobData);
+            }
     
             if (!response.ok) {
                 throw new Error('Failed to submit application');
