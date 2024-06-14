@@ -17,7 +17,7 @@ const HomeEmployer = () => {
                                     <img
                                         alt="hire-the-best-it"
                                         className="w-full"
-                                        src="https://itviec.com/assets/employer_landing/hire-the-best-it-15-95d4b6df6293a405cd77c094b8c7eb5dcc99cf8711f5b47751c841cfa51023a0.png"
+                                        src="/hire-the-best-it.webp"
                                     />
                                 </div>
                                 <div className="flex-1 text-center text-white lg:text-left">

@@ -3,207 +3,359 @@ import {   ChevronLeftIcon,  ChevronRightIcon, Search } from 'lucide-react';
 import CandidateItem from './candidate-item';
 import ClipLoader from "react-spinners/ClipLoader";
 import { useAuth } from '@/contexts/authContext';
+import PropTypes from "prop-types";
 
 
 const exCandidates = [
   {
-    photoUrl: 'MA',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9934",
     jobSeekerId: 'abc408580',
     applicationName: 'Nguyễn Thu Huyền',
-    jobTittle: 'Chiến dịch nhân viên kế toán Ngân hàng ABCD',
     jobId: '#408580',
-    email: 'banglangtim@gmail.com',
     applyAt: '05/06/2023 14:38',
     coverLetter: 'coverLetter',
     applicationStatus: 'in_review',
+    employerId: "hansentechnologies",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+        jobId: '#408580',
+        jobTitle: 'Chiến dịch nhân viên kế toán Ngân hàng ABCD',
+      },
+    contactInfo: {
+      email: 'banglangtim@gmail.com',
+    }
   },
   {
-    photoUrl: 'TK',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9935",
     jobSeekerId: '1253234as',
     applicationName: 'Trần Hữu AAAA',
-    jobTittle: 'Tuyển nhân viên kế toán Ngân hàng ABCD',
-    jobId: '#408581',
     email: 'thuukhoa@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
     applicationStatus: 'in_review',
+    employerId: "hansentechnologies",
+    jobId: "#408581",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      jobTitle: 'Tuyển nhân viên kế toán Ngân hàng ABCD',
+      jobId: '#408581',
+    },
+    contactInfo: {
+        "email": "nguyenhuutruc947@gmail.com"
+    }
   },
   {
-    photoUrl: 'MA',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9936",
     jobSeekerId: 'abc408582',
     applicationName: 'Nguyễn Thanh Thúy',
-    jobTittle: 'Chiến dịch tuyển Chọn nhân tài trẻ',
-    jobId: '#408582',
     email: 'banglthanhthuy408582@gmail.com',
     applyAt: '05/06/2023 14:38',
     coverLetter: 'coverLetter',
     applicationStatus: 'in_review',
+    employerId: "hansentechnologies",
+    jobId: "#408582",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      jobTitle: 'Chiến dịch tuyển Chọn nhân tài trẻ',
+      jobId: '#408582',
+    },
+    contactInfo: {
+        "email": "nguyenhuutruc947@gmail.com"
+    }
   },
   {
-    photoUrl: 'VB',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9937",
     jobSeekerId: 'abc408583',
     applicationName: 'Trần Văn Bá',
-    jobTittle: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng nhà nước',
-    jobId: '#408583',
     email: 'thanh.vb@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
     applicationStatus: 'in_review',
+    employerId: "hansentechnologies",
+    jobId: "#408583",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      jobTitle: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng nhà nước',
+      jobId: '#408583',
+    },
+    contactInfo: {
+        "email": "nguyenhuutruc947@gmail.com"
+    }
   },
   {
-    photoUrl: 'TT',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9938",
     jobSeekerId: 'abc408584',
     applicationName: 'Trần Thanh Tâm',
-    jobTittle: 'Tuyển Tester',
-    jobId: '#408584',
     email: 'thanh.td@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
     applicationStatus: 'in_review',
+    employerId: "hansentechnologies",
+    jobId: "#408584",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      jobTitle: 'Tuyển Tester',
+      jobId: '#408584',
+    },
+    contactInfo: {
+        "email": "nguyenhuutruc947@gmail.com"
+    }
   },
   {
-    photoUrl: 'BT',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9939",
     jobSeekerId: 'abc408585',
     applicationName: 'Phạm Quang Bình',
-    jobTittle: 'Tuyển C&B',
-    jobId: '#408585',
     email: 'binhpham@gmail.net',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
     applicationStatus: 'in_review',
+    employerId: "hansentechnologies",
+    jobId: "#408585",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      jobTitle: 'Tuyển C&B',
+      jobId: '#408585',
+    },
+    contactInfo: {
+        "email": "nguyenhuutruc947@gmail.com"
+    }
   },
   {
-    photoUrl: 'MA',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9940",
     jobSeekerId: 'abc408586',
     applicationName: 'Nguyễn Thu BBBB',
-    jobTittle: 'Chiến dịch tuyển Nhà , Tuyển nhân viên kế toán Ngân hàng A',
     jobId: '#408586',
     email: 'banglangtim408586@gmail.com',
     applyAt: '05/06/2023 14:38',
     coverLetter: 'coverLetter',
     applicationStatus: 'in_review',
+    employerId: "hansentechnologies",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      jobTitle: 'Chiến dịch tuyển Nhà , Tuyển nhân viên kế toán Ngân hàng A',
+      jobId: '#408586',
+    },
+    contactInfo: {
+        "email": "nguyenhuutruc947@gmail.com"
+    }
   },
   {
-    photoUrl: 'TK',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9950",
     jobSeekerId: 'abc408587',
     applicationName: 'Trần Hữu Khoa',
-    jobTittle: 'Tuyển nhân viên kế toán Ngân hàng bb',
-    jobId: '#408587',
     email: 'thuukhoa408587@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
     applicationStatus: 'in_review',
+    employerId: "hansentechnologies",
+    jobId: "#408587",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      jobTitle: 'Tuyển nhân viên kế toán Ngân hàng bb',
+      jobId: '#408587',
+    },
+    contactInfo: {
+        "email": "nguyenhuutruc947@gmail.com"
+    }
   },
   {
-    photoUrl: 'CC',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9960",
     jobSeekerId: 'abc408588',
     applicationName: 'Nguyễn Thanh CCCC',
-    jobTittle: 'Chiến dịch tuyển Chọn ...',
-    jobId: '#408588',
-    email: 'banglthanhthuy408588@gmail.com',
     applyAt: '05/06/2023 14:38',
     coverLetter: 'coverLetter',
     applicationStatus: 'in_review',
+    employerId: "hansentechnologies",
+    jobId: "5fa75d44-28f8-478a-ae5f-297546abeb9e",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      "jobId": "5fa75d44-28f8-478a-ae5f-297546abeb9e",
+      "jobTitle": "Software Developer (Java)"
+    },
+    contactInfo: {
+        email: 'banglthanhthuy408588@gmail.com',
+    }
   },
   {
-    photoUrl: 'VD',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9929",
     jobSeekerId: 'abc408589',
     applicationName: 'Trần Văn DDD',
-    jobTittle: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng ABCD Tuyển nhân viên kinh',
-    jobId: '#408589',
-    email: 'thanh.vb408589@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
     applicationStatus: 'accepted',
+    employerId: "hansentechnologies",
+    jobId: "5fa75d44-28f8-478a-ae5f-297546abeb9e",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      "jobId": "5fa75d44-28f8-478a-ae5f-297546abeb9e",
+      "jobTitle": "Software Developer (Java)"
+    },
+    contactInfo: {
+        "email": "nguyetrandddd7@gmail.com"
+    }
   },
   {
-    photoUrl: 'TT',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9928",
     jobSeekerId: 'abc408590',
     applicationName: 'Trần Thanh Tâm Can',
-    jobTittle: 'Tuyển Designer',
-    jobId: '#408590',
-    email: 'thanh.td408590@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
     applicationStatus: 'in_review',
+    employerId: "hansentechnologies",
+    jobId: "#408590",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      jobTitle: 'Tuyển Designer',
+      jobId: '#408590',
+    },
+    contactInfo: {
+      email: 'thanh.td408590@gmail.com',
+    }
   },
   {
-    photoUrl: 'TH',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9927",
     jobSeekerId: '12345abc408591',
     applicationName: 'Phạm Quang Bình Em',
-    jobTittle: 'Tuyển C&B',
-    jobId: '#408591',
-    email: 'binhpham408591@gmail.net',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
     applicationStatus: 'in_review',
+    employerId: "hansentechnologies",
+    jobId: "5fa75d44-28f8-478a-ae5f-297546abeb9e",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      "jobId": "5fa75d44-28f8-478a-ae5f-297546abeb9e",
+      "jobTitle": "Software Developer (Java)"
+    },
+    contactInfo: {
+      email: 'binhpham408591@gmail.net',
+    }
   },
   {
-    photoUrl: 'HA',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9926",
     jobSeekerId: 'abc408592',
     applicationName: 'Nguyễn Thu Hằng',
-    jobTittle: 'Chiến dịch tuyển Nhà , Tuyển nhân viên kế toán Trưởng',
-    jobId: '#408592',
-    email: 'banglangtim408592@gmail.com',
     applyAt: '05/06/2023 14:38',
     coverLetter: 'coverLetter',
     applicationStatus: 'rejected',
+    employerId: "hansentechnologies",
+    jobId: "5fa75d44-28f8-478a-ae5f-297546abeb9e",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      "jobId": "5fa75d44-28f8-478a-ae5f-297546abeb9e",
+      "jobTitle": "Software Developer (Java)"
+    },
+    contactInfo: {
+      email: 'banglangtim408592@gmail.com',
+    }
   },
   {
-    photoUrl: 'HT',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9925",
     jobSeekerId: 'abc408593',
     applicationName: 'Trần Hữu Tuấn',
-    jobTittle: 'Tuyển nhân viên kế toán Ngân hàng ABC',
-    jobId: '#408593',
-    email: 'thuutuan@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
     applicationStatus: 'in_review',
+    employerId: "hansentechnologies",
+    jobId: "5fa75d44-28f8-478a-ae5f-297546abeb9e",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      "jobId": "5fa75d44-28f8-478a-ae5f-297546abeb9e",
+      "jobTitle": "Software Developer (Java)"
+    },
+    contactInfo: {
+      email: 'thuutuan@gmail.com',
+    }
   },
   {
-    photoUrl: 'MU',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9924",
     jobSeekerId: 'abc408594',
     applicationName: 'Nguyễn Thanh Mai',
-    jobTittle: 'Chiến dịch tuyển Chọn ...',
-    jobId: '#408594',
-    email: 'banglthanhhang94@gmail.com',
     applyAt: '05/06/2023 14:38',
     coverLetter: 'coverLetter',
     applicationStatus: 'accepted',
+    employerId: "hansentechnologies",
+    jobId: "#408594",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      jobTitle: 'Chiến dịch tuyển Chọn ...',
+      jobId: '#408594',
+    },
+    contactInfo: {
+      email: 'banglthanhhang94@gmail.com',
+    }
   },
   {
-    photoUrl: 'HH',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9923",
     jobSeekerId: 'abc408595',
     applicationName: 'Hoàng Hà',
-    jobTittle: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng ABCD Tuyển nhân viên kinh',
-    jobId: '#408595',
-    email: 'thanh.HoaHoa@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
     applicationStatus: 'rejected',
+    employerId: "hansentechnologies",
+    jobId: "#408595",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      jobTitle: 'Tuyển nhân viên kinh, Tuyển nhân viên kế toán Ngân hàng ABCD Tuyển nhân viên kinh',
+      jobId: '#408595',
+    },
+    contactInfo: {
+      email: 'thanh.HoaHoa@gmail.com',
+    }
   },
   {
-    photoUrl: 'TO',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9722",
     jobSeekerId: 'abc408596',
     applicationName: 'Trần Tan Ong',
-    jobTittle: 'Tuyển Tester',
-    jobId: '#408596',
-    email: 'thanh.to.96@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
     applicationStatus: 'rejected',
+    employerId: "hansentechnologies",
+    jobId: "#408596",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      jobTitle: 'Tuyển Tester',
+      jobId: '#408596',
+    },
+    contactInfo: {
+      email: 'thanh.to.96@gmail.com',
+    }
   },
   {
-    photoUrl: 'BK',
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9921",
     jobSeekerId: 'abc408597',
     applicationName: 'Phạm Quang Bình Kha',
-    jobTittle: 'Tuyển C&B',
-    jobId: '#408597',
-    email: 'binhpham97@gmail.net',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
     applicationStatus: 'accepted',
+    employerId: "hansentechnologies",
+    jobId: "5fa75d44-28f8-478a-ae5f-297546abeb9e",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    jobInfo: {
+      "jobId": "5fa75d44-28f8-478a-ae5f-297546abeb9e",
+      "jobTitle": "Software Developer (Java)"
+    },
+    contactInfo: {
+      email: 'binhpham97@gmail.net',
+    }
   },
+  {
+    applicationId: "557aeef1-134e-4f00-afe2-e929560c9920",
+    employerId: "hansentechnologies",
+    jobId: "5fa75d44-28f8-478a-ae5f-297546abeb9e",
+    jobSeekerId: "nR2D25v2cQVw4gYRtNaE8kqhZgp1",
+    applicationStatus: "in_review",
+    applicationName: "Nguyễn Hữu Trực",
+    cvLink: "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
+    coverLetter: "cover_letter",
+    applyAt: "06/12/2024 22:13",
+    jobInfo: {
+        "jobId": "5fa75d44-28f8-478a-ae5f-297546abeb9e",
+        "jobTitle": "Software Developer (Java)"
+      },
+    contactInfo: {
+        "email": "nguyenhuutruc947@gmail.com"
+    }
+  }
 ];
 
 const statusOptions = {
@@ -211,16 +363,8 @@ const statusOptions = {
   'accepted': 'Accepted',
   'rejected': 'Rejected'
 };
-const exJobOptions = exCandidates.map(job => {
-  return {
-    jobId: job.jobId,
-    jobTitle: job.jobTittle,
-  }
-})
 
-
-
-const Candidates = () => {
+const Candidates = ({onCVViewer}) => {
   const {currentUser} = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
@@ -244,14 +388,19 @@ const Candidates = () => {
       // });
       // const data = await response.json(); 
       const data = exCandidates;
-      //console.log("data candidate: ", data);
+      console.log("data candidate: ", data);
       setCandidates(data);
-      const exJobOptions = data.map(job => {
-        return {
-          jobId: job.jobId,
-          jobTitle: job.jobTittle,
+      const exJobOptions = [];
+      const jobIdSet = new Set();
+
+      data.forEach(job => {
+        const { jobId, jobTitle } = job.jobInfo;
+        if (!jobIdSet.has(jobId)) {
+          jobIdSet.add(jobId);
+          exJobOptions.push({ jobId, jobTitle });
         }
-      })
+      });
+      console.log("exJobOptions: ", exJobOptions);
       setJobOptions(exJobOptions);
       setCurrentPage(1);
     } catch (error) {
@@ -261,46 +410,11 @@ const Candidates = () => {
     }
   };
 
-  // const fetchJobOptions = async (employerId) => {
-  //   setIsLoading(true);
-  //   try {
-  //     console.log(employerId);
-  //     // const response = await fetch(`https://job-search-service.azurewebsites.net/job-elastic/jobs-by-employer-id/${employerId}`,{
-  //     //   headers: {
-  //     //     "Authorization": currentUser?.accessToken,
-  //     //   }
-  //     // });
-  //     //const data = await response.json();
-  //     //console.log('data jobOptions: ', data);
-  //     // if(data.length ===0){
-  //       setJobOptions(exJobOptions);
-  //     // }else{
-  //     //    setJobOptions(data);
-  //     //}
-  //   } catch (error) {
-  //     console.error('Error fetching JobOptions:', error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-
   useEffect(() => {
-    console.log("call fetch");
-
-    //fetchJobOptions(currentUser?.uid);
-    //console.log("jobOptions: ", jobOptions);
     fetchCandidates(currentUser?.uid);
-    console.log("-- results in:  ", results);
   }, []);
 
-  console.log("results out:  ", results);
-  //console.log("jobOptions: ", jobOptions);
-  //console.log("candidates: ", candidates);
   useEffect(()=>{
-    console.log("2 - candidates: ", candidates);
-    console.log("2 - filter: ", filterResults);
-    console.log('2- currentPage : ', currentPage);
     const renderResult = (data) => {
       const startIdx = (currentPage - 1) * candidatesPerPage;
       const endIdx = startIdx + candidatesPerPage;
@@ -322,64 +436,6 @@ const Candidates = () => {
     handleSearch();
   }, [selectedJob, selectedStatus])
 
-  
-
-  // const handleSearch = async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     console.log("searchQuery: ", searchQuery, "- selctedStatus: ", selectedStatus,"- selctedJob: ", selectedJob);
-
-  //     const filteredCandidates = candidates.filter(candidate =>
-  //       candidate.applicationName.toLowerCase().includes(searchQuery.toLowerCase()) &&
-  //       (selectedStatus === 'all' || candidate.applicationStatus === selectedStatus) &&
-  //       (selectedJob === 'all' || candidate.jobId === selectedJob) 
-  //     );
-  //     console.log("filteredCandidate: ", filteredCandidates);
-      
-  //     const startIdx = (1 - 1) * candidatesPerPage;
-  //     const endIdx = startIdx + candidatesPerPage;
-  //     setTotalPages(Math.ceil(filteredCandidates.length / candidatesPerPage));
-  //     setResults(filteredCandidates.slice(startIdx, endIdx));
-  //     setCurrentPage(1);
-      
-  //   } catch (error) {
-  //     console.error('Error fetching search results:', error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  // const handleSearch = async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     console.log("searchQuery: ", searchQuery, "- selectedStatus: ", selectedStatus, "- selectedJob: ", selectedJob);
-  //     const lowerCaseSearchQuery = searchQuery.toLowerCase();
-  //     const filteredCandidates = candidates.filter(candidate => {
-  //       const { applicationName, jobTittle, jobId, email, applicationStatus, jobSeekerId } = candidate;
-  //       const matchesSearchQuery = lowerCaseSearchQuery === '' ? true :
-  //         applicationName.toLowerCase().includes(lowerCaseSearchQuery) ||
-  //         jobTittle.toLowerCase().includes(lowerCaseSearchQuery) ||
-  //         jobId.toLowerCase().includes(lowerCaseSearchQuery) ||
-  //         email.toLowerCase().includes(lowerCaseSearchQuery) ||
-  //         applicationStatus.toLowerCase().includes(lowerCaseSearchQuery) ||
-  //         jobSeekerId.toLowerCase().includes(lowerCaseSearchQuery);
-  //       const matchesStatus = (selectedStatus === '' || applicationStatus === selectedStatus);
-  //       const matchesJob = (selectedJob === '' || jobId === selectedJob);
-  
-  //       return matchesSearchQuery && matchesStatus && matchesJob;
-  //     });
-  
-  //     console.log("filteredCandidates: ", filteredCandidates);
-  //     setFilterResults(filteredCandidates);
-  //     setCurrentPage(1);
-      
-  //   } catch (error) {
-  //     console.error('Error fetching search results:', error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
   const removeVietnameseTones = (str) => {
     str = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     str = str.replace(/đ/g, 'd').replace(/Đ/g, 'D');
@@ -388,35 +444,32 @@ const Candidates = () => {
   const handleSearch = async () => {
     setIsLoading(true);
     try {
-      console.log("searchQuery: ", searchQuery, "- selectedStatus: ", selectedStatus, "- selectedJob: ", selectedJob);
-  
+      console.log("searchQuery: ", searchQuery, "\n- selectedStatus: ", selectedStatus, "- selectedJob: ", selectedJob);
       const lowerCaseSearchQuery = removeVietnameseTones(searchQuery.toLowerCase());
   
       const filteredCandidates = candidates.filter(candidate => {
-        const { applicationName, jobTittle, jobId, email, applicationStatus, jobSeekerId } = candidate;
+        const { applicationName, jobInfo , contactInfo, applicationStatus, jobSeekerId } = candidate;
   
         const normalizedApplicationName = removeVietnameseTones(applicationName.toLowerCase());
-        const normalizedJobTittle = removeVietnameseTones(jobTittle.toLowerCase());
-        const normalizedJobId = removeVietnameseTones(jobId.toLowerCase());
-        const normalizedEmail = removeVietnameseTones(email.toLowerCase());
+        const normalizedJobTitle = removeVietnameseTones(jobInfo.jobTitle.toLowerCase());
+        const normalizedJobId = removeVietnameseTones(jobInfo.jobId.toLowerCase());
+        const normalizedEmail = removeVietnameseTones(contactInfo.email.toLowerCase());
         const normalizedApplicationStatus = removeVietnameseTones(applicationStatus.toLowerCase());
         const normalizedJobSeekerId = removeVietnameseTones(jobSeekerId.toLowerCase());
   
         const matchesSearchQuery = lowerCaseSearchQuery === '' ? true :
           normalizedApplicationName.includes(lowerCaseSearchQuery) ||
-          normalizedJobTittle.includes(lowerCaseSearchQuery) ||
+          normalizedJobTitle.includes(lowerCaseSearchQuery) ||
           normalizedJobId.includes(lowerCaseSearchQuery) ||
           normalizedEmail.includes(lowerCaseSearchQuery) ||
           normalizedApplicationStatus.includes(lowerCaseSearchQuery) ||
           normalizedJobSeekerId.includes(lowerCaseSearchQuery);
   
         const matchesStatus = (selectedStatus === '' || applicationStatus === selectedStatus);
-        const matchesJob = (selectedJob === '' || jobId === selectedJob);
+        const matchesJob = (selectedJob === '' || jobInfo.jobId === selectedJob);
   
         return matchesSearchQuery && matchesStatus && matchesJob;
       });
-  
-      console.log("filteredCandidates: ", filteredCandidates);
       setFilterResults(filteredCandidates);
       setCurrentPage(1);
   
@@ -531,7 +584,7 @@ const Candidates = () => {
             </thead>
             <tbody>
               {(results.length > 0 ) ? results.map((candidate, index) => (
-                <CandidateItem key={index} candidate={candidate} statusOptions={statusOptions} />
+                <CandidateItem key={index} candidate={candidate} statusOptions={statusOptions} onCVViewer= {onCVViewer} />
               )):(
                 <tr>
                   <td colSpan="5" className="p-2 text-center">Have no result.</td>
@@ -571,5 +624,9 @@ const Candidates = () => {
     </div>
   );
 };
+
+Candidates.propTypes = {
+  onCVViewer: PropTypes.func,
+}
 
 export default Candidates;

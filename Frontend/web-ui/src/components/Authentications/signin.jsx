@@ -9,7 +9,14 @@ import { useAuth } from "../../contexts/authContext";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doSignInWithGoogle } from "../../firebase/auth";
 import { auth, db } from "../../firebase/firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+    collection,
+    query,
+    where,
+    getDocs,
+    getDoc,
+    doc,
+} from "firebase/firestore";
 
 import { useNavigate, Navigate } from "react-router-dom";
 
@@ -66,14 +73,27 @@ const SignIn = () => {
                     ).then(async (userCred) => {
                         const user = userCred.user;
                         if (user.emailVerified) {
-                            toast.success(
-                                "Successfully authenticated from Email & Password account.",
+                            const userDoc = await getDoc(
+                                doc(db, "users", user.uid),
                             );
-                            if (role === "admin")
-                                navigate(`/admin`)
-                            else
-                            // Điều hướng tới home sau khi đăng nhập  thành công
-                                navigate(`/`);
+                            const userData = userDoc.exists()
+                                ? userDoc.data()
+                                : {};
+
+                            if (userData.state === "enable") {
+                                toast.success(
+                                    "Successfully authenticated from Email & Password account.",
+                                );
+                                if (role === "admin") {
+                                    navigate(`/admin`);
+                                } else {
+                                    navigate(`/`);
+                                }
+                            } else {
+                                toast.error(
+                                    "Oops ! Your account has been locked by an administrator. ",
+                                );
+                            }
                         } else {
                             toast.error(
                                 " Please verify your email before login",

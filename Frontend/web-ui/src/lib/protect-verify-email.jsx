@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/authContext";
 
 const ProtectedRouteVerify = ({ children }) => {
     const { isRegistered } = useAuth();
+    console.log(isRegistered);
 
     if (!isRegistered) {
         return <Navigate to="/" />;

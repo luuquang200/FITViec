@@ -16,9 +16,12 @@ import {
     FaCalendarAlt,
     FaPhoneAlt,
     FaLocationArrow,
+    FaGoogle,
+    FaLink,
+    FaUserFriends,
 } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { ClipLoader } from "react-spinners"; // Import the ClipLoader
+import { ClipLoader, MoonLoader } from "react-spinners"; // Import the ClipLoader
 import { db } from "../../firebase/firebase";
 import {
     collection,
@@ -33,6 +36,9 @@ const capitalized = (letter) => {
     return letter?.charAt(0).toUpperCase() + letter?.slice(1);
 };
 
+const defaultAvt =
+    "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png";
+
 const UserManagement = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -40,8 +46,8 @@ const UserManagement = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [filterInput, setFilterInput] = useState("");
 
-    const [approving, setApproving] = useState(false);
-    const [rejecting, setRejecting] = useState(false);
+    const [enabling, setEnabling] = useState(false);
+    const [disabling, setDisabling] = useState(false);
 
     const data = useMemo(() => users, [users]);
 
@@ -50,8 +56,11 @@ const UserManagement = () => {
             // Create a reference to the "users" collection
             const usersRef = collection(db, "users");
 
-            // Create a query against the collection where the role is "users"
-            const q = query(usersRef, where("role", "==", "user"));
+            // Create a query against the collection where the role is either "user" or "employer"
+            const q = query(
+                usersRef,
+                where("role", "in", ["user", "employer"]),
+            );
 
             // Execute the query
             const querySnapshot = await getDocs(q);
@@ -61,9 +70,9 @@ const UserManagement = () => {
             querySnapshot.forEach((doc) => {
                 usersList.push({ id: doc.id, ...doc.data() });
             });
+
             // Set the state with the list of users
             setUsers(usersList);
-            console.log(usersList);
         } catch (error) {
             console.error("Error getting users: ", error);
         } finally {
@@ -78,8 +87,38 @@ const UserManagement = () => {
     const columns = useMemo(
         () => [
             {
-                Header: "Company Name",
-                accessor: "company",
+                Header: "Providers",
+                Cell: ({ row }) => (
+                    <div className="flex items-center justify-center space-x-2">
+                        {row.original.googleAuth ? (
+                            <FaGoogle className="h-5 w-5  text-gray-500" />
+                        ) : (
+                            <FaEnvelope className="h-5 w-5 text-gray-500" />
+                        )}
+                    </div>
+                ),
+            },
+            {
+                Header: "Avatar",
+                Cell: ({ row }) => (
+                    <div className="flex items-center space-x-2">
+                        <div className="overflow-hidden rounded-full border-2 border-white">
+                            <img
+                                src={
+                                    row.original.photoURL
+                                        ? row.original.photoURL
+                                        : defaultAvt
+                                }
+                                alt="Avatar"
+                                className="h-8 w-8"
+                            />
+                        </div>
+                    </div>
+                ),
+            },
+            {
+                Header: "Email",
+                accessor: "email",
             },
             {
                 Header: "User Name",
@@ -87,12 +126,12 @@ const UserManagement = () => {
                 Filter: ColumnFilter,
             },
             {
-                Header: "Registration Date",
-                accessor: "registrationDate",
+                Header: "Role",
+                accessor: "role",
             },
             {
                 Header: "Status",
-                accessor: "status",
+                accessor: "state",
                 Filter: SelectColumnFilter,
             },
             {
@@ -110,46 +149,46 @@ const UserManagement = () => {
         [],
     );
 
-    const handleApprove = async (id) => {
-        if (window.confirm("Are you sure you want to approve?")) {
-            setApproving(true);
+    const handleEnable = async (id) => {
+        if (window.confirm("Are you sure you want to enable this account ?")) {
+            setEnabling(true);
             try {
                 // Create a reference to the document
                 const userRef = doc(db, "users", id);
 
                 // Update the status field
-                await updateDoc(userRef, { status: "approved" });
-                toast.success("Approve account user successfully ! ");
+                await updateDoc(userRef, { state: "enable" });
+                toast.success("Enable account user successfully ! ");
                 setSelectedUser(null);
                 // Call getUsers again to update the list after approval
                 getUsers();
             } catch (error) {
-                toast.error("Error approving user: ", error);
+                toast.error("Error enabling user: ", error);
             } finally {
-                setApproving(false);
+                setEnabling(false);
             }
         } else {
             return;
         }
     };
 
-    const handleReject = async (id) => {
-        if (window.confirm("Are you sure you want to reject?")) {
-            setRejecting(true);
+    const handleDisable = async (id) => {
+        if (window.confirm("Are you sure you want to disable this account?")) {
+            setDisabling(true);
             try {
                 // Create a reference to the document
                 const userRef = doc(db, "users", id);
 
                 // Update the status field
-                await updateDoc(userRef, { status: "rejected" });
-                toast.success("Reject account user successfully ! ");
+                await updateDoc(userRef, { state: "disable" });
+                toast.success("Disable account user successfully ! ");
                 setSelectedUser(null);
                 // Call getUsers again to update the list after approval
                 getUsers();
             } catch (error) {
-                toast.error("Error rejecting user: ", error);
+                toast.error("Error disabling user: ", error);
             } finally {
-                setRejecting(false);
+                setDisabling(false);
             }
         } else {
             return;
@@ -211,13 +250,20 @@ const UserManagement = () => {
                     className="w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <select
-                    onChange={(e) => setFilter("status", e.target.value)}
+                    onChange={(e) => setFilter("role", e.target.value)}
+                    className="w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                    <option value="">All Role</option>
+                    <option value="user">User</option>
+                    <option value="employer">Employer</option>
+                </select>
+                <select
+                    onChange={(e) => setFilter("state", e.target.value)}
                     className="w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                     <option value="">All Statuses</option>
-                    <option value="approved">Approved</option>
-                    <option value="pending">Pending</option>
-                    <option value="rejected">Rejected</option>
+                    <option value="enable">Enable</option>
+                    <option value="disable">Disable</option>
                 </select>
             </div>
             <table
@@ -272,7 +318,7 @@ const UserManagement = () => {
                                         return (
                                             <td
                                                 {...cell.getCellProps()}
-                                                className={`whitespace-nowrap px-6 py-4 text-sm font-semibold text-gray-500 ${cell.value == "pending" ? "text-orange-600" : cell.value == "approved" ? "text-green-600" : cell.value == "rejected" ? "text-red-600" : "text-gray-500"}`}
+                                                className={`whitespace-nowrap px-6 py-4 text-sm font-semibold text-gray-500 ${cell.value == "enable" ? "text-green-600" : cell.value == "disable" ? "text-red-600" : "text-gray-500"}`}
                                             >
                                                 {cell.render("Cell")}
                                             </td>
@@ -318,17 +364,10 @@ const UserManagement = () => {
                         </div>
                         <div className="mt-4">
                             <div className="mb-3 flex items-center text-sm text-gray-700">
-                                <FaBuilding className="mr-2 text-gray-600" />
-                                <strong>Company Name:</strong>
-                                <span className="ml-2">
-                                    {selectedUser?.company}
-                                </span>
-                            </div>
-                            <div className="mb-3 flex items-center text-sm text-gray-700">
                                 <FaUser className="mr-2 text-gray-600" />
                                 <strong>User Name:</strong>
                                 <span className="ml-2">
-                                    {selectedUser?.displayName}
+                                    {capitalized(selectedUser?.displayName)}
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
@@ -342,81 +381,118 @@ const UserManagement = () => {
                                 <FaPhoneAlt className="mr-2 text-gray-600" />
                                 <strong>Personal Phone Number:</strong>
                                 <span className="ml-2">
-                                    {selectedUser?.phoneNumber}
+                                    {selectedUser.phone
+                                        ? selectedUser.phone
+                                        : null}
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
                                 <FaUser className="mr-2 text-gray-600" />
                                 <strong>Gender:</strong>
                                 <span className="ml-2">
-                                    {capitalized(selectedUser?.gender)}
+                                    {selectedUser.gender
+                                        ? capitalized(selectedUser.gender)
+                                        : null}
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
                                 <FaLocationArrow className="mr-2 text-gray-600" />
-                                <strong>Work Location:</strong>
+                                <strong>Address:</strong>
                                 <span className="ml-2">
-                                    {selectedUser?.workLocation}
+                                    {selectedUser.address
+                                        ? capitalized(selectedUser.address)
+                                        : null}
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
                                 <FaCalendarAlt className="mr-2 text-gray-600" />
-                                <strong>Registration Date:</strong>
+                                <strong>Birthday:</strong>
                                 <span className="ml-2">
-                                    {selectedUser?.registrationDate}
+                                    {selectedUser.birthday
+                                        ? selectedUser.birthday
+                                        : null}
                                 </span>
                             </div>
-
+                            <div className="mb-3 flex items-center text-sm text-gray-700">
+                                <FaLink className="mr-2 text-gray-600" />
+                                <strong>Personal Link:</strong>
+                                <span className="ml-2">
+                                    {selectedUser.personalLink
+                                        ? selectedUser.personalLink
+                                        : null}
+                                </span>
+                            </div>
+                            <div className="mb-3 flex items-center text-sm text-gray-700">
+                                <FaUserFriends className="mr-2 text-gray-600" />
+                                <strong>Role:</strong>
+                                <span className="ml-2">
+                                    {capitalized(selectedUser?.role)}
+                                </span>
+                            </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
                                 <FaCheck className="mr-2 text-gray-600" />
                                 <strong>Status:</strong>
                                 <span
-                                    className={`ml-2 ${selectedUser?.status === "approved" ? "text-green-600" : selectedUser?.status === "rejected" ? "text-red-600" : "text-orange-600"}`}
+                                    className={`ml-2 ${selectedUser?.state === "enable" ? "text-green-600" : "text-red-600"}`}
                                 >
-                                    {selectedUser?.status}
+                                    {capitalized(selectedUser?.state)}
                                 </span>
                             </div>
                         </div>
                         <div className="mt-6 ">
-                            {selectedUser?.status === "pending" ? (
-                                <div className="flex justify-end space-x-4">
-                                    <button
-                                        onClick={() =>
-                                            handleApprove(selectedUser?.id)
-                                        }
-                                        className="flex items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-white transition duration-150 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
-                                    >
-                                        <FaCheck className="mr-2" /> Approve
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            handleReject(selectedUser?.id)
-                                        }
-                                        className="flex items-center justify-center rounded-lg bg-red-500 px-4 py-2 text-white transition duration-150 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
-                                    >
-                                        <FaTimes className="mr-2" /> Reject
-                                    </button>
-                                </div>
-                            ) : selectedUser?.status === "approved" ? (
+                            {selectedUser?.googleAuth ? (
                                 <div className="flex justify-end ">
                                     <button
-                                        onClick={() =>
-                                            setSelectedUser(null)
-                                        }
+                                        onClick={() => setSelectedUser(null)}
                                         className="flex items-center justify-center rounded-lg bg-slate-700 px-4 py-2 text-white transition duration-150 hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-50"
                                     >
                                         Cancel
                                     </button>
                                 </div>
-                            ) : (
-                                <div className="flex justify-end">
+                            ) : selectedUser?.state === "enable" ? (
+                                <div className="flex justify-end space-x-4">
+                                    <div className="flex justify-end ">
+                                        <button
+                                            onClick={() =>
+                                                setSelectedUser(null)
+                                            }
+                                            className="flex items-center justify-center rounded-lg bg-slate-700 px-4 py-2 text-white transition duration-150 hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-50"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
                                     <button
                                         onClick={() =>
-                                            handleApprove(selectedUser?.id)
+                                            handleDisable(selectedUser?.id)
                                         }
+                                        disabled={disabling}
+                                        className="flex items-center justify-center rounded-lg bg-red-500 px-4 py-2 text-white transition duration-150 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
+                                    >
+                                        <FaTimes className="mr-2" />
+                                        {disabling ? "Disabling..." : "Disable"}
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="flex justify-end space-x-4">
+                                    <div className="flex justify-end ">
+                                        <button
+                                            onClick={() =>
+                                                setSelectedUser(null)
+                                            }
+                                            className="flex items-center justify-center rounded-lg bg-slate-700 px-4 py-2 text-white transition duration-150 hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-50"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                    <button
+                                        onClick={() =>
+                                            handleEnable(selectedUser?.id)
+                                        }
+                                        disabled={enabling}
                                         className="flex items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-white transition duration-150 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
                                     >
-                                        <FaCheck className="mr-2" /> Approve
+                                        <FaTimes className="mr-2" />
+                                        {enabling ? "Enabling..." : "Enable"}
                                     </button>
                                 </div>
                             )}

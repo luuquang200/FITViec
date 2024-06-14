@@ -63,6 +63,8 @@ const SignUp = () => {
                 await setDoc(doc(db, "users", user.uid), {
                     displayName: userName,
                     email: user.email,
+                    googleAuth: false,
+                    state: "enable",
                     role: "user", // Default role
                 });
 
