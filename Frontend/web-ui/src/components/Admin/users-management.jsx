@@ -16,9 +16,10 @@ import {
     FaCalendarAlt,
     FaPhoneAlt,
     FaLocationArrow,
+    FaGoogle,
 } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { ClipLoader } from "react-spinners"; // Import the ClipLoader
+import { ClipLoader, MoonLoader } from "react-spinners"; // Import the ClipLoader
 import { db } from "../../firebase/firebase";
 import {
     collection,
@@ -33,65 +34,103 @@ const capitalized = (letter) => {
     return letter?.charAt(0).toUpperCase() + letter?.slice(1);
 };
 
-const EmployerManagement = () => {
-    const [employers, setEmployers] = useState([]);
+const defaultAvt =
+    "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png";
+
+const UserManagement = () => {
+    const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const [selectedEmployer, setSelectedEmployer] = useState(null);
+    const [selectedUser, setSelectedUser] = useState(null);
     const [filterInput, setFilterInput] = useState("");
 
     const [approving, setApproving] = useState(false);
     const [rejecting, setRejecting] = useState(false);
 
-    const data = useMemo(() => employers, [employers]);
+    const data = useMemo(() => users, [users]);
 
-    const getEmployers = async () => {
+    const getUsers = async () => {
         try {
             // Create a reference to the "users" collection
             const usersRef = collection(db, "users");
 
-            // Create a query against the collection where the role is "employer"
-            const q = query(usersRef, where("role", "==", "employer"));
+            // Create a query against the collection where the role is either "user" or "employer"
+            const q = query(
+                usersRef,
+                where("role", "in", ["user", "employer"]),
+            );
 
             // Execute the query
             const querySnapshot = await getDocs(q);
 
             // Extract the data from the query snapshot
-            const employersList = [];
+            const usersList = [];
             querySnapshot.forEach((doc) => {
-                employersList.push({ id: doc.id, ...doc.data() });
+                usersList.push({ id: doc.id, ...doc.data() });
             });
-            // Set the state with the list of employers
-            setEmployers(employersList);
+
+            // Set the state with the list of users
+            setUsers(usersList);
+            console.log(usersList);
         } catch (error) {
-            console.error("Error getting employers: ", error);
+            console.error("Error getting users: ", error);
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        getEmployers();
+        getUsers();
     }, []);
 
     const columns = useMemo(
         () => [
             {
-                Header: "Company Name",
-                accessor: "company",
+                Header: "Providers",
+                Cell: ({ row }) => (
+                    <div className="flex items-center justify-center space-x-2">
+                        {row.original.googleAuth ? (
+                            <FaGoogle className="h-5 w-5  text-gray-500" />
+                        ) : (
+                            <FaEnvelope className="h-5 w-5 text-gray-500" />
+                        )}
+                    </div>
+                ),
             },
             {
-                Header: "Employer Name",
+                Header: "Avatar",
+                Cell: ({ row }) => (
+                    <div className="flex items-center space-x-2">
+                        <div className="overflow-hidden rounded-full border-2 border-white">
+                            <img
+                                src={
+                                    row.original.photoURL
+                                        ? row.original.photoURL
+                                        : defaultAvt
+                                }
+                                alt="Avatar"
+                                className="h-8 w-8"
+                            />
+                        </div>
+                    </div>
+                ),
+            },
+            {
+                Header: "Email",
+                accessor: "email",
+            },
+            {
+                Header: "User Name",
                 accessor: "displayName",
                 Filter: ColumnFilter,
             },
             {
-                Header: "Registration Date",
-                accessor: "registrationDate",
+                Header: "Role",
+                accessor: "role",
             },
             {
                 Header: "Status",
-                accessor: "status",
+                accessor: "state",
                 Filter: SelectColumnFilter,
             },
             {
@@ -100,7 +139,7 @@ const EmployerManagement = () => {
                     <div className="flex items-center space-x-2">
                         <EyeIcon
                             className="h-5 w-5 cursor-pointer text-blue-500"
-                            onClick={() => setSelectedEmployer(row.original)}
+                            onClick={() => setSelectedUser(row.original)}
                         />
                     </div>
                 ),
@@ -109,21 +148,21 @@ const EmployerManagement = () => {
         [],
     );
 
-    const handleApprove = async (id) => {
+    const handleEnable = async (id) => {
         if (window.confirm("Are you sure you want to approve?")) {
             setApproving(true);
             try {
                 // Create a reference to the document
-                const employerRef = doc(db, "users", id);
+                const userRef = doc(db, "users", id);
 
                 // Update the status field
-                await updateDoc(employerRef, { status: "approved" });
-                toast.success("Approve account employer successfully ! ");
-                setSelectedEmployer(null);
-                // Call getEmployers again to update the list after approval
-                getEmployers();
+                await updateDoc(userRef, { status: "approved" });
+                toast.success("Approve account user successfully ! ");
+                setSelectedUser(null);
+                // Call getUsers again to update the list after approval
+                getUsers();
             } catch (error) {
-                toast.error("Error approving employer: ", error);
+                toast.error("Error approving user: ", error);
             } finally {
                 setApproving(false);
             }
@@ -132,21 +171,21 @@ const EmployerManagement = () => {
         }
     };
 
-    const handleReject = async (id) => {
+    const handleDisable = async (id) => {
         if (window.confirm("Are you sure you want to reject?")) {
             setRejecting(true);
             try {
                 // Create a reference to the document
-                const employerRef = doc(db, "users", id);
+                const userRef = doc(db, "users", id);
 
                 // Update the status field
-                await updateDoc(employerRef, { status: "rejected" });
-                toast.success("Reject account employer successfully ! ");
-                setSelectedEmployer(null);
-                // Call getEmployers again to update the list after approval
-                getEmployers();
+                await updateDoc(userRef, { status: "rejected" });
+                toast.success("Reject account user successfully ! ");
+                setSelectedUser(null);
+                // Call getUsers again to update the list after approval
+                getUsers();
             } catch (error) {
-                toast.error("Error rejecting employer: ", error);
+                toast.error("Error rejecting user: ", error);
             } finally {
                 setRejecting(false);
             }
@@ -199,24 +238,31 @@ const EmployerManagement = () => {
         <Container className="py-16 pt-8">
             <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-2xl font-bold text-gray-900">
-                    Employers Management
+                    Users Management
                 </h3>
             </div>
             <div className="mb-4 flex space-x-4">
                 <input
                     value={filterInput}
                     onChange={handleFilterChange}
-                    placeholder={"Search by Name Employer"}
+                    placeholder={"Search by Name User"}
                     className="w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <select
-                    onChange={(e) => setFilter("status", e.target.value)}
+                    onChange={(e) => setFilter("role", e.target.value)}
+                    className="w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                    <option value="">All Role</option>
+                    <option value="user">User</option>
+                    <option value="employer">Employer</option>
+                </select>
+                <select
+                    onChange={(e) => setFilter("state", e.target.value)}
                     className="w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                     <option value="">All Statuses</option>
-                    <option value="approved">Approved</option>
-                    <option value="pending">Pending</option>
-                    <option value="rejected">Rejected</option>
+                    <option value="enable">Enable</option>
+                    <option value="disable">Disable</option>
                 </select>
             </div>
             <table
@@ -271,7 +317,7 @@ const EmployerManagement = () => {
                                         return (
                                             <td
                                                 {...cell.getCellProps()}
-                                                className={`whitespace-nowrap px-6 py-4 text-sm font-semibold text-gray-500 ${cell.value == "pending" ? "text-orange-600" : cell.value == "approved" ? "text-green-600" : cell.value == "rejected" ? "text-red-600" : "text-gray-500"}`}
+                                                className={`whitespace-nowrap px-6 py-4 text-sm font-semibold text-gray-500 ${cell.value == "enable" ? "text-green-600" : cell.value == "disable" ? "text-red-600" : "text-gray-500"}`}
                                             >
                                                 {cell.render("Cell")}
                                             </td>
@@ -307,115 +353,132 @@ const EmployerManagement = () => {
                     <ChevronRightIcon className="h-5 w-5" />
                 </button>
             </div>
-            {selectedEmployer && (
-                <Modal onClose={() => setSelectedEmployer(null)}>
+            {selectedUser && (
+                <Modal onClose={() => setSelectedUser(null)}>
                     <div className="transform rounded-lg  p-4 transition-all sm:w-full sm:max-w-lg">
                         <div className="flex items-center justify-between border-b pb-3">
                             <h3 className="text-lg font-semibold text-gray-800">
-                                Employer Details
+                                User Details
                             </h3>
                         </div>
                         <div className="mt-4">
                             <div className="mb-3 flex items-center text-sm text-gray-700">
-                                <FaBuilding className="mr-2 text-gray-600" />
-                                <strong>Company Name:</strong>
-                                <span className="ml-2">
-                                    {selectedEmployer?.company}
-                                </span>
-                            </div>
-                            <div className="mb-3 flex items-center text-sm text-gray-700">
                                 <FaUser className="mr-2 text-gray-600" />
-                                <strong>Employer Name:</strong>
+                                <strong>User Name:</strong>
                                 <span className="ml-2">
-                                    {selectedEmployer?.displayName}
+                                    {capitalized(selectedUser?.displayName)}
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
                                 <FaEnvelope className="mr-2 text-gray-600" />
-                                <strong>Employer Email:</strong>
+                                <strong>User Email:</strong>
                                 <span className="ml-2">
-                                    {selectedEmployer?.email}
+                                    {selectedUser?.email}
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
                                 <FaPhoneAlt className="mr-2 text-gray-600" />
                                 <strong>Personal Phone Number:</strong>
                                 <span className="ml-2">
-                                    {selectedEmployer?.phone}
+                                    {selectedUser.phone
+                                        ? selectedUser.phone
+                                        : null}
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
                                 <FaUser className="mr-2 text-gray-600" />
                                 <strong>Gender:</strong>
                                 <span className="ml-2">
-                                    {capitalized(selectedEmployer?.gender)}
+                                    {selectedUser.gender
+                                        ? capitalized(selectedUser.gender)
+                                        : null}
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
                                 <FaLocationArrow className="mr-2 text-gray-600" />
-                                <strong>Work Location:</strong>
+                                <strong>Address:</strong>
                                 <span className="ml-2">
-                                    {selectedEmployer?.workLocation}
+                                    {selectedUser.address
+                                        ? capitalized(selectedUser.address)
+                                        : null}
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
                                 <FaCalendarAlt className="mr-2 text-gray-600" />
-                                <strong>Registration Date:</strong>
+                                <strong>Birthday:</strong>
                                 <span className="ml-2">
-                                    {selectedEmployer?.registrationDate}
+                                    {selectedUser.birthday
+                                        ? selectedUser.birthday
+                                        : null}
                                 </span>
                             </div>
-
+                            <div className="mb-3 flex items-center text-sm text-gray-700">
+                                <FaCalendarAlt className="mr-2 text-gray-600" />
+                                <strong>Personal Link:</strong>
+                                <span className="ml-2">
+                                    {selectedUser.personalLink
+                                        ? selectedUser.personalLink
+                                        : null}
+                                </span>
+                            </div>
+                            <div className="mb-3 flex items-center text-sm text-gray-700">
+                                <FaCalendarAlt className="mr-2 text-gray-600" />
+                                <strong>Role:</strong>
+                                <span className="ml-2">
+                                    {capitalized(selectedUser?.role)}
+                                </span>
+                            </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
                                 <FaCheck className="mr-2 text-gray-600" />
                                 <strong>Status:</strong>
                                 <span
-                                    className={`ml-2 ${selectedEmployer?.status === "approved" ? "text-green-600" : selectedEmployer?.status === "rejected" ? "text-red-600" : "text-orange-600"}`}
+                                    className={`ml-2 ${selectedUser?.state === "enable" ? "text-green-600" : "text-red-600"}`}
                                 >
-                                    {selectedEmployer?.status}
+                                    {capitalized(selectedUser?.state)}
                                 </span>
                             </div>
                         </div>
                         <div className="mt-6 ">
-                            {selectedEmployer?.status === "pending" ? (
+                            {selectedUser?.state === "enable" ? (
                                 <div className="flex justify-end space-x-4">
+                                    <div className="flex justify-end ">
+                                        <button
+                                            onClick={() =>
+                                                setSelectedUser(null)
+                                            }
+                                            className="flex items-center justify-center rounded-lg bg-slate-700 px-4 py-2 text-white transition duration-150 hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-50"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
                                     <button
                                         onClick={() =>
-                                            handleApprove(selectedEmployer?.id)
-                                        }
-                                        className="flex items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-white transition duration-150 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
-                                    >
-                                        <FaCheck className="mr-2" /> Approve
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            handleReject(selectedEmployer?.id)
+                                            handleDisable(selectedUser?.id)
                                         }
                                         className="flex items-center justify-center rounded-lg bg-red-500 px-4 py-2 text-white transition duration-150 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
                                     >
-                                        <FaTimes className="mr-2" /> Reject
-                                    </button>
-                                </div>
-                            ) : selectedEmployer?.status === "approved" ? (
-                                <div className="flex justify-end ">
-                                    <button
-                                        onClick={() =>
-                                            setSelectedEmployer(null)
-                                        }
-                                        className="flex items-center justify-center rounded-lg bg-slate-700 px-4 py-2 text-white transition duration-150 hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-50"
-                                    >
-                                        Cancel
+                                        <FaTimes className="mr-2" /> Disable
                                     </button>
                                 </div>
                             ) : (
-                                <div className="flex justify-end">
+                                <div className="flex justify-end space-x-4">
+                                    <div className="flex justify-end ">
+                                        <button
+                                            onClick={() =>
+                                                setSelectedUser(null)
+                                            }
+                                            className="flex items-center justify-center rounded-lg bg-slate-700 px-4 py-2 text-white transition duration-150 hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-50"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
                                     <button
                                         onClick={() =>
-                                            handleApprove(selectedEmployer?.id)
+                                            handleEnable(selectedUser?.id)
                                         }
                                         className="flex items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-white transition duration-150 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
                                     >
-                                        <FaCheck className="mr-2" /> Approve
+                                        <FaTimes className="mr-2" /> Enable
                                     </button>
                                 </div>
                             )}
@@ -471,4 +534,4 @@ function SelectColumnFilter({
     );
 }
 
-export default EmployerManagement;
+export default UserManagement;

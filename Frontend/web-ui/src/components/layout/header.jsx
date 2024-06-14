@@ -38,6 +38,8 @@ import { doSignOut } from "@/firebase/auth";
 
 import { useNavigate } from "react-router-dom";
 
+import { toast } from "react-toastify";
+
 const menuContent = [
     {
         title: "All Jobs",
@@ -209,10 +211,9 @@ const Header = () => {
                         <Button
                             variant="link"
                             onClick={() => {
-                                navigate("/employer");
+                                navigate("/for-employers");
                             }}
                             className="h-min p-0 text-white hover:no-underline"
-                            // onClick={() => navigate("/for-employers")}
                         >
                             For Employers
                         </Button>
@@ -355,6 +356,7 @@ const Header = () => {
                             </Button>
                         </li>
                     )}
+
                     <li className="flex space-x-3 p-0">
                         <Button
                             variant="link"

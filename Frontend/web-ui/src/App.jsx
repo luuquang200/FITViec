@@ -1,11 +1,12 @@
 import { Routes, Route } from "react-router-dom";
+
 // Components
+import HomePage from "@/components/HomePage";
+
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import MainTablet from "@/components/layout/main-tablet";
 import FormApplyJob from "@/components/layout/form-apply-job";
-import SearchSection from "@/components/layout/search-section";
-import TopEmployerSection from "@/components/layout/top-employer-section";
 import SearchResult from "./components/Search/search-result";
 import JobDetailGuestPage from "./components/ui/job-detail-guest/job-detail-guest";
 import ProfileManagement from "./components/profile/profile-management";
@@ -29,11 +30,13 @@ import VerifyEmployer from "./components/Employers/verify-employer";
 import ProfileManagementCv from "./components/profile/profile-management-cv";
 import ProfileManagementJob from "./components/profile/profile-management-job";
 import AdminDashboard from "./components/Admin/admin-dashboard";
-import EmployeeJobManagment from "./components/Employee/employee-job-managment";
+import EmployeeJobManagement from "./components/Employee/employee-job-management";
 import SettingsAccount from "./components/Authentications/settingsAccount";
 import EmployeeJobRecent from "./components/Employee/employee-job-recent";
 import EmployeeJobApplied from "./components/Employee/employee-job-applied";
 import ProfileEmployer from "./components/profile/profile-employer";
+
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 function App() {
     return (
@@ -43,21 +46,30 @@ function App() {
             <Header />
             <div className="h-[88px]" />
             <Routes>
-                <Route path="/employer" element={<EmployerContainer />} />
+                <Route path="/" element={<HomePage />} />
+                <Route
+                    path="/employer"
+                    element={
+                        <ProtectedRoute allowedRole="employer">
+                            <EmployerContainer />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/admin"
+                    element={
+                        <ProtectedRoute allowedRole="admin">
+                            <AdminDashboard />
+                        </ProtectedRoute>
+                    }
+                />
+
                 <Route
                     path="/cv-detail/:applicationId"
                     element={<CVViewer />}
                 />
                 <Route path="/sign_in" element={<SignIn />} />
                 <Route path="/sign_up" element={<SignUp />} />
-                <Route
-                    path="/"
-                    element={
-                        <>
-                            <SearchSection /> <TopEmployerSection />
-                        </>
-                    }
-                />
                 <Route path="/job-detail" element={<JobDetailGuestPage />} />
                 <Route
                     path="/form-apply-job/:jobId"
@@ -77,7 +89,7 @@ function App() {
                     path="/profile-cv/job-preferences"
                     element={<ProfileManagementJob />}
                 />
-                <Route path="/my-jobs/" element={<EmployeeJobManagment />} />
+                <Route path="/my-jobs/" element={<EmployeeJobManagement />} />
                 <Route
                     path="/my-jobs/applied"
                     element={<EmployeeJobApplied />}
@@ -112,7 +124,6 @@ function App() {
                         // </ProtectedRouteVerify>
                     }
                 />
-                <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/settings" element={<SettingsAccount />} />
             </Routes>
             <Footer />
