@@ -10,6 +10,7 @@ import com.example.applicationservice.dto.CreateApplicationDto;
 import com.example.applicationservice.infrastructure.dao.Application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -55,5 +56,20 @@ public class DomainApplicationService implements ApplicationService {
   @Override
   public List<Application> getApplicationsByEmployer(String employerId) {
     return this.repository.findAllByEmployerId(employerId);
+  }
+  @Override
+  public void updateJobInfo(String jobId, JobInfo newInfo) {
+    List<Application> lsApp = this.repository.findAllByJobId(jobId);
+    if (!lsApp.isEmpty()) {
+      for (Application app : lsApp) {
+        app.updateJobInfo(newInfo);
+        this.repository.save(app);
+      }
+    }
+  }
+  @Override
+  @Transactional
+  public void deleteApplicationsByJob(String jobId) {
+    this.repository.deleteAllByJobId(jobId);
   }
 }

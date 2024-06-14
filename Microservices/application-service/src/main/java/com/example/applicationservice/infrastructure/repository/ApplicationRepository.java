@@ -8,4 +8,5 @@ import java.util.List;
 public interface ApplicationRepository extends JpaRepository<Application, String> {
   List<Application> findAllByJobId(String jobId);
   List<Application> findAllByEmployerId(String employerId);
+  void deleteAllByJobId(String jobId);
 }
