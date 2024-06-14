@@ -28,7 +28,7 @@ namespace EmployerService.API.Middlewares
 				"/employers/get-all",
 			};
 
-			if (excludedPaths.Any(p => path != null && path.Contains(path)))
+			if (excludedPaths.Any(p => path != null && p.Contains(path)))
 			{
 				await _next(context);
 				return;

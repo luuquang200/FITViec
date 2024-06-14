@@ -61,6 +61,14 @@ namespace EmployerService.API.Controllers
             return Ok(company);
         }
 
+        // delete company by company id
+        [Route("delete")]
+        [HttpDelete]
+        public async Task DeleteCompany(string companyId)
+        {
+			await _employerService.DeleteCompanyAsync(companyId);
+		}
+
         //get all companies
         [Route("get-all")]
         [HttpGet]
