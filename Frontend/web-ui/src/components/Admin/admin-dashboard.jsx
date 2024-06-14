@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AdminSidebar from "./admin-sidebar";
 import EmployerManagement from "./employers-management";
+import UserManagement from "./users-management";
 import JobManagement from "./jobs-management";
 import JobDetail from "./job-detail";
 
@@ -23,12 +24,14 @@ const AdminDashboard = () => {
             );
         }
         switch (activeTab) {
+            case "user-management":
+                return <UserManagement />;
             case "employer-management":
                 return <EmployerManagement />;
             case "job-management":
                 return <JobManagement onSelectJob={setSelectedJob} />;
             default:
-                return <EmployerManagement />;
+                return <UserManagement />;
         }
     };
 
