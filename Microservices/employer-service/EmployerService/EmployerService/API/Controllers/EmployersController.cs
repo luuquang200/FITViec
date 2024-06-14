@@ -82,8 +82,21 @@ namespace EmployerService.API.Controllers
             };
         }
 
-        // api test
-        [Route("test")]
+		//get top companies
+		[Route("get-top")]
+		[HttpGet]
+		public async Task<ApiResult> GetTopCompanies()
+		{
+			var companies = await _employerService.GetAllCompaniesAsync();
+			return new ApiResult
+			{
+				IsSuccess = true,
+				Data = companies
+			};
+		}
+
+		// api test
+		[Route("test")]
         [HttpGet]
         public IActionResult Test()
         {

@@ -13,6 +13,7 @@ namespace EmployerService.Infrastructure.Repositories
 		Task UpdateAsync(Company company);
 		Task DeleteAsync(string companyId);
 		Task<List<Company>> GetAllCompaniesAsync();
+		Task<List<Company>> GetTopCompaniesAsync();
 	}
 	public class CompanyRepository : ICompanyRepository
 	{
@@ -70,6 +71,20 @@ namespace EmployerService.Infrastructure.Repositories
 			return company;
 		}
 		public async Task<List<Company>> GetAllCompaniesAsync()
+		{
+			try
+			{
+				var companies = await _context.Companies.ToListAsync();
+				return companies;
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+
+
+		public async Task<List<Company>> GetTopCompaniesAsync()
 		{
 			try
 			{

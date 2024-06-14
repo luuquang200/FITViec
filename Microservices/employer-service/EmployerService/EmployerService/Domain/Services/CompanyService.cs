@@ -16,6 +16,7 @@ namespace EmployerService.Domain.Services
 		Task<CompanyDto> GetCompanyByEmployerAsync();
 		Task DeleteCompanyAsync(string companyId);
 		Task<List<CompanyDto>> GetAllCompaniesAsync();
+		Task<List<CompanyDto>> GetTopCompaniesAsync();
 		Task<CreateJobResponseDto> PostJobAsync(PostJobRequestDto request);
 		Task<List<JobDto>> GetListJobByEmployerAsync();
 		Task<UpdateJobReponseDto> UpdateJobByEmployerAsync(UpdateJobRequestDto request);
@@ -122,6 +123,19 @@ namespace EmployerService.Domain.Services
 		public async Task<List<CompanyDto>> GetAllCompaniesAsync()
 		{
 			var companies = await _companyRepository.GetAllCompaniesAsync();
+			var companyDtos = new List<CompanyDto>();
+			foreach (var company in companies)
+			{
+				var companyDto = new CompanyDto(company);
+				companyDtos.Add(companyDto);
+			}
+			return companyDtos;
+		}
+
+		// Get top companies
+		public async Task<List<CompanyDto>> GetTopCompaniesAsync()
+		{
+			var companies = await _companyRepository.GetTopCompaniesAsync();
 			var companyDtos = new List<CompanyDto>();
 			foreach (var company in companies)
 			{

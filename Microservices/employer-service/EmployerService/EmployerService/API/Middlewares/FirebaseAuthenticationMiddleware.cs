@@ -25,7 +25,7 @@ namespace EmployerService.API.Middlewares
 			var excludedPaths = new List<string>
 			{
 				"/uploads",
-				"/employers/get-all",
+				"/employer/get-top",
 			};
 
 			if (excludedPaths.Any(p => path != null && p.Contains(path)))
