@@ -47,7 +47,7 @@ const JobList = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${currentUser.accessToken}`,
+            Authorization: `${currentUser?.accessToken}`,
           },
         }
       );
@@ -73,7 +73,7 @@ const JobList = () => {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${currentUser.accessToken}`,
+            Authorization: `${currentUser?.accessToken}`,
           },
         }
       );
@@ -97,10 +97,11 @@ const JobList = () => {
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `${currentUser.accessToken}`,
+            'Content-Type': "application/json",
+            'Access-Control-Allow-Origin': '*',
+            Authorization: `${currentUser?.accessToken}`,
           },
-          body: JSON.stringify(data)
+          body: JSON.stringify(data),
         }
       );
       if (response.status === 200) {
@@ -114,13 +115,13 @@ const JobList = () => {
         })
       }
     } catch {
-      console.log("Error");
+      return toast.error("Something wrong happened. Please try again later")
     }
   }
 
   const handleSearch = (value) => {
-    const results = jobs.filter((item) => {
-      return item.jobTitle.toLowerCase().includes(value.toLowerCase());
+    const results = jobs?.filter((item) => {
+      return item?.jobTitle.toLowerCase().includes(value.toLowerCase());
     });
     setSearchResults(results);
   };
@@ -129,13 +130,13 @@ const JobList = () => {
     const results = searchResults.filter((item) => {
       return item.jobId !== id;
     });
+    await deleteJob(currentUser?.uid, id);
     setSearchResults(results);
-    await deleteJob(currentUser.uid, id);
   };
 
   const onSubmit = (data, id) => {
     data.jobId = id
-    data.employerId = currentUser.uid
+    data.employerId = currentUser?.uid
     data.jobDescription = jobDescription;
     data.jobResponsibility = jobResponsibility;
     data.jobRequirement = jobRequirements;
@@ -189,23 +190,23 @@ const JobList = () => {
           </TableHeader>
           <TableBody>
             {searchResults.map((item) => (
-              <TableRow key={item.jobId}>
-                <TableCell className="font-medium">{item.jobId}</TableCell>
-                <TableCell>{item.jobTitle}</TableCell>
+              <TableRow key={item?.jobId}>
+                <TableCell className="font-medium">{item?.jobId}</TableCell>
+                <TableCell>{item?.jobTitle}</TableCell>
                 <TableCell className="break-words">
-                  {item.jobLocation}
+                  {item?.jobLocation}
                 </TableCell>
-                <TableCell>{item.jobSalary}</TableCell>
+                <TableCell>{item?.jobSalary}</TableCell>
                 <TableCell
                   className={
-                    item.jobStatus === "approved"
+                    item?.jobStatus === "approved"
                       ? "text-green-600"
-                      : item.jobStatus === "pending"
+                      : item?.jobStatus === "pending"
                         ? "text-gray-600"
                         : "text-red-600"
                   }
                 >
-                  {item.jobStatus}
+                  {item?.jobStatus}
                 </TableCell>
                 <TableCell className="flex flex-col">
                   <Dialog>
@@ -226,7 +227,7 @@ const JobList = () => {
                               id="job_title"
                               {...register("jobTitle", { required: true })}
                               className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px] focus:outline-green-200 focus:outline focus:outline-solid"
-                              defaultValue={item.jobTitle}
+                              defaultValue={item?.jobTitle}
                             />
                             <label
                               htmlFor="job_title"
@@ -235,7 +236,7 @@ const JobList = () => {
                               Job Title
                               <span className="text-red-500 ml-1">*</span>
                             </label>
-                            {errors.jobTitle && (
+                            {errors?.jobTitle && (
                               <span className="px-3 text-red-600">
                                 This field is required
                               </span>
@@ -248,7 +249,7 @@ const JobList = () => {
                               id="job_location"
                               {...register("jobLocation", { required: true })}
                               className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
-                              defaultValue={item.jobLocation}
+                              defaultValue={item?.jobLocation}
                             />
                             <label
                               htmlFor="job_location"
@@ -257,7 +258,7 @@ const JobList = () => {
                               Job Location
                               <span className="text-red-500 ml-1">*</span>
                             </label>
-                            {errors.jobLocation && (
+                            {errors?.jobLocation && (
                               <span className="px-3 text-red-600">
                                 This field is required
                               </span>
@@ -269,7 +270,7 @@ const JobList = () => {
                               id="job_type"
                               {...register("jobType", { required: true })}
                               className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
-                              defaultValue={item.jobType}
+                              defaultValue={item?.jobType}
                             />
                             <label
                               htmlFor="job_type"
@@ -278,7 +279,7 @@ const JobList = () => {
                               Job Type
                               <span className="text-red-500 ml-1">*</span>
                             </label>
-                            {errors.jobType && (
+                            {errors?.jobType && (
                               <span className="px-3 text-red-600">
                                 This field is required
                               </span>
@@ -290,7 +291,7 @@ const JobList = () => {
                               id="job_salary"
                               {...register("jobSalary", { required: true })}
                               className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
-                              defaultValue={item.jobSalary}
+                              defaultValue={item?.jobSalary}
                             />
                             <label
                               htmlFor="job_salary"
@@ -299,7 +300,7 @@ const JobList = () => {
                               Job Salary
                               <span className="text-red-500 ml-1">*</span>
                             </label>
-                            {errors.jobSalary && (
+                            {errors?.jobSalary && (
                               <span className="px-3 text-red-600">
                                 This field is required
                               </span>
@@ -312,7 +313,7 @@ const JobList = () => {
                               id="job_skills"
                               {...register("jobSkills", { required: true })}
                               className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
-                              defaultValue={item.jobSkills}
+                              defaultValue={item?.jobSkills}
                             />
                             <label
                               htmlFor="job_skills"
@@ -321,7 +322,7 @@ const JobList = () => {
                               Job Skills
                               <span className="text-red-500 ml-1">*</span>
                             </label>
-                            {errors.jobSkills && (
+                            {errors?.jobSkills && (
                               <span className="px-3 text-red-600">
                                 This field is required
                               </span>
@@ -337,7 +338,7 @@ const JobList = () => {
                                 required: true,
                               })}
                               className="whitespace-pre-wrap peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
-                              defaultValue={item.jobTopReasons}
+                              defaultValue={item?.jobTopReasons}
                             />
                             <label
                               htmlFor="job_top_reasons"
@@ -346,7 +347,7 @@ const JobList = () => {
                               Job Top Reasons
                               <span className="text-red-500 ml-1">*</span>
                             </label>
-                            {errors.jobTopReasons && (
+                            {errors?.jobTopReasons && (
                               <span className="px-3 text-red-600">
                                 This field is required
                               </span>
@@ -360,7 +361,7 @@ const JobList = () => {
                               id="job_benefits"
                               {...register("jobBenefit", { required: true })}
                               className="whitespace-pre-wrap peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px] focus:outline-green-200 focus:outline focus:outline-solid"
-                              defaultValue={item.jobBenefits}
+                              defaultValue={item?.jobBenefits}
                             />
                             <label
                               htmlFor="job_benefits"
@@ -369,7 +370,7 @@ const JobList = () => {
                               Job Benefits
                               <span className="text-red-500 ml-1">*</span>
                             </label>
-                            {errors.jobBenefit && (
+                            {errors?.jobBenefit && (
                               <span className="px-3 text-red-600">
                                 This field is required
                               </span>
@@ -394,9 +395,10 @@ const JobList = () => {
                                     editor.editing.view.document.getRoot()
                                   );
                                 });
+                                editor.setData(item?.jobDescription)
                               }}
                               editor={ClassicEditor}
-                              data={item.jobDescription}
+                              data={item?.jobDescription}
                               onChange={(event, editor) => {
                                 setJobDescription(editor.getData());
                               }}
@@ -420,9 +422,10 @@ const JobList = () => {
                                     editor.editing.view.document.getRoot()
                                   );
                                 });
+                                editor.setData(item?.jobResponsibility)
                               }}
                               editor={ClassicEditor}
-                              data={item.jobResponsibility}
+                              data={item?.jobResponsibility}
                               onChange={(event, editor) => {
                                 setJobResponsibility(editor.getData());
                               }}
@@ -446,9 +449,10 @@ const JobList = () => {
                                     editor.editing.view.document.getRoot()
                                   );
                                 });
+                                editor.setData(item?.jobRequirement)
                               }}
                               editor={ClassicEditor}
-                              data={item.jobRequirement}
+                              data={item?.jobRequirement}
                               onChange={(event, editor) => {
                                 setJobRequirements(editor.getData());
                               }}
@@ -458,7 +462,7 @@ const JobList = () => {
                         </div>
                       </div>
                       <DialogFooter>
-                        <Button type="submit" onClick={handleSubmit((data) => { onSubmit(data, item.jobId) })}>
+                        <Button type="submit" onClick={handleSubmit((data) => { onSubmit(data, item?.jobId) })}>
                           Save changes
                         </Button>
                       </DialogFooter>
@@ -467,7 +471,7 @@ const JobList = () => {
 
                   <button
                     className="bg-red-500 text-white px-2 py-1 rounded text-center"
-                    onClick={(e) => handleDelete(item.jobId)}
+                    onClick={(e) => handleDelete(item?.jobId)}
                   >
                     Delete
                   </button>
