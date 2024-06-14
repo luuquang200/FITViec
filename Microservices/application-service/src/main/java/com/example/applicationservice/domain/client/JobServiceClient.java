@@ -1,6 +1,6 @@
 package com.example.applicationservice.domain.client;
 
-import com.example.applicationservice.domain.entity.JobInfo;
+import com.example.applicationservice.infrastructure.entity.JobInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

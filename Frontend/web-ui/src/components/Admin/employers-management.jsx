@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Container from "@/components/layout/container";
 import { useTable, usePagination, useSortBy, useFilters } from "react-table";
 import {
@@ -14,50 +14,80 @@ import {
     FaUser,
     FaEnvelope,
     FaCalendarAlt,
+    FaPhoneAlt,
+    FaLocationArrow,
 } from "react-icons/fa";
+import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners"; // Import the ClipLoader
+import { db } from "../../firebase/firebase";
+import {
+    collection,
+    query,
+    where,
+    getDocs,
+    doc,
+    updateDoc,
+} from "firebase/firestore";
 
-// Dữ liệu mẫu
-const employerData = [
-    {
-        id: 1,
-        companyName: "ABC Corp",
-        employerName: "John Doe",
-        registrationDate: "2023-06-01",
-        status: "pending",
-        email: "johndoe@abccorp.com",
-    },
-    {
-        id: 2,
-        companyName: "XYZ Ltd",
-        employerName: "Jane Smith",
-        registrationDate: "2023-06-05",
-        status: "approved",
-        email: "janesmith@xyzltd.com",
-    },
-    // Thêm dữ liệu mẫu khác ở đây...
-];
+const capitalized = (letter) => {
+    return letter.charAt(0).toUpperCase() + letter.slice(1);
+};
 
 const EmployerManagement = () => {
+    const [employers, setEmployers] = useState([]);
+    const [loading, setLoading] = useState(true);
+
     const [selectedEmployer, setSelectedEmployer] = useState(null);
     const [filterInput, setFilterInput] = useState("");
 
-    const data = useMemo(() => employerData, []);
+    const [approving, setApproving] = useState(false);
+    const [rejecting, setRejecting] = useState(false);
+
+    const data = useMemo(() => employers, [employers]);
+
+    const getEmployers = async () => {
+        try {
+            // Create a reference to the "users" collection
+            const usersRef = collection(db, "users");
+
+            // Create a query against the collection where the role is "employer"
+            const q = query(usersRef, where("role", "==", "employer"));
+
+            // Execute the query
+            const querySnapshot = await getDocs(q);
+
+            // Extract the data from the query snapshot
+            const employersList = [];
+            querySnapshot.forEach((doc) => {
+                employersList.push({ id: doc.id, ...doc.data() });
+            });
+            // Set the state with the list of employers
+            setEmployers(employersList);
+        } catch (error) {
+            console.error("Error getting employers: ", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        getEmployers();
+    }, []);
 
     const columns = useMemo(
         () => [
             {
                 Header: "Company Name",
-                accessor: "companyName",
+                accessor: "company",
             },
             {
-                Header: "Employer",
-                accessor: "employerName",
+                Header: "Employer Name",
+                accessor: "displayName",
                 Filter: ColumnFilter,
             },
             {
                 Header: "Registration Date",
                 accessor: "registrationDate",
-                Cell: ({ value }) => new Date(value).toLocaleDateString(),
             },
             {
                 Header: "Status",
@@ -79,25 +109,47 @@ const EmployerManagement = () => {
         [],
     );
 
-    const handleApprove = (id) => {
-        console.log(`Approved employer with ID: ${id}`);
+    const handleApprove = async (id) => {
         if (window.confirm("Are you sure you want to approve?")) {
-                    setSelectedEmployer((prev) => ({
-                        ...prev,
-                        status: "approved",
-                    }));
+            setApproving(true);
+            try {
+                // Create a reference to the document
+                const employerRef = doc(db, "users", id);
+
+                // Update the status field
+                await updateDoc(employerRef, { status: "approved" });
+                toast.success("Approve account employer successfully ! ");
+                setSelectedEmployer(null);
+                // Call getEmployers again to update the list after approval
+                getEmployers();
+            } catch (error) {
+                toast.error("Error approving employer: ", error);
+            } finally {
+                setApproving(false);
+            }
         } else {
             return;
         }
     };
 
-    const handleReject = (id) => {
-        console.log(`Rejected employer with ID: ${id}`);
+    const handleReject = async (id) => {
         if (window.confirm("Are you sure you want to reject?")) {
-                    setSelectedEmployer((prev) => ({
-                        ...prev,
-                        status: "rejected",
-                    }));
+            setRejecting(true);
+            try {
+                // Create a reference to the document
+                const employerRef = doc(db, "users", id);
+
+                // Update the status field
+                await updateDoc(employerRef, { status: "rejected" });
+                toast.success("Reject account employer successfully ! ");
+                setSelectedEmployer(null);
+                // Call getEmployers again to update the list after approval
+                getEmployers();
+            } catch (error) {
+                toast.error("Error rejecting employer: ", error);
+            } finally {
+                setRejecting(false);
+            }
         } else {
             return;
         }
@@ -126,14 +178,22 @@ const EmployerManagement = () => {
         },
         useFilters,
         useSortBy,
-        usePagination
+        usePagination,
     );
 
     const handleFilterChange = (e) => {
         const value = e.target.value || undefined;
-        setFilter("employerName", value);
+        setFilter("displayName", value);
         setFilterInput(value);
     };
+
+    if (loading) {
+        return (
+            <Container className="flex items-center justify-center py-16 pt-8">
+                <ClipLoader size={50} color={"red"} loading={loading} />
+            </Container>
+        );
+    }
 
     return (
         <Container className="py-16 pt-8">
@@ -146,7 +206,7 @@ const EmployerManagement = () => {
                 <input
                     value={filterInput}
                     onChange={handleFilterChange}
-                    placeholder={"Search by Employer"}
+                    placeholder={"Search by Name Employer"}
                     className="w-full rounded-lg border px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <select
@@ -207,14 +267,16 @@ const EmployerManagement = () => {
                                     {...row.getRowProps()}
                                     className="hover:bg-gray-50"
                                 >
-                                    {row.cells.map((cell) => (
-                                        <td
-                                            {...cell.getCellProps()}
-                                            className="whitespace-nowrap px-6 py-4 text-sm text-gray-500"
-                                        >
-                                            {cell.render("Cell")}
-                                        </td>
-                                    ))}
+                                    {row.cells.map((cell) => {
+                                        return (
+                                            <td
+                                                {...cell.getCellProps()}
+                                                className={`whitespace-nowrap px-6 py-4 text-sm font-semibold text-gray-500 ${cell.value == "pending" ? "text-orange-600" : cell.value == "approved" ? "text-green-600" : cell.value == "rejected" ? "text-red-600" : "text-gray-500"}`}
+                                            >
+                                                {cell.render("Cell")}
+                                            </td>
+                                        );
+                                    })}
                                 </tr>
                             );
                         })
@@ -258,14 +320,14 @@ const EmployerManagement = () => {
                                 <FaBuilding className="mr-2 text-gray-600" />
                                 <strong>Company Name:</strong>
                                 <span className="ml-2">
-                                    {selectedEmployer.companyName}
+                                    {selectedEmployer.company}
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
                                 <FaUser className="mr-2 text-gray-600" />
                                 <strong>Employer Name:</strong>
                                 <span className="ml-2">
-                                    {selectedEmployer.employerName}
+                                    {selectedEmployer.displayName}
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
@@ -276,44 +338,86 @@ const EmployerManagement = () => {
                                 </span>
                             </div>
                             <div className="mb-3 flex items-center text-sm text-gray-700">
+                                <FaPhoneAlt className="mr-2 text-gray-600" />
+                                <strong>Personal Phone Number:</strong>
+                                <span className="ml-2">
+                                    {selectedEmployer.phoneNumber}
+                                </span>
+                            </div>
+                            <div className="mb-3 flex items-center text-sm text-gray-700">
+                                <FaUser className="mr-2 text-gray-600" />
+                                <strong>Gender:</strong>
+                                <span className="ml-2">
+                                    {capitalized(selectedEmployer.gender)}
+                                </span>
+                            </div>
+                            <div className="mb-3 flex items-center text-sm text-gray-700">
+                                <FaLocationArrow className="mr-2 text-gray-600" />
+                                <strong>Work Location:</strong>
+                                <span className="ml-2">
+                                    {selectedEmployer.workLocation}
+                                </span>
+                            </div>
+                            <div className="mb-3 flex items-center text-sm text-gray-700">
                                 <FaCalendarAlt className="mr-2 text-gray-600" />
                                 <strong>Registration Date:</strong>
                                 <span className="ml-2">
-                                    {new Date(
-                                        selectedEmployer.registrationDate,
-                                    ).toLocaleDateString()}
+                                    {selectedEmployer.registrationDate}
                                 </span>
                             </div>
+
                             <div className="mb-3 flex items-center text-sm text-gray-700">
                                 <FaCheck className="mr-2 text-gray-600" />
                                 <strong>Status:</strong>
                                 <span
-                                    className={`ml-2 ${selectedEmployer.status === "approved" ? "text-green-600" : selectedEmployer.status === "rejected" ? "text-red-600" : "text-yellow-600"}`}
+                                    className={`ml-2 ${selectedEmployer.status === "approved" ? "text-green-600" : selectedEmployer.status === "rejected" ? "text-red-600" : "text-orange-600"}`}
                                 >
                                     {selectedEmployer.status}
                                 </span>
                             </div>
                         </div>
-                        <div className="mt-6 flex justify-end space-x-4">
-                            {selectedEmployer.status !== "approved" && (
-                                <button
-                                    onClick={() =>
-                                        handleApprove(selectedEmployer.id)
-                                    }
-                                    className="flex items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-white transition duration-150 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
-                                >
-                                    <FaCheck className="mr-2" /> Approve
-                                </button>
-                            )}
-                            {selectedEmployer.status !== "rejected" && (
-                                <button
-                                    onClick={() =>
-                                        handleReject(selectedEmployer.id)
-                                    }
-                                    className="flex items-center justify-center rounded-lg bg-red-500 px-4 py-2 text-white transition duration-150 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
-                                >
-                                    <FaTimes className="mr-2" /> Reject
-                                </button>
+                        <div className="mt-6 ">
+                            {selectedEmployer.status === "pending" ? (
+                                <div className="flex justify-end space-x-4">
+                                    <button
+                                        onClick={() =>
+                                            handleApprove(selectedEmployer.id)
+                                        }
+                                        className="flex items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-white transition duration-150 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
+                                    >
+                                        <FaCheck className="mr-2" /> Approve
+                                    </button>
+                                    <button
+                                        onClick={() =>
+                                            handleReject(selectedEmployer.id)
+                                        }
+                                        className="flex items-center justify-center rounded-lg bg-red-500 px-4 py-2 text-white transition duration-150 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
+                                    >
+                                        <FaTimes className="mr-2" /> Reject
+                                    </button>
+                                </div>
+                            ) : selectedEmployer.status === "approved" ? (
+                                <div className="flex justify-end ">
+                                    <button
+                                        onClick={() =>
+                                            setSelectedEmployer(null)
+                                        }
+                                        className="flex items-center justify-center rounded-lg bg-slate-700 px-4 py-2 text-white transition duration-150 hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-50"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="flex justify-end">
+                                    <button
+                                        onClick={() =>
+                                            handleApprove(selectedEmployer.id)
+                                        }
+                                        className="flex items-center justify-center rounded-lg bg-green-500 px-4 py-2 text-white transition duration-150 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
+                                    >
+                                        <FaCheck className="mr-2" /> Approve
+                                    </button>
+                                </div>
                             )}
                         </div>
                     </div>
@@ -368,4 +472,3 @@ function SelectColumnFilter({
 }
 
 export default EmployerManagement;
-

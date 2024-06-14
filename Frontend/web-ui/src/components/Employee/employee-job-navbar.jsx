@@ -4,12 +4,9 @@ import Container from "@/components/layout/container";
 import { NavLink } from "react-router-dom";
 
 const EmployeeJobNavbar = () => {
-    const hover =
-        "hover:border-b-[3px] hover:border-gray-400  transitions text-base font-semibold text-center text-gray-400 p-4 w-[165px]   ";
-    const Hover = ({ isActive }) =>
-        isActive
-            ? "border-b-[3px] border-red-500 text-red-500 text-center text-base p-4 font-semibold w-[165px] "
-            : hover;
+    const Hover =
+        "hover:border-b-[3px] hover:border-red-500  hover:text-red-500 transitions text-base font-semibold text-center text-gray-400 p-4 w-[165px]";
+
 
     return (
         <div className="bg-white shadow-md">
@@ -17,7 +14,7 @@ const EmployeeJobNavbar = () => {
               <NavLink to="/my-jobs" className={Hover}>
                   Saved Jobs
               </NavLink>
-              <NavLink to="/" className={Hover}>
+              <NavLink to="/my-jobs/recent-viewed" className={Hover}>
                 Recent Viewed Jobs
               </NavLink>
               <NavLink to="/" className={Hover}>

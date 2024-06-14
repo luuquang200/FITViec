@@ -38,7 +38,8 @@ const SignUp = () => {
 
     useEffect(() => {
         setInSingUpInPage(true);
-    }, []);
+        return () => setInSingUpInPage(false); // Reset the state when the component is unmounted
+    }, [setInSingUpInPage]);
 
     const handleSignIn = async (e) => {
         e.preventDefault();

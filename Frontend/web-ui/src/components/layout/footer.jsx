@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 // Components
 import { Separator } from "@/components/ui/separator";
 import Container from "@/components/layout/container";
@@ -16,20 +18,24 @@ import {
 } from "lucide-react";
 
 const aboutUsHeadings = [
-    "Home",
-    "About Us",
-    "AI Match Service",
-    "Contact Us",
-    "All Jobs",
-    "FAQ",
+    { title: "Home", link: "/" },
+    { title: "About Us", link: "/" },
+    { title: "AI Match Service", link: "/" },
+    { title: "Contact Us", link: "/" },
+    { title: "All Jobs", link: "/" },
+    { title: "FAQ", link: "/" },
 ];
-const campaignHeadings = ["IT Story", "Writing Contest"];
+const yourCareerHeadings = [
+    { title: "Your CV", link: "/profile-cv" },
+    { title: "Manage Your  CVs", link: "/profile-cv/manage-cv" },
+    { title: "Saved Jobs", link: "/my-jobs" },
+    { title: "Applied Jobs", link: "/my-jobs/applied" },
+];
 const termHeadings = [
-    "Privacy Policy",
-    "Operating Regulation",
-    "Complaint Handling",
-    "Terms & Conditions",
-    "Press",
+    { title: "Privacy Policy", link: "/" },
+    { title: "Complaint Handling", link: "/" },
+    { title: "Operating Regulation", link: "/" },
+    { title: "Terms & Conditions", link: "/" },
 ];
 
 const Footer = () => {
@@ -78,19 +84,23 @@ const Footer = () => {
 
                     <ul className="mt-2 space-y-2 text-muted-foreground">
                         {aboutUsHeadings.map((heading, index) => (
-                            <li key={index}>{heading}</li>
+                            <li key={index}>
+                                <Link to={heading.link}>{heading.title}</Link>
+                            </li>
                         ))}
                     </ul>
                 </div>
 
                 <div className="w-1/5">
                     <h1 className="text-base font-medium text-background">
-                        Campaign
+                        Your Career
                     </h1>
 
                     <ul className="mt-2 space-y-2 text-muted-foreground">
-                        {campaignHeadings.map((heading, index) => (
-                            <li key={index}>{heading}</li>
+                        {yourCareerHeadings.map((heading, index) => (
+                            <li key={index}>
+                                <Link to={heading.link}>{heading.title}</Link>
+                            </li>
                         ))}
                     </ul>
                 </div>
@@ -102,7 +112,9 @@ const Footer = () => {
 
                     <ul className="mt-2 space-y-2 text-muted-foreground">
                         {termHeadings.map((heading, index) => (
-                            <li key={index}>{heading}</li>
+                            <li key={index}>
+                                <Link to={heading.link}>{heading.title}</Link>
+                            </li>
                         ))}
                     </ul>
                 </div>
@@ -120,7 +132,7 @@ const Footer = () => {
 
                         <li>
                             <Mail className="mr-2 inline" />
-                            Email: love@fitviec.com
+                            Email: fitviec@gmail.com
                         </li>
 
                         <li>
@@ -135,7 +147,7 @@ const Footer = () => {
 
             <Container>
                 <h3 className="py-3 text-center text-xs text-muted-foreground">
-                    Copyright &copy; IT VIEC SJC
+                    &copy; 2024 FIT VIEC - HCMUS
                 </h3>
             </Container>
         </footer>
