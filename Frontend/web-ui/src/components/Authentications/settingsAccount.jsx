@@ -23,7 +23,7 @@ import {
     signInWithPopup,
 } from "firebase/auth";
 import { db } from "../../firebase/firebase";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, deleteDoc } from "firebase/firestore";
 
 import { useNavigate } from "react-router-dom";
 
@@ -37,7 +37,9 @@ const SettingsAccount = () => {
 
     const navigate = useNavigate();
 
-    const [userName, setUserName] = useState(currentUser.displayName);
+    const [userName, setUserName] = useState(
+        currentUser?.displayName ? currentUser.displayName : "",
+    );
     const [userNameError, setUserNameError] = useState(false);
 
     const [password, setPassword] = useState("");
@@ -161,7 +163,7 @@ const SettingsAccount = () => {
         e.preventDefault();
         setIsUpdatingName(true);
         try {
-            if (userName === currentUser.displayName) {
+            if (userName === currentUser?.displayName) {
                 setShowUpdateUserName(false);
                 return;
             }
@@ -306,10 +308,16 @@ const SettingsAccount = () => {
             // Xác thực lại người dùng với mật khẩu hiện tại
             await reauthenticateWithCredential(auth.currentUser, credential);
 
+            const userId = auth.currentUser.uid; // Lưu UID của người dùng hiện tại
+
             // Xóa tài khoản người dùng
             await deleteUser(auth.currentUser);
-            toast.success("Account deleted successfully!");
+
+            // Xóa tài liệu người dùng từ Firestore
+            const userDocRef = doc(db, "users", userId);
+            await deleteDoc(userDocRef);
             navigate("/");
+            toast.success("Account deleted successfully!");
         } catch (error) {
             console.error(error);
 
@@ -365,11 +373,16 @@ const SettingsAccount = () => {
             // Reauthenticate the user with the credential
             await reauthenticateWithCredential(auth.currentUser, credential);
 
+            const userId = auth.currentUser.uid; // Lưu UID của người dùng hiện tại
+
             // Delete the user account
             await deleteUser(auth.currentUser);
+            // Xóa tài liệu người dùng từ Firestore
+            const userDocRef = doc(db, "users", userId);
+            await deleteDoc(userDocRef);
 
-            toast.success("Account deleted successfully!");
             navigate("/");
+            toast.success("Account deleted successfully!");
         } catch (error) {
             console.error(error);
 
@@ -414,7 +427,7 @@ const SettingsAccount = () => {
                                 Email :
                             </div>
                             <div className="col-span-9 flex items-center gap-2 text-slate-700">
-                                <span>{currentUser.email}</span>
+                                <span>{currentUser?.email}</span>
                                 <TooltipProvider>
                                     <Tooltip>
                                         <TooltipTrigger>
@@ -441,7 +454,7 @@ const SettingsAccount = () => {
                                             className={`form-input h-10 w-full rounded-sm border ${
                                                 !userNameError &&
                                                 userName !==
-                                                    currentUser.displayName
+                                                    currentUser?.displayName
                                                     ? "border-green-500"
                                                     : userNameError
                                                       ? "border-red-500"
@@ -493,7 +506,7 @@ const SettingsAccount = () => {
                             ) : (
                                 <div className="col-span-9 flex items-center gap-2 text-slate-700">
                                     <span>
-                                        {capitalized(currentUser.displayName)}
+                                        {capitalized(currentUser?.displayName)}
                                     </span>
                                     <PenLine
                                         className="h-4 w-4 cursor-pointer text-red-500"
