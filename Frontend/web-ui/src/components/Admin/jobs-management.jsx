@@ -205,7 +205,7 @@ const JobManagement = ({ onSelectJob }) => {
                                     {row.cells.map((cell) => (
                                         <td
                                             {...cell.getCellProps()}
-                                            className="whitespace-nowrap px-6 py-4 text-sm text-gray-500"
+                                            className="break-all px-6 py-4 text-sm text-gray-500"
                                         >
                                             {cell.render("Cell")}
                                         </td>

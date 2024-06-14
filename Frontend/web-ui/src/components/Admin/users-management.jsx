@@ -318,7 +318,7 @@ const UserManagement = () => {
                                         return (
                                             <td
                                                 {...cell.getCellProps()}
-                                                className={`whitespace-nowrap px-6 py-4 text-sm font-semibold text-gray-500 ${cell.value == "enable" ? "text-green-600" : cell.value == "disable" ? "text-red-600" : "text-gray-500"}`}
+                                                className={`break-all px-6 py-4 text-sm font-semibold text-gray-500 ${cell.value == "enable" ? "text-green-600" : cell.value == "disable" ? "text-red-600" : "text-gray-500"}`}
                                             >
                                                 {cell.render("Cell")}
                                             </td>
