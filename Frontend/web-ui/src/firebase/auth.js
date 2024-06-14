@@ -8,7 +8,6 @@ import {
 } from "firebase/auth";
 import { auth, db } from "./firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { removeToken } from "@/cookie/cookie";
 
 export const doSignInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
@@ -27,8 +26,6 @@ export const doSignInWithGoogle = async () => {
                 displayName: user.displayName,
             });
         }
-        console.log(user);
-
         return user;
     } catch (error) {
         console.error("Error signing in with Google: ", error);
@@ -37,7 +34,6 @@ export const doSignInWithGoogle = async () => {
 };
 
 export const doSignOut = () => {
-    removeToken();
     return auth.signOut();
 };
 

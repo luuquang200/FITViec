@@ -38,6 +38,8 @@ import { doSignOut } from "@/firebase/auth";
 
 import { useNavigate } from "react-router-dom";
 
+import { toast } from "react-toastify";
+
 const menuContent = [
     {
         title: "All Jobs",
@@ -212,7 +214,6 @@ const Header = () => {
                                 navigate("/employer");
                             }}
                             className="h-min p-0 text-white hover:no-underline"
-                            // onClick={() => navigate("/for-employers")}
                         >
                             For Employers
                         </Button>
@@ -246,50 +247,100 @@ const Header = () => {
                                         </div>
                                     </li>
                                 </MenubarTrigger>
-                                <MenubarContent
-                                    align="end"
-                                    sideOffset={8}
-                                    className="w-56"
-                                >
-                                    <MenubarItem
-                                        className="border-b-2 border-gray-300"
-                                        onClick={() => navigate("/profile-cv")}
+                                {currentUser.role === "user" ? (
+                                    <MenubarContent
+                                        align="end"
+                                        sideOffset={8}
+                                        className="w-56"
                                     >
-                                        {" "}
-                                        <User className="mr-2 h-5 w-5 text-muted-foreground" />
-                                        Profile & CVs
-                                    </MenubarItem>
-                                    <MenubarItem
-                                        className="border-b-2 border-gray-300"
-                                        onClick={() => navigate("/my-jobs")}
+                                        <MenubarItem
+                                            className="border-b-2 border-gray-300"
+                                            onClick={() =>
+                                                navigate("/profile-cv")
+                                            }
+                                        >
+                                            {" "}
+                                            <User className="mr-2 h-5 w-5 text-muted-foreground" />
+                                            Profile & CVs
+                                        </MenubarItem>
+                                        <MenubarItem
+                                            className="border-b-2 border-gray-300"
+                                            onClick={() => navigate("/my-jobs")}
+                                        >
+                                            <Briefcase className="mr-2 h-5 w-5 text-muted-foreground" />
+                                            My Jobs
+                                        </MenubarItem>
+                                        <MenubarItem className="border-b-2 border-gray-300">
+                                            <Inbox className="mr-2 h-5 w-5 text-muted-foreground" />
+                                            AI Match Invitation
+                                        </MenubarItem>
+                                        <MenubarItem className="border-b-2 border-gray-300">
+                                            <Mail className="mr-2 h-5 w-5 text-muted-foreground" />
+                                            Email Subscriptions
+                                        </MenubarItem>
+                                        <MenubarItem
+                                            className="border-b-2 border-gray-300"
+                                            onClick={() =>
+                                                navigate("/settings")
+                                            }
+                                        >
+                                            <Settings className="mr-2 h-5 w-5 text-muted-foreground" />
+                                            Settings
+                                        </MenubarItem>
+                                        <MenubarItem
+                                            onClick={() => {
+                                                doSignOut();
+                                                navigate("/");
+                                            }}
+                                        >
+                                            <LogOut className="mr-2 h-5 w-5 text-muted-foreground" />
+                                            Sign Out
+                                        </MenubarItem>
+                                    </MenubarContent>
+                                ) : currentUser.role === "employer" ? (
+                                    <MenubarContent
+                                        align="end"
+                                        sideOffset={8}
+                                        className="w-56"
                                     >
-                                        <Briefcase className="mr-2 h-5 w-5 text-muted-foreground" />
-                                        My Jobs
-                                    </MenubarItem>
-                                    <MenubarItem className="border-b-2 border-gray-300">
-                                        <Inbox className="mr-2 h-5 w-5 text-muted-foreground" />
-                                        AI Match Invitation
-                                    </MenubarItem>
-                                    <MenubarItem className="border-b-2 border-gray-300">
-                                        <Mail className="mr-2 h-5 w-5 text-muted-foreground" />
-                                        Email Subscriptions
-                                    </MenubarItem>
-                                    <MenubarItem
-                                        className="border-b-2 border-gray-300"
-                                        onClick={() => navigate("/settings")}
+                                        <MenubarItem
+                                            className="border-b-2 border-gray-300"
+                                            onClick={() =>
+                                                navigate("/customer/profile")
+                                            }
+                                        >
+                                            {" "}
+                                            <User className="mr-2 h-5 w-5 text-muted-foreground" />
+                                            Profile & Account
+                                        </MenubarItem>
+
+                                        <MenubarItem
+                                            onClick={() => {
+                                                doSignOut();
+                                                navigate("/");
+                                            }}
+                                        >
+                                            <LogOut className="mr-2 h-5 w-5 text-muted-foreground" />
+                                            Sign Out
+                                        </MenubarItem>
+                                    </MenubarContent>
+                                ) : (
+                                    <MenubarContent
+                                        align="end"
+                                        sideOffset={8}
+                                        className="w-56"
                                     >
-                                        <Settings className="mr-2 h-5 w-5 text-muted-foreground" />
-                                        Settings
-                                    </MenubarItem>
-                                    <MenubarItem
-                                        onClick={() => {
-                                            doSignOut();
-                                        }}
-                                    >
-                                        <LogOut className="mr-2 h-5 w-5 text-muted-foreground" />
-                                        Sign Out
-                                    </MenubarItem>
-                                </MenubarContent>
+                                        <MenubarItem
+                                            onClick={() => {
+                                                doSignOut();
+                                                navigate("/");
+                                            }}
+                                        >
+                                            <LogOut className="mr-2 h-5 w-5 text-muted-foreground" />
+                                            Sign Out
+                                        </MenubarItem>
+                                    </MenubarContent>
+                                )}
                             </MenubarMenu>
                         </Menubar>
                     ) : (
@@ -305,6 +356,7 @@ const Header = () => {
                             </Button>
                         </li>
                     )}
+
                     <li className="flex space-x-3 p-0">
                         <Button
                             variant="link"

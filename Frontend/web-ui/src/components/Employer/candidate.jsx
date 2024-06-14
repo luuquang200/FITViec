@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import {   ChevronLeftIcon,  ChevronRightIcon, Search } from 'lucide-react';
 import CandidateItem from './candidate-item';
 import ClipLoader from "react-spinners/ClipLoader";
+import { useAuth } from '@/contexts/authContext';
+
 
 const exCandidates = [
   {
@@ -13,7 +15,7 @@ const exCandidates = [
     email: 'banglangtim@gmail.com',
     applyAt: '05/06/2023 14:38',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'TK',
@@ -24,7 +26,7 @@ const exCandidates = [
     email: 'thuukhoa@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'MA',
@@ -35,7 +37,7 @@ const exCandidates = [
     email: 'banglthanhthuy@gmail.com',
     applyAt: '05/06/2023 14:38',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'VB',
@@ -46,7 +48,7 @@ const exCandidates = [
     email: 'thanh.vb@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'TT',
@@ -57,7 +59,7 @@ const exCandidates = [
     email: 'thanh.td@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'BT',
@@ -68,7 +70,7 @@ const exCandidates = [
     email: 'binhpham@gmail.net',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'MA',
@@ -79,7 +81,7 @@ const exCandidates = [
     email: 'banglangtim@gmail.com',
     applyAt: '05/06/2023 14:38',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'TK',
@@ -90,7 +92,7 @@ const exCandidates = [
     email: 'thuukhoa@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'MA',
@@ -101,7 +103,7 @@ const exCandidates = [
     email: 'banglthanhthuy@gmail.com',
     applyAt: '05/06/2023 14:38',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'VB',
@@ -112,7 +114,7 @@ const exCandidates = [
     email: 'thanh.vb@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'TT',
@@ -123,7 +125,7 @@ const exCandidates = [
     email: 'thanh.td@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'BT',
@@ -134,7 +136,7 @@ const exCandidates = [
     email: 'binhpham@gmail.net',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'MA',
@@ -145,7 +147,7 @@ const exCandidates = [
     email: 'banglangtim@gmail.com',
     applyAt: '05/06/2023 14:38',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'TK',
@@ -156,7 +158,7 @@ const exCandidates = [
     email: 'thuukhoa@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'MA',
@@ -167,7 +169,7 @@ const exCandidates = [
     email: 'banglthanhthuy@gmail.com',
     applyAt: '05/06/2023 14:38',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'VB',
@@ -178,7 +180,7 @@ const exCandidates = [
     email: 'thanh.vb@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'TT',
@@ -189,7 +191,7 @@ const exCandidates = [
     email: 'thanh.td@gmail.com',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
   {
     photoUrl: 'BT',
@@ -200,14 +202,14 @@ const exCandidates = [
     email: 'binhpham@gmail.net',
     applyAt: '01/06/2023 15:59',
     coverLetter: 'coverLetter',
-    applicationStatus: 'CV recieved',
+    applicationStatus: 'in_review',
   },
 ];
 
 const statusOptions = {
-  'CV received': 'in_review',
-  'Interview': 'accepted',
-  'Reject': 'rejected'
+  'in_review': 'CV received' ,
+  'accepted': 'Interview',
+  'rejected': 'Reject'
 };
 
 const exJobOptions = [
@@ -234,63 +236,90 @@ const exJobOptions = [
 ];
 
 const Candidates = () => {
+  const {currentUser} = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('');
-  const [jobOptions, setJobOptions] = useState(exJobOptions); //exapmle jobOptions
-  const [selectedJob, setSelectedJob] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('all');
+  const [jobOptions, setJobOptions] = useState([]); //exapmle jobOptions
+  const [selectedJob, setSelectedJob] = useState('all');
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState([]);
-  const [candidates, setCandidates] = useState(exCandidates); //example candidates
+  const [candidates, setCandidates] = useState([]); //example candidates
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const candidatesPerPage = 5;
+  const candidatesPerPage = 8;
+  const fetchCandidates = async (employerId) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`https://application-service-otwul2bnna-uc.a.run.app/application/by-employer/${employerId}`, {
+        headers: {
+          "Authorization": currentUser?.accessToken,
+        }
+      });
+      const data = await response.json(); 
+      //const data = exCandidates;
+      console.log("data candidate: ", data);
+      setCandidates(data);
+
+      //console.log('currentPage : ', currentPage);
+      const startIdx = (currentPage - 1) * candidatesPerPage;
+      const endIdx = startIdx + candidatesPerPage;
+      setResults(data.slice(startIdx, endIdx));
+      setTotalPages(Math.ceil(data.length / candidatesPerPage));
+    } catch (error) {
+      console.error('Error fetching candidates:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchJobOptions = async (employerId) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`https://job-search-service.azurewebsites.net/job-elastic/jobs-by-employer-id/${employerId}`,{
+        headers: {
+          "Authorization": currentUser?.accessToken,
+        }
+      });
+      const data = await response.json();
+      //console.log('data jobOptions: ', data);
+      if(data.length ===0){
+        setJobOptions(exJobOptions);
+      }else{
+        setJobOptions(data);
+      }
+    } catch (error) {
+      console.error('Error fetching JobOptions:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   useEffect(() => {
-    // const fetchCandidates = async () => {
-    //   setLoading(true);
-    //   try {
-    //     const response = await fetch(`https://localhost:9999/application?page=${currentPage}&perPage=${candidatesPerPage}`);
-    //     const data = await response.json();
-    //     setCandidates(data.candidates);
-    //     setTotalPages(data.totalPages);
-    //   } catch (error) {
-    //     console.error('Error fetching candidates:', error);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
-
-    // const fetchJob = async () => {
-    //   setLoading(true);
-    //   try {
-    //     const response = await fetch(`https://job-search-service.azurewebsites.net/job-elastic/jobs-by-employer-id/${employerId}`);
-    //     const data = await response.json();
-    //     setJobOptions(data);
-    //   } catch (error) {
-    //     console.error('Error fetching JobOptions:', error);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
-
-    // Fake API call for pagination
-    console.log('currentPage useEffect: ', currentPage);
-    const startIdx = (currentPage - 1) * candidatesPerPage;
-    const endIdx = startIdx + candidatesPerPage;
-    setCandidates(exCandidates.slice(startIdx, endIdx));
-    setTotalPages(Math.ceil(exCandidates.length / candidatesPerPage));
-    
+    fetchJobOptions(currentUser?.uid);
+    //console.log("jobOptions: ", jobOptions);
+    fetchCandidates(currentUser?.uid);
+    console.log("candidates: ", candidates);
   }, [currentPage]);
-
+  //console.log("jobOptions: ", jobOptions);
+  //console.log("candidates: ", candidates);
   const handleSearch = async () => {
     setIsLoading(true);
     try {
-      console.log("searchQuery: ", searchQuery, "- selctedStatus: ", selectedStatus);
-      const filteredCandidates = exCandidates.filter(candidate =>
-        candidate.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        (selectedStatus === '' || candidate.status === selectedStatus)
+      console.log("searchQuery: ", searchQuery, "- selctedStatus: ", selectedStatus,"- selctedJob: ", selectedJob);
+
+      const filteredCandidates = candidates.filter(candidate =>
+        candidate.applicationName.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        (selectedStatus === 'all' || candidate.applicationStatus === selectedStatus) &&
+        (selectedJob === 'all' || candidate.jobId === selectedJob) 
       );
-      setResults(filteredCandidates);
+      console.log("filteredCandidate: ", filteredCandidates);
+      setCurrentPage(1);
+      const startIdx = (currentPage - 1) * candidatesPerPage;
+      const endIdx = startIdx + candidatesPerPage;
+      setTotalPages(Math.ceil(filteredCandidates.length / candidatesPerPage));
+      setResults(filteredCandidates.slice(startIdx, endIdx));
+      
     } catch (error) {
       console.error('Error fetching search results:', error);
     } finally {
@@ -346,9 +375,9 @@ const Candidates = () => {
               className="border rounded px-2 py-1 my-2 text-sm w-full"
             >
               <option value="all">All</option>
-              {Object.keys(statusOptions).map((status) => (
-                <option key={status} value={statusOptions[status]}>
-                  {status}
+              {Object.entries(statusOptions).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value}
                 </option>
               ))}
             </select>
@@ -393,10 +422,9 @@ const Candidates = () => {
               </tr>
             </thead>
             <tbody>
-              {(results.length > 0 ? results : candidates).map((candidate, index) => (
-                <CandidateItem key={index} candidate={candidate} />
-              ))}
-              {results.length === 0 && candidates.length === 0 && (
+              {(results.length > 0 ) ? results.map((candidate, index) => (
+                <CandidateItem key={index} candidate={candidate} statusOptions={statusOptions} />
+              )):(
                 <tr>
                   <td colSpan="5" className="p-2 text-center">Have no result.</td>
                 </tr>
@@ -404,8 +432,7 @@ const Candidates = () => {
             </tbody>
           </table>
           {/* Pagination */}
-          
-          <div className="mt-4 flex items-center justify-between">
+          {results.length > 0 && <div className="mt-4 flex items-center justify-between">
                 <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
@@ -428,7 +455,9 @@ const Candidates = () => {
                     <span className="mr-2">Next</span>
                     <ChevronRightIcon className="h-5 w-5" />
                 </button>
-            </div>
+          </div>}
+          
+          
         </div>
       )}
     </div>

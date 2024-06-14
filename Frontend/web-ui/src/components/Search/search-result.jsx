@@ -2,6 +2,17 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useSearchParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../contexts/authContext";
+import { toast } from "react-toastify";
+
+// firebase
+import { db } from "@/firebase/firebase";
+import { setDoc, getDoc, doc } from "firebase/firestore";
+import {
+    StoreRecentViewedJob,
+    StoreSavedJob,
+    CheckIsSavedJob,
+} from "../Employee/employee-job-management";
 
 // Components
 import Container from "@/components/layout/container";
@@ -46,13 +57,46 @@ const SearchResult = () => {
 
     const [jobs, setJobs] = useState([]);
     const [selectedJob, setSelectedJob] = useState(null);
+    const [isSelectedJobSave, setIsSelectedJobSave] = useState(false);
 
-    // Get Jobs from API: https://demo-restful-api-itviec.vercel.app/api/jobs
+    const { currentUser } = useAuth();
 
+    // orignal useEffect
+    // useEffect(() => {
+    //     fetch("https://demo-restful-api-itviec.vercel.app/api/jobs")
+    //         .then((response) => response.json())
+    //         .then((data) => {
+    //             // Filter jobs by city and keyword
+    //             if (city !== "all") {
+    //                 data = data.filter((job) =>
+    //                     job.location.toLowerCase().includes(city),
+    //                 );
+    //             }
+    //             if (keyword) {
+    //                 data = data.filter((job) =>
+    //                     job.title.toLowerCase().includes(keyword),
+    //                 );
+    //             }
+    //             // data = data.map((job) => {console.log(job)})
+
+    //             setJobs(data);
+    //             if (!selectedJob && data.length > 0) setSelectedJob(data[0]);
+    //         })
+    //         .catch((error) => {
+    //             console.error(error);
+    //         });
+    // });
+
+    // useEffect() with adding saveJob atrribute to every job in the jobs list
     useEffect(() => {
-        fetch("https://demo-restful-api-itviec.vercel.app/api/jobs")
-            .then((response) => response.json())
-            .then((data) => {
+        const fetchJobs = async () => {
+            try {
+                // Get Jobs from API: https://demo-restful-api-itviec.vercel.app/api/jobs
+                const response = await fetch(
+                    "https://demo-restful-api-itviec.vercel.app/api/jobs",
+                );
+                let data = await response.json();
+
                 // Filter jobs by city and keyword
                 if (city !== "all") {
                     data = data.filter((job) =>
@@ -65,17 +109,50 @@ const SearchResult = () => {
                     );
                 }
 
-                setJobs(data);
-                if (!selectedJob && data.length > 0) setSelectedJob(data[0]);
-            })
-            .catch((error) => {
+                // Add isSaved attribute to jobs
+                const updatedData = await addIsSavedAttribute(
+                    data,
+                    currentUser,
+                );
+                setJobs(updatedData);
+                if (!selectedJob && updatedData.length > 0)
+                    setSelectedJob(updatedData[0]);
+            } catch (error) {
                 console.error(error);
-            });
-    });
+            }
+        };
+
+        fetchJobs();
+    }, [city, keyword, currentUser, selectedJob]);
+
+    const addIsSavedAttribute = async (jobs, currentUser) => {
+        try {
+            const jobsWithIsSaved = await Promise.all(
+                jobs.map(async (job) => {
+                    const isSaved = await CheckIsSavedJob(job, currentUser);
+                    return { ...job, isSaved };
+                }),
+            );
+            return jobsWithIsSaved;
+        } catch (error) {
+            console.error("Error adding isSaved attribute to jobs:", error);
+            return jobs;
+        }
+    };
 
     const handleListItemClick = (id) => {
         setSelectedJob(jobs.find((job) => job.id === id));
+        let recentJob = jobs.find((job) => job.id === id);
+        StoreRecentViewedJob(recentJob, currentUser);
     };
+
+    const selectedJobClassName =
+        // The red ring around the selected card
+        "relative ring-1 ring-inset ring-primary" +
+        // The red line on the left side of the selected card
+        " before:absolute before:left-0 before:top-[8px] before:h-[calc(100%-16px)] before:w-1.5 before:rounded-r-lg before:bg-primary before:content-['']" +
+        // The red triangle on the right side of the selected card
+        " after:absolute after:left-full after:top-1/2 after:h-0 after:w-0 after:border-b-[10px] after:border-l-[10px] after:border-t-[10px] after:border-b-transparent after:border-l-primary after:border-t-transparent after:content-['']";
 
     return (
         <>
@@ -92,7 +169,7 @@ const SearchResult = () => {
                         {/* Total jobs headline */}
                         <h1 className="text-3xl font-bold text-foreground">
                             {jobs.length}{" "}
-                            <span className={keyword && "text-red-500"}>
+                            <span className={keyword && "text-primary"}>
                                 {keyword || "IT"}
                             </span>{" "}
                             {jobs.length == 1 ? "job" : "jobs"} in {city_label}
@@ -103,7 +180,7 @@ const SearchResult = () => {
                             <DialogTrigger>
                                 <Button
                                     variant="outline"
-                                    className="border-primary bg-none font-bold text-primary hover:text-"
+                                    className="hover:text- border-primary bg-none font-bold text-primary"
                                 >
                                     <Filter className="mr-2" />
                                     Filter
@@ -136,12 +213,7 @@ const SearchResult = () => {
                                             // Conditional styling for the selected card
                                             className={
                                                 selectedJob.id === job.id &&
-                                                // The red ring around the selected card
-                                                "relative ring-1 ring-inset ring-primary" +
-                                                    // The red line on the left side of the selected card
-                                                    " before:absolute before:left-0 before:top-[8px] before:h-[calc(100%-16px)] before:w-1.5 before:rounded-r-lg before:bg-primary before:content-['']" +
-                                                    // The red triangle on the right side of the selected card
-                                                    " after:absolute after:left-full after:top-1/2 after:h-0 after:w-0 after:border-b-[10px] after:border-l-[10px] after:border-t-[10px] after:border-b-transparent after:border-l-primary after:border-t-transparent after:content-['']"
+                                                selectedJobClassName
                                             }
                                         >
                                             <CardHeader>
@@ -211,7 +283,11 @@ const SearchResult = () => {
 
                         {/* Job detail */}
                         <div className="col-span-6">
-                            <JobDetail job={selectedJob} />
+                            {selectedJob ? (
+                                <JobDetail job={selectedJob} />
+                            ) : (
+                                <div>No job selected</div>
+                            )}
                         </div>
                     </div>
                 </Container>
@@ -224,34 +300,5 @@ SearchResult.propTypes = {
     city: PropTypes.string,
     query: PropTypes.string,
 };
-
-// const JobDetailInSearchResult = ({ job }) => {
-//     if (!job) {
-//         return null;
-//     }
-//     // May use the same component for JobDetail in JobDetail page
-//     // But for now, we just show the title, company name, and salary
-//     return (
-//         <div className="sticky top-[100px] rounded-lg bg-white p-6">
-//             <div className="flex-col space-y-3">
-//                 <h2 className="text-3xl font-bold">{job.title ?? ""}</h2>
-//                 <p className="text-xl">{job.company?.name ?? ""}</p>
-//                 <p className="flex space-x-1 text-base text-green-600">
-//                     <CircleDollarSign />
-//                     <div>{job.salary}</div>
-//                 </p>
-//                 <hr />
-//                 <p>
-//                     <h2 className="text-2xl font-bold">Description</h2>
-//                     <p className="text-base">{job.description}</p>
-//                 </p>
-//             </div>
-//         </div>
-//     );
-// };
-
-// JobDetailInSearchResult.propTypes = {
-//     job: PropTypes.object,
-// };
 
 export default SearchResult;
