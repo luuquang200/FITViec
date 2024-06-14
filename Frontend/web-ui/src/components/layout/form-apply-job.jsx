@@ -377,7 +377,7 @@ const FormApplyJob = () => {
                 Send my CV
               </button>
             </div>
-          </form>
+          {/* </form> */}
         </div>
         </div>
     );
