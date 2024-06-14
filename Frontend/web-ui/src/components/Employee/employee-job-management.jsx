@@ -7,21 +7,22 @@ import React, { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../contexts/authContext";
 import { toast } from "react-toastify";
 
-
 import EmployeeJobSave from "./employee-job-save";
 
 const StoreRecentViewedJob = async (job, currentUser) => {
     try {
         const docRef = doc(db, "employeeJobInfo", currentUser.uid);
         const docSnap = await getDoc(docRef);
-  
+
         if (docSnap.exists()) {
             const profileData = docSnap.data();
             const jobRecentView = profileData.jobRecentView || [];
-  
+
             // Check if the job is already in the jobRecentView array
-            const jobExists = jobRecentView.some((viewedJob) => viewedJob.id === job.id);
-  
+            const jobExists = jobRecentView.some(
+                (viewedJob) => viewedJob.id === job.id,
+            );
+
             if (!jobExists) {
                 // Append the new job to the existing array
                 await updateDoc(docRef, {
@@ -36,7 +37,7 @@ const StoreRecentViewedJob = async (job, currentUser) => {
                 jobRecentView: [job],
             });
         }
-  
+
         toast.success("Job viewed successfully!");
     } catch (error) {
         toast.error("Error updating StoreRecentViewedJob:", error);
@@ -82,54 +83,53 @@ const StoreSavedJob = async (job, currentUser, isSaved) => {
     }
 };
 
-const CheckIsSavedJob = async (job,currentUser) => {
+const CheckIsSavedJob = async (job, currentUser) => {
     try {
         if (currentUser) {
             const profileDoc = await getDoc(
                 doc(db, "employeeJobInfo", currentUser.uid),
             );
-            const profileData = profileDoc.exists()
-                ? profileDoc.data()
-                : {};
-            const targetJob = profileData.jobSaved.find((jobSaving) => jobSaving.id === job.id)
-            return targetJob.isSaved
+            const profileData = profileDoc.exists() ? profileDoc.data() : {};
+            const targetJob = profileData.jobSaved.find(
+                (jobSaving) => jobSaving.id === job.id,
+            );
+            return targetJob.isSaved;
         }
-        return false
+        return false;
     } catch (error) {
         toast.error("Error updating StoreRecentViewedJob:", error);
     }
 };
 
-
-const EmployeeJobManagment = () => {
+const EmployeeJobManagement = () => {
     // const { currentUser, inSingUpInPage, isGoogleUser } = useAuth();
 
     // const [profileUser, setProfileUser] = useState("null");
 
     const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-          await setDoc(doc(db, "employeeJobInfo", currentUser.uid), {
-            jobRecentView: null,
-          });
+        e.preventDefault();
+        try {
+            await setDoc(doc(db, "employeeJobInfo", currentUser.uid), {
+                jobRecentView: null,
+            });
 
-          toast.success("Update Company test successfully ");
-      } catch (error) {
-          toast.error("Error update user AboutMe :", error);
-      }
+            toast.success("Update Company test successfully ");
+        } catch (error) {
+            toast.error("Error update user AboutMe :", error);
+        }
     };
 
     return (
-    <>
-      <div className=" min-h-screen bg-gray-200 w-full">
-      <EmployeeJobNavbar />
-      {/* <p className="text-2xl">{console.log(profileUser)}</p> */}
+        <>
+            <div className=" min-h-screen w-full bg-gray-200">
+                <EmployeeJobNavbar />
+                {/* <p className="text-2xl">{console.log(profileUser)}</p> */}
 
-      <EmployeeJobSave/>
-    </div>
-    </>
+                <EmployeeJobSave />
+            </div>
+        </>
     );
 };
-  
-export default EmployeeJobManagment;
-export {StoreRecentViewedJob, StoreSavedJob, CheckIsSavedJob};
+
+export default EmployeeJobManagement;
+export { StoreRecentViewedJob, StoreSavedJob, CheckIsSavedJob };
