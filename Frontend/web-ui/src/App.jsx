@@ -5,7 +5,6 @@ import HomePage from "@/components/HomePage";
 
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
-import MainTablet from "@/components/layout/main-tablet";
 import FormApplyJob from "@/components/layout/form-apply-job";
 import SearchResult from "./components/Search/search-result";
 import JobDetailGuestPage from "./components/ui/job-detail-guest/job-detail-guest";
@@ -70,7 +69,10 @@ function App() {
                 />
                 <Route path="/sign_in" element={<SignIn />} />
                 <Route path="/sign_up" element={<SignUp />} />
-                <Route path="/job-detail/:jobId" element={<JobDetailGuestPage />} />
+                <Route
+                    path="/job-detail/:jobId"
+                    element={<JobDetailGuestPage />}
+                />
                 <Route
                     path="/form-apply-job/:jobId"
                     element={<FormApplyJob />}
@@ -149,12 +151,20 @@ function App() {
                 <Route
                     path="/customer/notification"
                     element={
-                        // <ProtectedRouteVerify>
-                        <VerifyEmployer />
-                        // </ProtectedRouteVerify>
+                        <ProtectedRouteVerify>
+                            <VerifyEmployer />
+                        </ProtectedRouteVerify>
                     }
                 />
-                <Route path="/settings" element={<SettingsAccount />} />
+                <Route
+                    path="/settings"
+                    element={
+                        <ProtectedRoute allowedRole="user">
+                            {" "}
+                            <SettingsAccount />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
             <Footer />
         </AuthProvider>

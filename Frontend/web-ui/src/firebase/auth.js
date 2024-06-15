@@ -48,7 +48,7 @@ export const doApplyActionCode = (oobCode) => {
 // Gửi email ResetPassWord
 export const doSendEmailPasswordReset = (email) => {
     return sendPasswordResetEmail(auth, email, {
-        url: "http://localhost:5173/sign_in",
+        url: "https://fitviec-gpc3dcbsewfcffav.southeastasia-01.azurewebsites.net/sign_in",
     });
 };
 // You can't access this page without coming from a password reset email. If you do come from a password reset email, please make sure you used the full URL provided.
