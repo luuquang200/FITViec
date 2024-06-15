@@ -1,10 +1,10 @@
-﻿namespace EmployerService.Domain.DTO
+﻿using EmployerService.Domain.DTO;
+
+namespace EmployerService.Domain.DTO
 {
-	public class JobDto
+	public class CreateJobRequestDto
 	{
-		public string JobId { get; set; }
 		public string EmployerId { get; set; }
-		public string JobStatus { get; set; }
 		public string JobSalary { get; set; }
 		public string JobTitle { get; set; }
 		public string JobLocation { get; set; }
@@ -15,6 +15,8 @@
 		public string JobResponsibility { get; set; }
 		public string JobRequirement { get; set; }
 		public string JobBenefit { get; set; }
+		public EmployerInfoDto EmployerInfo { get; set; }
 	}
+
 }
 

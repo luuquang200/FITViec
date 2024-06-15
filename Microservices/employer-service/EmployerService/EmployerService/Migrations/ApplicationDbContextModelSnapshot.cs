@@ -43,6 +43,9 @@ namespace EmployerService.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Image")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("KeySkills")
                         .HasColumnType("longtext");
 
@@ -67,42 +70,6 @@ namespace EmployerService.Migrations
                     b.HasKey("CompanyId");
 
                     b.ToTable("Companies");
-                });
-
-            modelBuilder.Entity("EmployerService.Domain.Entities.CompanyImage", b =>
-                {
-                    b.Property<string>("ImageId")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("CompanyId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("ImageId");
-
-                    b.HasIndex("CompanyId");
-
-                    b.ToTable("CompanyImages");
-                });
-
-            modelBuilder.Entity("EmployerService.Domain.Entities.CompanyImage", b =>
-                {
-                    b.HasOne("EmployerService.Domain.Entities.Company", "Company")
-                        .WithMany("Images")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-                });
-
-            modelBuilder.Entity("EmployerService.Domain.Entities.Company", b =>
-                {
-                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

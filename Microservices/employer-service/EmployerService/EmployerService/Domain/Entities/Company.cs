@@ -18,6 +18,6 @@ namespace EmployerService.Domain.Entities
 		public string? LogoUrl { get; set; }
 		public string? Location { get; set; }
 		public string? WorkType { get; set; }
-		public ICollection<CompanyImage>? Images { get; set; }
+		public string? Image { get; set; }
 	}
 }

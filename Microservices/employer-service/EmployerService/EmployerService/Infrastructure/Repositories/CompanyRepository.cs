@@ -12,7 +12,8 @@ namespace EmployerService.Infrastructure.Repositories
 		Task<Company> GetByEmployerIdAsync(string employerId);
 		Task UpdateAsync(Company company);
 		Task DeleteAsync(string companyId);
-		Task<List<CompanyDto>> GetAllCompaniesAsync();
+		Task<List<Company>> GetAllCompaniesAsync();
+		Task<List<Company>> GetTopCompaniesAsync();
 	}
 	public class CompanyRepository : ICompanyRepository
 	{
@@ -31,9 +32,14 @@ namespace EmployerService.Infrastructure.Repositories
 
 		public async Task<Company> GetByIdAsync(string companyId)
 		{
-			return await _context.Companies
-				.Include(c => c.Images)
+			var company = await _context.Companies
 				.FirstOrDefaultAsync(c => c.CompanyId == companyId);
+
+			if (company == null)
+			{
+				return null;
+			}
+			return company;
 		}
 
 		public async Task UpdateAsync(Company company)
@@ -54,44 +60,36 @@ namespace EmployerService.Infrastructure.Repositories
 
 		public async Task<Company> GetByEmployerIdAsync(string employerId)
 		{
-			return await _context.Companies
-				.Include(c => c.Images)
+			var company = await _context.Companies
 				.FirstOrDefaultAsync(c => c.EmployerId == employerId);
+
+			if (company == null)
+			{
+				return null;
+			}
+
+			return company;
 		}
-		public async Task<List<CompanyDto>> GetAllCompaniesAsync()
+		public async Task<List<Company>> GetAllCompaniesAsync()
 		{
 			try
 			{
-				var companies = await _context.Companies
-					.Include(c => c.Images)
-					.ToListAsync();
-				var companyDtos = new List<CompanyDto>();
-				foreach (var company in companies)
-				{
-					var companyDto = new CompanyDto
-					{
-						CompanyId = company.CompanyId,
-						EmployerId = company.EmployerId,
-						CompanyName = company.CompanyName,
-						CompanyType = company.CompanyType,
-						CompanySize = company.CompanySize,
-						Country = company.Country,
-						WorkingDays = company.WorkingDays,
-						OvertimePolicy = company.OvertimePolicy,
-						CompanyOverview = company.CompanyOverview,
-						KeySkills = company.KeySkills,
-						WhyLoveWorkingHere = company.WhyLoveWorkingHere,
-						LogoUrl = company.LogoUrl,
-						Location = company.Location,
-						WorkType = company.WorkType,
-						Images = company.Images.Select(i => new ImageDto
-						{
-							ImageUrl = i.ImageUrl
-						}).ToList()
-					};
-					companyDtos.Add(companyDto);
-				}
-				return companyDtos;
+				var companies = await _context.Companies.ToListAsync();
+				return companies;
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+		}
+
+
+		public async Task<List<Company>> GetTopCompaniesAsync()
+		{
+			try
+			{
+				var companies = await _context.Companies.ToListAsync();
+				return companies;
 			}
 			catch (Exception ex)
 			{
