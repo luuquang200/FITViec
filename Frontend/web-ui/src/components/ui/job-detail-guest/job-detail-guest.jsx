@@ -7,7 +7,7 @@ import JobCardSimilar from "@/components/ui/job-detail-guest/job-card";
 import { useAuth } from "../../../contexts/authContext";
 import { toast } from "react-toastify";
 import ClipLoader from "react-spinners/ClipLoader";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 // const job_detail = {
 //   "employerId": "hansentechnologies",
@@ -45,6 +45,7 @@ const JobDetailGuestPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [jobData, setJobData] = useState(null);
   const { currentUser}  = useAuth();
+  const navigate  = useNavigate();
   console.log("currentUser: ", currentUser);
   //Call API get job infor
   const fetchJobData = async (jobId) => {
@@ -66,6 +67,7 @@ const JobDetailGuestPage = () => {
     } catch (error) {
       toast.error("Error fetching JobData:");
       console.error('Error fetching JobData:', error);
+      navigate("/")
     }
   };
   useEffect(()=>{
