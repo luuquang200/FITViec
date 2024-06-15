@@ -205,7 +205,7 @@ const JobManagement = ({ onSelectJob }) => {
                                     {row.cells.map((cell) => (
                                         <td
                                             {...cell.getCellProps()}
-                                            className="break-all px-6 py-4 text-sm text-gray-500"
+                                            className={`break-all px-6 py-4 text-sm font-semibold text-gray-500 ${cell.value == "pending" ? "text-orange-600" : cell.value == "approved" ? "text-green-600" : cell.value == "rejected" ? "text-red-600" : "text-gray-500"}`}
                                         >
                                             {cell.render("Cell")}
                                         </td>

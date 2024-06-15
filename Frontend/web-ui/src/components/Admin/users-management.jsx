@@ -20,6 +20,8 @@ import {
     FaLink,
     FaUserFriends,
 } from "react-icons/fa";
+
+import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-toastify";
 import { ClipLoader, MoonLoader } from "react-spinners"; // Import the ClipLoader
 import { db } from "../../firebase/firebase";
@@ -91,7 +93,7 @@ const UserManagement = () => {
                 Cell: ({ row }) => (
                     <div className="flex items-center justify-center space-x-2">
                         {row.original.googleAuth ? (
-                            <FaGoogle className="h-5 w-5  text-gray-500" />
+                            <FcGoogle className="h-5 w-5  text-gray-500" />
                         ) : (
                             <FaEnvelope className="h-5 w-5 text-gray-500" />
                         )}
