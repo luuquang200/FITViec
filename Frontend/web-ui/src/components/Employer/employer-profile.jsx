@@ -79,7 +79,6 @@ const EmployerProfile = () => {
     const [companyOverview, setCompanyOverview] = useState("");
     const [whyLoveWorkingHere, setWhyLoveWorkingHere] = useState("");
     const [keyskills, setKeyskills] = useState("");
-    const [selectedFile, setSelectedFile] = useState(null);
     const [logoUrl, setLogoUrl] = useState("");
     const [location, setLocation] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -177,14 +176,13 @@ const EmployerProfile = () => {
         }
     };
 
-    const handleFileChange = (event) => {
-        setSelectedFile(event.target.files[0]);
-        updateLogo();
+    const handleFileChange = async (event) => {
+      updateLogo(event.target.files[0]);
     };
 
-    const updateLogo = async () => {
-        const formData = new FormData();
-        formData.append("file", selectedFile);
+    const updateLogo = async (data) => {
+      const formData = new FormData();
+      formData.append("file", data);
 
         try {
             const response = await fetch(

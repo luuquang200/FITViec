@@ -1,22 +1,19 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "@/contexts/authContext";
 
 // Components
 import Container from "@/components/layout/container";
 import EmployerCard from "@/components/employer-card";
 
 const TopEmployerSection = () => {
-    const { currentUser } = useAuth();
     const [employers, setEmployers] = useState([]);
 
     useEffect(() => {
         const fetchTopEmployers = async () => {
             try {
                 const response = await fetch(
-                    `https://employer-service-otwul2bnna-uc.a.run.app/employer/get-top`,
+                    "https://employer-service-otwul2bnna-uc.a.run.app/employer/get-top",
                 );
                 let data = await response.json();
-                console.log(data.data);
 
                 setEmployers(data.data);
             } catch (error) {
