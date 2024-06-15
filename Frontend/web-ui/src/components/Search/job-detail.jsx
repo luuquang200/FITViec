@@ -31,7 +31,6 @@ const JobDetail = ({ job }) => {
     const [reload, setReload] = useState(0);
     // const [isLike, setisLike] = useState(false); => use job.isSaved props instead of use isLike with useState
 
-
     const handleLiked = () => {
         job.isSaved = !job.isSaved;
         StoreSavedJob(job, currentUser, job.isSaved);
@@ -70,10 +69,12 @@ const JobDetail = ({ job }) => {
                 {/* Action buttons container */}
                 <div className="flex space-x-2 pt-3">
                     <Button className="flex-1">
-                        <Link to={`/form-apply-job/${job.id}`} className="button-link flex-1">
+                        <Link
+                            to={`/form-apply-job/${job.id}`}
+                            className="button-link flex-1"
+                        >
                             Apply now
                         </Link>
-
                     </Button>
 
                     <Button
@@ -160,9 +161,7 @@ const JobDetail = ({ job }) => {
                     <div className="space-y-2">
                         <h1 className="text-2xl font-bold">Job description</h1>
 
-
                         {job.description}
-
                     </div>
                 </CardContent>
             </ScrollArea>
