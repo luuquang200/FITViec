@@ -106,6 +106,8 @@ const SearchResult = () => {
     const [jobs, setJobs] = useState([]);
     const [firstjobs, setFirstJobs] = useState([]);
     const [selectedJob, setSelectedJob] = useState(null);
+    const [isFilterFormOpen, setisFilterFormOpen] = useState(false);
+
     // const [isSelectedJobSave, setIsSelectedJobSave] = useState(false);
 
     const { currentUser } = useAuth();
@@ -114,10 +116,13 @@ const SearchResult = () => {
 
     const handleApplyFilters = (newFilters) => {
         console.log('Applied Filters:', newFilters);
+        setSelectedJob(null)
         setFilters(newFilters);
-
+        setisFilterFormOpen(false)
         // Apply filters to your data or state
     };
+
+    const handleFilterForm = () => setisFilterFormOpen(true)
     /*
     const ApplyFiltersToJobs = () => {
         if (filters) {
@@ -157,13 +162,13 @@ const SearchResult = () => {
         }
 
         let filteredJobs = firstjobs;
-        if (filters.selectedLevel) {
+        if ( filters.selectedLevel) {
             filteredJobs = firstjobs.filter(job =>
-                filters.selectedLevel.some(level => job.level.includes(level))
+                job.level && filters.selectedLevel.some(level => job.level.includes(level))
             );
         }
 
-        if (filters.selectedWorkingModel) {
+        if ( filters.selectedWorkingModel) {
             filteredJobs = firstjobs.filter(job =>
                 filters.selectedWorkingModel.some(workingModel => job.working_model.includes(workingModel))
             );
@@ -271,7 +276,7 @@ const SearchResult = () => {
         };
 
         fetchJobs(keyword, city);
-    }, [city, keyword, currentUser, selectedJob]);
+    }, [city, keyword, currentUser]);
     const addIsSavedAttribute = async (jobs, currentUser) => {
         try {
             const jobsWithIsSaved = await Promise.all(
@@ -323,9 +328,11 @@ const SearchResult = () => {
                         </h1>
 
                         {/* Filter button */}
+                       
                         <Dialog>
                             <DialogTrigger>
                                 <Button
+                                    onClick = {handleFilterForm}
                                     variant="outline"
                                     className="hover:text- border-primary bg-none font-bold text-primary"
                                 >
@@ -333,7 +340,7 @@ const SearchResult = () => {
                                     Filter
                                 </Button>
                             </DialogTrigger>
-
+                            {isFilterFormOpen ? (
                             <DialogContent className="w-full">
                                 <DialogHeader >
                                     <DialogTitle>
@@ -341,9 +348,10 @@ const SearchResult = () => {
                                         <hr></hr>
                                     </DialogTitle>
                                 </DialogHeader>
-
+                                
                                 <FilterForm onApply={handleApplyFilters} onReset={handleResetFilters} />
-                            </DialogContent>
+                                    
+                            </DialogContent>): ("")}
                         </Dialog>
                     </div>
 
@@ -359,6 +367,7 @@ const SearchResult = () => {
                                             handleListItemClick(job.id)
                                         }
                                     >
+                                        {selectedJob != null ? (
                                         <Card
                                             // Conditional styling for the selected card
                                             className={
@@ -425,7 +434,7 @@ const SearchResult = () => {
                                                     ))}
                                                 </div>
                                             </CardContent>
-                                        </Card>
+                                        </Card>) : ("")}
                                     </li>
                                 ))}
                             </ul>
