@@ -102,6 +102,9 @@ module.exports = {
                 "vh-main": "calc(100vh - 417px)",
                 "vh-employer-login": "calc(100vh - 88px)",
             },
+            minHeight: {
+                128: "50rem",
+            },
         },
     },
     variants: {

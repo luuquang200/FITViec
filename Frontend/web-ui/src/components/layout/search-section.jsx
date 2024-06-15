@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 // Components
 import Container from "@/components/layout/container";
 import SearchBar from "./search-bar";
@@ -28,13 +30,17 @@ const SearchSection = () => {
                     <h1 className="text-lg text-background">Trending now:</h1>
 
                     {trendingNow.map((item, index) => (
-                        <Badge
+                        <Link
                             key={index}
-                            variant="outline"
-                            className="border-muted-foreground text-base font-normal text-background"
+                            to={`/search?keyword=${item}&city=all%20cities`}
                         >
-                            {item}
-                        </Badge>
+                            <Badge
+                                variant="outline"
+                                className="border-muted-foreground text-base font-normal text-background"
+                            >
+                                {item}
+                            </Badge>
+                        </Link>
                     ))}
                 </div>
             </Container>

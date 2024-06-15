@@ -10,17 +10,13 @@ const TopEmployerSection = () => {
     const [employers, setEmployers] = useState([]);
 
     useEffect(() => {
-        const fetchAllEmployers = async () => {
+        const fetchTopEmployers = async () => {
             try {
                 const response = await fetch(
-                    `https://employer-service-otwul2bnna-uc.a.run.app/employer/get-all`,
-                    {
-                        headers: {
-                            Authorization: currentUser?.accessToken,
-                        },
-                    },
+                    `https://employer-service-otwul2bnna-uc.a.run.app/employer/get-top`,
                 );
                 let data = await response.json();
+                console.log(data.data);
 
                 setEmployers(data.data);
             } catch (error) {
@@ -28,7 +24,7 @@ const TopEmployerSection = () => {
             }
         };
 
-        fetchAllEmployers();
+        fetchTopEmployers();
     }, []);
 
     return (

@@ -84,40 +84,40 @@ const StoreSavedJob = async (job, currentUser, isSaved) => {
     }
 };
 
-// const StoreAppliedJob = async (job, currentUser) => {
-//     try {
-//         const docRef = doc(db, "employeeJobInfo", currentUser.uid);
-//         const docSnap = await getDoc(docRef);
+const StoreAppliedJob = async (jobID, currentUser) => {
+    try {
+        const docRef = doc(db, "employeeJobInfo", currentUser.uid);
+        const docSnap = await getDoc(docRef);
 
-//         if (docSnap.exists()) {
-//             const profileData = docSnap.data();
-//             const jobApply = profileData.jobApplied || [];
+        if (docSnap.exists()) {
+            const profileData = docSnap.data();
+            const jobApply = profileData.jobApplied || [];
 
-//             // Check if the job is already in the jobRecentView array
-//             const jobExists = jobApply.some(
-//                 (jobApplied) => jobApplied.id === job.id,
-//             );
+            // Check if the job is already in the jobRecentView array
+            const jobExists = jobApply.some(
+                (jobApplied) => jobApplied === jobID,
+            );
 
-//             if (!jobExists) {
-//                 // Append the new job to the existing array
-//                 await updateDoc(docRef, {
-//                     jobApplied: arrayUnion(job),
-//                 });
-//             } else {
-//                 console.log("Job is already in the applied view list");
-//             }
-//         } else {
-//             // If the document does not exist, create it with the new job
-//             await setDoc(docRef, {
-//                 jobApplied: [job],
-//             });
-//         }
+            if (!jobExists) {
+                // Append the new job to the existing array
+                await updateDoc(docRef, {
+                    jobApplied: arrayUnion(jobID),
+                });
+            } else {
+                console.log("Job is already in the applied view list");
+            }
+        } else {
+            // If the document does not exist, create it with the new job
+            await setDoc(docRef, {
+                jobApplied: [jobID],
+            });
+        }
 
-//         toast.success("Job applied successfully!");
-//     } catch (error) {
-//         toast.error("Error updating StoreRecentViewedJob:", error);
-//     }
-// };
+        toast.success("Stored Job applied successfully!");
+    } catch (error) {
+        toast.error("Error updating StoreRecentViewedJob:", error);
+    }
+};
 
 const CheckIsSavedJob = async (job, currentUser) => {
     try {
@@ -171,4 +171,4 @@ const EmployeeJobManagement = () => {
 };
 
 export default EmployeeJobManagement;
-export { StoreRecentViewedJob, StoreSavedJob, CheckIsSavedJob };
+export { StoreRecentViewedJob, StoreSavedJob, StoreAppliedJob,  CheckIsSavedJob };
