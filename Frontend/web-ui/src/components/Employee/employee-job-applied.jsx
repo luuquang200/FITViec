@@ -2,6 +2,7 @@ import EmployeeJobNavbar from "./employee-job-navbar";
 import JobDetail from "../Search/job-detail";
 import JobCard from "../ui/job-card";
 import EmployeeViewJobCard from "./employee-view-jobcard";
+import EmployeeViewAppliedJob from "./employee-view-applied-job";
 
 import { db } from "@/firebase/firebase";
 import { setDoc, getDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
@@ -15,6 +16,7 @@ const images ={ jobImage:'https://itviec.com/assets/everything-empty-62c813bcb84
 
 const EmployeeJobApplied = () => {
     const { currentUser, inSingUpInPage, isGoogleUser } = useAuth();
+    const [jobAppliedRender, setJobAppliedRender] = useState([]);
     const [profileUser, setProfileUser] = useState("null");
     
     useEffect(() => {
@@ -33,7 +35,39 @@ const EmployeeJobApplied = () => {
       fetchUserData();
     }, []);
 
+    useEffect(() => {
+      const fetchJobData = async (jobId) => {
+          try {
+              const response = await fetch(`https://job-search-service.azurewebsites.net/job-elastic/job-by-id/${jobId}`);
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              const data = await response.json();
+              return data;
+          } catch (error) {
+              console.error('Error fetching JobData:', error);
+              return null;
+          }
+      };
 
+      const fetchAllJobs = async () => {
+            console.log(profileUser.jobApplied)
+          if (profileUser.jobApplied && profileUser.jobApplied.length > 0) {
+              try {
+                  const jobDataPromises = profileUser.jobApplied.map(jobId => fetchJobData(jobId));
+                  const jobDataArray = await Promise.all(jobDataPromises);
+                  const validJobDataArray = jobDataArray.filter(job => job !== null);
+                  setJobAppliedRender(validJobDataArray);
+                  console.log(validJobDataArray)
+                  toast.success("Successfully fetched job data!");
+              } catch (error) {
+                  toast.error("Error fetching job data");
+              }
+          }
+      };
+
+      fetchAllJobs();
+  }, [profileUser]);
 
     return (
       <div className=" min-h-screen bg-gray-200 w-full">
@@ -51,7 +85,7 @@ const EmployeeJobApplied = () => {
               <div className="">
 
                   {profileUser && profileUser.jobApplied && profileUser.jobApplied.length != 0 ? (
-                          <EmployeeViewJobCard jobs={profileUser.jobApplied} location="job-applied" />
+                          <EmployeeViewAppliedJob jobs={jobAppliedRender} />
                   ) : (
                     <div className="flex flex-col h-72 justify-center">
                     <div className="self-center"><img src={images.jobImage} alt="JOB Folder" /></div>

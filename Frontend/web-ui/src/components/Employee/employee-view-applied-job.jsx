@@ -13,27 +13,18 @@ import { Badge } from "@/components/ui/badge";
 import JobDetail from "@/components/Search/job-detail";
 
 // Icons
-import { CircleDollarSign, MapPin, Laptop, Filter } from "lucide-react";
+import { CircleDollarSign, MapPin, Laptop, Filter, Check} from "lucide-react";
 
-const EmployeeViewJobCard = ({jobs,location}) => {
+const EmployeeViewAppliedJob = ({jobs}) => {
 
-    const isRender = (job,location) => {
-        if (location !="job-saved")
-            return true
-        
-        if (job.isSaved == null)
-            return true;
-        else return job.isSaved
-    }
     return (
 <div className="bg-gray-200">
     <ul className="grid grid-cols-4 gap-4">
         {jobs.map((job) => (
-            isRender(job,location) ? 
-            (<li
-                key={job.id}
+            <li
+                key={job.jobId}
                 onClick={() =>
-                    handleListItemClick(job.id)
+                    handleListItemClick(job.jobId)
                 }
             >
                 <Card
@@ -41,27 +32,27 @@ const EmployeeViewJobCard = ({jobs,location}) => {
                     <CardHeader>
                         {/* Posted date */}
                         <p className="text-sm text-gray-500">
-                            Posted on {job.posted_day}
+                            Posted on {job.postedAt}
                         </p>
 
                         {/* Job title */}
                         <CardTitle>
                             <Link
-                                to={`/job-detail/${job.id}`}
+                                to={`/job-detail/${job.jobId}`}
                             >
-                                {job.title}
+                                {job.jobTitle}
                             </Link>
                         </CardTitle>
 
                         {/* Company name */}
                         <p className="text-base">
-                            {job.company?.name}
+                            {job.employerInfo?.companyName}
                         </p>
 
                         {/* Salary */}
                         <p className="flex space-x-3 text-green-600">
                             <CircleDollarSign />
-                            <div>{job.salary}</div>
+                            <div>{job.jobSalary}</div>
                         </p>
                     </CardHeader>
 
@@ -69,24 +60,23 @@ const EmployeeViewJobCard = ({jobs,location}) => {
 
                     <CardContent>
                         <CardDescription className="flex items-center space-x-2">
-                            <Laptop className="h-5 w-5" />
-
+                            <MapPin className="h-5 w-5" />
                             <p className="text-foreground">
-                                {job.working_model}
+                                {job.jobLocation}
                             </p>
                         </CardDescription>
 
-                        <CardDescription className="flex items-center space-x-2">
-                            <MapPin className="h-5 w-5" />
+                        <CardDescription className="mt-5 flex items-center space-x-2">
+                            <Check className="h-5 w-5 stroke-green-500" />
 
                             <p className="text-foreground">
-                                {job.location}
+                                {job.jobStatus}
                             </p>
                         </CardDescription>
 
                         {/* Skills section */}
                         <div className="space-x-1 space-y-1 pt-2">
-                            {job.skills.map((skill) => (
+                            {/* {job.jobSkills.map((skill) => (
                                 <Badge
                                     key={skill}
                                     variant="outline"
@@ -94,15 +84,15 @@ const EmployeeViewJobCard = ({jobs,location}) => {
                                 >
                                     {skill}
                                 </Badge>
-                            ))}
+                            ))} */}
                         </div>
                     </CardContent>
                 </Card>
-            </li>) : ("")
+            </li>
         ))}
     </ul>
 </div>
     );
 };
 
-export default EmployeeViewJobCard;
+export default EmployeeViewAppliedJob;

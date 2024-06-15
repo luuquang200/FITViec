@@ -10,6 +10,7 @@ import { storage } from "../../firebase/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import ClipLoader from "react-spinners/ClipLoader";
+import { StoreAppliedJob } from "../Employee/employee-job-management";
 
 // const job_detail = {
 //   "employerId": "hansentechnologies",
@@ -204,7 +205,12 @@ const FormApplyJob = () => {
                 method: 'POST',
                 body: JSON.stringify(data),
             });
-    
+
+            // nếu đã apply thành công thì lưu lại là job này đã applied
+            if (response.ok) {
+                StoreAppliedJob(jobId,currentUser)
+            }
+
             if (!response.ok) {
                 throw new Error('Failed to submit application');
             }
