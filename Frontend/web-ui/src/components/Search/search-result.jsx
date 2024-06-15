@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import JobDetail from "@/components/Search/job-detail";
+import FilterForm from "./filter";
 
 // Icons
 import { CircleDollarSign, MapPin, Laptop, Filter } from "lucide-react";
@@ -56,10 +57,81 @@ const SearchResult = () => {
     const keyword = searchParams.get("keyword").toLowerCase();
 
     const [jobs, setJobs] = useState([]);
+    const [firstjobs, setFirstJobs] = useState([]);
     const [selectedJob, setSelectedJob] = useState(null);
-    const [isSelectedJobSave, setIsSelectedJobSave] = useState(false);
+    // const [isSelectedJobSave, setIsSelectedJobSave] = useState(false);
 
     const { currentUser } = useAuth();
+
+    const [filters, setFilters] = useState(null);
+
+    const handleApplyFilters = (newFilters) => {
+        console.log('Applied Filters:', newFilters);
+        setFilters(newFilters);
+
+        // Apply filters to your data or state
+    };
+    /*
+    const ApplyFiltersToJobs = () => {
+        if (filters) {
+            setJobs(firstjobs);
+            firstjobs.filter((job)=>{
+                console.log("Fisrt Job id: " + job.id);
+            });
+            jobs.filter((job)=>{
+                console.log("Job id: " + job.id);
+            });
+            if (filters.selectedLevel) {
+              //  console.log("Filter Level: " + filters.selectedLevel);
+                const filterJobs = jobs.filter(job => {
+              //      console.log("Job level: " + job.level);
+                    return filters.selectedLevel.some(level => job.level.includes(level));
+                });
+              //  console.log("Filter Jobs: ", filterJobs);
+                setJobs(filterJobs);
+            }
+            if (filters.selectedWorkingModel) {
+              //  console.log("Filter selectedWorkingModel: " + filters.selectedWorkingModel);
+                const filterJobs = jobs.filter(job => {
+              //      console.log("Job Working Model: " + job.working_model);
+                    return filters.selectedWorkingModel.some(workingModel => job.working_model.includes(workingModel));
+                });
+              //  console.log("Filter Jobs: ", filterJobs);
+                setJobs(filterJobs);
+            }
+           
+        }
+
+    };*/
+    const ApplyFiltersToJobs = () => {
+        if (!filters) {
+            setJobs(firstjobs);
+            return;
+        }
+
+        let filteredJobs = firstjobs;
+        if (filters.selectedLevel) {
+            filteredJobs = firstjobs.filter(job =>
+                filters.selectedLevel.some(level => job.level.includes(level))
+            );
+        }
+
+        if (filters.selectedWorkingModel) {
+            filteredJobs = firstjobs.filter(job =>
+                filters.selectedWorkingModel.some(workingModel => job.working_model.includes(workingModel))
+            );
+        }
+
+        setJobs(filteredJobs);
+    };
+    useEffect(() => {
+        ApplyFiltersToJobs();
+    }, [filters]);
+    const handleResetFilters = () => {
+        console.log('Filters reset');
+        setFilters(null);
+        // Reset filters in your data or state
+    };
 
     // orignal useEffect
     // useEffect(() => {
@@ -115,6 +187,7 @@ const SearchResult = () => {
                     currentUser,
                 );
                 setJobs(updatedData);
+                setFirstJobs(updatedData);
                 if (!selectedJob && updatedData.length > 0)
                     setSelectedJob(updatedData[0]);
             } catch (error) {
@@ -124,7 +197,6 @@ const SearchResult = () => {
 
         fetchJobs();
     }, [city, keyword, currentUser, selectedJob]);
-
     const addIsSavedAttribute = async (jobs, currentUser) => {
         try {
             const jobsWithIsSaved = await Promise.all(
@@ -141,9 +213,9 @@ const SearchResult = () => {
     };
 
     const handleListItemClick = (id) => {
-        setSelectedJob(jobs.find((job) => job.id === id));
         let recentJob = jobs.find((job) => job.id === id);
         StoreRecentViewedJob(recentJob, currentUser);
+        setSelectedJob(jobs.find((job) => job.id === id));
     };
 
     const selectedJobClassName =
@@ -187,12 +259,15 @@ const SearchResult = () => {
                                 </Button>
                             </DialogTrigger>
 
-                            <DialogContent>
-                                <DialogHeader>
+                            <DialogContent className="w-full">
+                                <DialogHeader >
                                     <DialogTitle>
-                                        Filter feature coming soon!
+                                        <div>Filter</div>
+                                        <hr></hr>
                                     </DialogTitle>
                                 </DialogHeader>
+
+                                <FilterForm onApply={handleApplyFilters} onReset={handleResetFilters} />
                             </DialogContent>
                         </Dialog>
                     </div>

@@ -20,7 +20,7 @@ const AdminSidebar = ({ onTabChange }) => {
         }`;
 
     return (
-        <div className="fixed min-h-screen w-64 bg-gray-100 p-6 text-gray-900 shadow-lg">
+        <div className="min-h-screen w-[25%] bg-gray-100 p-6 text-gray-900 shadow-lg">
             <div className="mb-8 flex items-center">
                 <img
                     src={currentUser?.photoURL}

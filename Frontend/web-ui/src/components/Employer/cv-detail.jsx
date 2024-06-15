@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAuth } from "../../contexts/authContext";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -10,24 +9,6 @@ const statusOptions = {
   'accepted': 'Accepted',
   'rejected': 'Rejected'
 };
-const applicationDto2 = {
-  "applicationId": "557aeef1-134e-4f00-afe2-e929560c9920",
-  "employerId": "hansentechnologies",
-  "jobId": "5fa75d44-28f8-478a-ae5f-297546abeb9e",
-  "jobSeekerId": "nR2D25v2cQVw4gYRtNaE8kqhZgp1",
-  "applicationStatus": "in_review",
-  "applicationName": "Nguyễn Hữu Trực",
-  "cvLink": "https://firebasestorage.googleapis.com/v0/b/fit-viec.appspot.com/o/cvs%2FDomain_Model.pdf_3e0e5065-d27e-4346-9d55-2bb1bb19b6ab?alt=media&token=c4b2dcda-ae11-407c-ae36-a3a3e58dde3e",
-  "coverLetter": "cover_letter",
-  "applyAt": "06/12/2024 22:13",
-  "jobInfo": {
-      "jobId": "5fa75d44-28f8-478a-ae5f-297546abeb9e",
-      "jobTitle": "Software Developer (Java)"
-  },
-  "contactInfo": {
-      "email": "nguyenhuutruc947@gmail.com"
-  }
-}
 
 const CVViewer = ({onTabChange, applicationDto}) => {
   //const {applicationId} = useParams();
@@ -37,27 +18,6 @@ const CVViewer = ({onTabChange, applicationDto}) => {
 
   console.log("applicationDto: ", applicationData);
   console.log("currentUser: ", currentUser);
-  //Dữ liệu liên quan đến việc ứng tuyển công việc
-  // const fetchApplicationData = async (applicationId) => { 
-  //   setIsLoading(true);
-  //   try {
-  //     const response = await fetch(`https://application-service-otwul2bnna-uc.a.run.app/application/${applicationId}`);
-  //     if (!response.ok) {
-  //       throw new Error("Network response was not ok");
-  //     }
-  //     const data = await response.json();
-  //     setApplicationData(data);
-  //   } catch (error) {
-  //     console.error('Error fetching Applicant data:', error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  useEffect(()=>{
-    //fetchApplicationData(applicationId);
-    console.log("applicationData", applicationData);
-  },[]);
 
   const copyCodeToClipboard = () => {
     navigator.clipboard.writeText(applicationData?.jobSeekerId);
@@ -75,32 +35,31 @@ const CVViewer = ({onTabChange, applicationDto}) => {
   };
 
   const updateApplicationStatus = async (newStatus) => {
+    setIsLoading(true);
     if (!applicationData) return;
     try {
-      // const response = await fetch(`https://application-service-otwul2bnna-uc.a.run.app/application/${newStatus}/${applicationId}`, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      // });
-
-      // if (!response.ok) {
-      //   throw new Error("Failed to update status");
-      // }
-      console.log("preData: ", {
-        ...applicationData,
-        applicationStatus: newStatus + "ed",
+      const response = await fetch(`https://application-service-otwul2bnna-uc.a.run.app/application/${newStatus}/${applicationData.applicationId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: currentUser?.accessToken,
+        },
       });
+
+      if (!response.ok) {
+        throw new Error("Failed to update status");
+      }
+      
       setApplicationData((prevData) => ({
         ...prevData,
         applicationStatus: newStatus + "ed",
       }));
-
-
       toast.success(`CV status has been updated to "${newStatus}"`);
     } catch (error) {
       console.error('Error updating candidate status:', error);
       toast.error("Error! Can not update status.");
+    }finally {
+      setIsLoading(false);
     }
   };
   if (isLoading) {

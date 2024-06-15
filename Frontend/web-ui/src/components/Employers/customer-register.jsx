@@ -27,6 +27,8 @@ import { setDoc, doc } from "firebase/firestore";
 
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
+import Logo from "../../assets/logo-fitviec-black.webp";
+
 // Get the current date and format it
 const currentDate = new Date();
 const day = String(currentDate.getDate()).padStart(2, "0");
@@ -254,11 +256,7 @@ const CustomerRegister = () => {
                     {/* Header */}
                     <div className="mx-auto mb-8 mt-[6vh] max-w-[1000px] ">
                         <div className="flex items-center gap-x-3">
-                            <img
-                                src="https://itviec.com/assets/logo_black_text-04776232a37ae9091cddb3df1973277252b12ad19a16715f4486e603ade3b6a4.png"
-                                className="w-24"
-                                alt=""
-                            />
+                            <img src={Logo} className="w-24" alt="" />
                             <h3 className="text-3xl font-bold">
                                 CUSTOMER ADMIN SITE
                             </h3>

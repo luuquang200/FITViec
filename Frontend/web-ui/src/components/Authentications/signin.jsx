@@ -22,6 +22,7 @@ import { useNavigate, Navigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import { useEffect } from "react";
+import Logo from "../../assets/logo-fitviec-black.webp";
 
 const SignIn = () => {
     const { userLoggedIn, setInSingUpInPage } = useAuth();
@@ -186,11 +187,7 @@ const SignIn = () => {
             {userLoggedIn && <Navigate to={"/"} replace={true} />}
             <div className="mb-4 flex gap-x-3">
                 <h3 className="text-xl font-bold">Welcome to</h3>
-                <img
-                    src="https://itviec.com/assets/logo_black_text-04776232a37ae9091cddb3df1973277252b12ad19a16715f4486e603ade3b6a4.png"
-                    className="w-20"
-                    alt=""
-                />
+                <img src={Logo} className="w-20" alt="" />
             </div>
             <div className="flex gap-x-32">
                 <div className="leftside w-5/12">

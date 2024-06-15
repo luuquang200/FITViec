@@ -16,7 +16,7 @@ const EmployerSidebar = ({ onTabChange }) => {
   return (
     <div className="w-1/5 bg-gray-100 text-gray-900 p-4 overflow-y-auto">
       <div className="flex items-center mb-6">
-        <img src={currentUser?.photoUrl} alt="Logo" className="w-10 h-10 mr-2" />
+        <img src={currentUser?.photoURL} alt="Logo" className="w-10 h-10 mr-2" />
         <div>
           <p className="text-sm font-semibold">{currentUser?.displayName} </p>
           <p className="text-xs text-gray-600">{currentUser?.email} </p>

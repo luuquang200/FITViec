@@ -17,6 +17,8 @@ import { doSignInWithGoogle } from "../../firebase/auth";
 import { auth, db } from "../../firebase/firebase";
 import { setDoc, doc } from "firebase/firestore";
 
+import Logo from "../../assets/logo-fitviec-black.webp";
+
 const SignUp = () => {
     const { userLoggedIn, setIsRegistered, setInSingUpInPage } = useAuth();
 
@@ -161,11 +163,7 @@ const SignUp = () => {
             {userLoggedIn && <Navigate to={"/"} replace={true} />}
             <div className="mb-4 flex gap-x-3">
                 <h3 className="text-xl font-bold">Welcome to</h3>
-                <img
-                    src="https://itviec.com/assets/logo_black_text-04776232a37ae9091cddb3df1973277252b12ad19a16715f4486e603ade3b6a4.png"
-                    className="w-20"
-                    alt=""
-                />
+                <img src={Logo} className="w-20" alt="" />
             </div>
             <div className="flex gap-x-32">
                 <div className="leftside w-6/12">

@@ -175,7 +175,6 @@ const FormApplyJob = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        //Gửi CV mới
         console.log("newFileUrl: ", newFileUrl);
         console.log("currentCV?.url: ", currentCV?.url);
         if ((cvOption === "new" && !newFileUrl) || (cvOption === "current" && !currentCV?.url)) {
@@ -183,42 +182,42 @@ const FormApplyJob = () => {
             console.error('Please select a file before submitting');
             return;
         }
-
+    
         try {
-            //  Gửi file CV và nhận CV_url
             let cvUrl = cvOption === "new" ? newFileUrl : currentCV?.url;
-            const formData = new FormData();
-            formData.append('jobSeekerId', currentUser?.uid); 
-            formData.append('employerId', jobData?.employerId); 
-            formData.append('applicationName', name); 
-            formData.append('jobId', jobId); // jobId đã được nhận từ useParams
-            formData.append('coverLetter', coverLetter); 
-            formData.append('cvLink', cvUrl); // url đã nhận được từ uploadCV
-            // Duyệt qua các cặp khóa / giá trị trong FormData và tạo một đối tượng có thể log được
-            const formDataObject = {};
-            for (let pair of formData.entries()) {
-                formDataObject[pair[0]] = pair[1];
-            }
-
-            // Log đối tượng có thể log được
-            console.log("+++ formData: ", formDataObject);
-
-            const response = await fetch('http://localhost:4999/application/create', {
+    
+            const data = {
+                jobSeekerId: currentUser?.uid,
+                employerId: jobData?.employerId,
+                applicationName: name,
+                jobId: jobId, // jobId đã được nhận từ useParams
+                coverLetter: coverLetter,
+                cvLink: cvUrl // url đã nhận được từ uploadCV
+            };
+            console.log("+++ data: ", data);
+    
+            const response = await fetch('https://application-service-otwul2bnna-uc.a.run.app/application/create', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: currentUser?.accessToken
+                },
                 method: 'POST',
-                body: formData,
+                body: JSON.stringify(data),
             });
     
             if (!response.ok) {
                 throw new Error('Failed to submit application');
             }
-            toast.success("Application submitted successfully!")
+    
+            toast.success("Application submitted successfully!");
             console.log('Application submitted successfully');
         } catch (error) {
-            toast.error("Error submitting application!")
+            toast.error("Error submitting application!");
             console.error('Error submitting application:', error);
         }
     };
-
+    
+    
 
     if (isLoading) {
         return <div className="flex h-screen items-center justify-center">
@@ -238,7 +237,7 @@ const FormApplyJob = () => {
         <div className=" max-w-[884px] ml-auto mr-auto relative">
             {/* Logo */}
             <div className="flex items-center justify-center relative h-[80px] ">
-                <Link to="/" className="  flex text-white absolute left-0"> <ChevronLeft /> Back</Link>
+                <Link to={`/job-detail/${jobId}`} className="  flex text-white absolute left-0"> <ChevronLeft /> Back</Link>
                 <div className=""><img src={Logo} alt="Logo" className="w-[81px]" /></div>
             </div>
             {/* Body */}

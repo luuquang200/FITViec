@@ -118,16 +118,18 @@ const ProfileProgressBar = () => {
                         Upgrade profile to "Excellent" to unlock Download CV
                     </p>
                     <div className="flex flex-col justify-center">
-                        <div className="w-100 mb-0 p-2">
-                            <button onClick={handleModifyAboutMeClick}>
-                                <div className="flex items-center gap-2">
-                                    <CirclePlus className="h-4 w-4 text-blue-700" />
-                                    <p className="text-base text-blue-700">
-                                        Add About me
-                                    </p>
-                                </div>
-                            </button>
-                        </div>
+                        {!profileUser?.aboutMe && (
+                            <div className="w-100 mb-0 p-2">
+                                <button onClick={handleModifyAboutMeClick}>
+                                    <div className="flex items-center gap-2">
+                                        <CirclePlus className="h-4 w-4 text-blue-700" />
+                                        <p className="text-base text-blue-700">
+                                            Add About me
+                                        </p>
+                                    </div>
+                                </button>
+                            </div>
+                        )}
                         <div className="w-100 mb-0 p-2">
                             <button onClick={handleModifyPersonalClick}>
                                 <div className="flex items-center gap-2">

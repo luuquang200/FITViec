@@ -1,42 +1,55 @@
-﻿using EmployerService.Domain.DTO;
+﻿using EmployerService.Domain.Dto;
+using EmployerService.Domain.DTO;
 using EmployerService.Domain.Entities;
 using EmployerService.Infrastructure.Repositories;
 using EmployerService.Shared.Dto;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace EmployerService.Domain.Services
 {
-	public interface ICompanyService
+    public interface ICompanyService
 	{
 		Task<CreateEmployerResult> CreateEmployerAsync(CreateEmployerRequest request);
 		Task<UpdateEmployerResult> UpdateEmployerAsync(UpdateEmployerRequest request);
-		Task<Company> GetCompanyByEmployerIdAsync(string employerId);
+		Task<CompanyDto> GetCompanyByEmployerAsync();
 		Task DeleteCompanyAsync(string companyId);
 		Task<List<CompanyDto>> GetAllCompaniesAsync();
-		Task<ApiResult> PostJobAsync(PostJobRequest request);
-		Task<ApiResult> GetListJobByEmployerIdAsync(string employerId);
-		Task<ApiResult> UpdateJobByEmployerIdAsync(UpdateJobRequest request);
-		Task<ApiResult> DeleteJobByEmployerIdAsync(string employerId, string jobId);
+		Task<List<CompanyDto>> GetTopCompaniesAsync();
+		Task<CreateJobResponseDto> PostJobAsync(PostJobRequestDto request);
+		Task<List<JobDto>> GetListJobByEmployerAsync();
+		Task<UpdateJobReponseDto> UpdateJobByEmployerAsync(UpdateJobRequestDto request);
+		Task<DeleteJobResponseDto> DeleteJobByEmployerAsync(string jobId);
 	}
 	public class CompanyService: ICompanyService
 	{
 		private readonly ICompanyRepository _companyRepository;
-		private readonly HttpClient _httpClient;
-		public CompanyService(ICompanyRepository companyRepository, HttpClient httpClient)
+		private readonly IJobService _jobService;
+		private readonly ICurrentUserService _currentUserService;
+
+		public CompanyService(ICompanyRepository companyRepository, IJobService jobService, ICurrentUserService currentUserService)
 		{
 			_companyRepository = companyRepository;
-			_httpClient = httpClient;
+			_jobService = jobService;
+			_currentUserService = currentUserService;
 		}
 
 		// Create company by employer id
 		public async Task<CreateEmployerResult> CreateEmployerAsync(CreateEmployerRequest request)
 		{
-			
+			// Check if company already exists
+			var employerId = _currentUserService.GetUserId();
+			var companyExists = await _companyRepository.GetByEmployerIdAsync(employerId);
+			if (companyExists != null)
+			{
+				return new CreateEmployerResult { IsSuccess = false, ErrorMessage = "Company already exists" };
+			}
+			var companyId = Guid.NewGuid().ToString();
 			var company = new Company
 			{
-				CompanyId = Guid.NewGuid().ToString(),
-				EmployerId = request.EmployerId,
+				CompanyId = companyId,
+				EmployerId = employerId,
 				CompanyName = request.CompanyName,
 				CompanyType = request.CompanyType,
 				CompanySize = request.CompanySize,
@@ -49,19 +62,20 @@ namespace EmployerService.Domain.Services
 				LogoUrl = request.LogoUrl,
 				Location = request.Location,
 				WorkType = request.WorkType,
-				Images = request.Images.Select(url => new CompanyImage { ImageId = Guid.NewGuid().ToString(), ImageUrl = url }).ToList()
+				Image = request.Image
 			};
 
 			// Save to database
 			await _companyRepository.AddAsync(company);
 
-			return new CreateEmployerResult { IsSuccess = true, CompanyId = company.CompanyId.ToString() };
+			return new CreateEmployerResult { IsSuccess = true, EmployerId = employerId, CompanyId = companyId };
 		}
 
 		// Update company by employer id
 		public async Task<UpdateEmployerResult> UpdateEmployerAsync(UpdateEmployerRequest request)
 		{
-			var company = await _companyRepository.GetByEmployerIdAsync(request.EmployerId);
+			var employerId = _currentUserService.GetUserId();
+			var company = await _companyRepository.GetByEmployerIdAsync(employerId);
 			if (company == null)
 			{
 				return new UpdateEmployerResult { IsSuccess = false, ErrorMessage = "Company not found" };
@@ -79,20 +93,24 @@ namespace EmployerService.Domain.Services
 			company.LogoUrl = request.LogoUrl;
 			company.Location = request.Location;
 			company.WorkType = request.WorkType;
-			if (request.Images != null && request.Images.Any())
-			{
-				company.Images = request.Images.Select(url => new CompanyImage { ImageId = Guid.NewGuid().ToString(), ImageUrl = url }).ToList();
-			}
+			company.Image = request.Image;
 
 			await _companyRepository.UpdateAsync(company);
 
-			return new UpdateEmployerResult { IsSuccess = true };
+			return new UpdateEmployerResult { IsSuccess = true, EmployerId = employerId, CompanyId = company.CompanyId };
 		}
 
-		// Get company by employer id
-		public async Task<Company> GetCompanyByEmployerIdAsync(string employerId)
+		// Get company by employer 
+		public async Task<CompanyDto> GetCompanyByEmployerAsync()
 		{
-			return await _companyRepository.GetByEmployerIdAsync(employerId);
+			var employerId = _currentUserService.GetUserId();
+			var company = await _companyRepository.GetByEmployerIdAsync(employerId);
+			if (company == null)
+			{
+				 return null;
+			 }
+
+			return new CompanyDto(company);
 		}
 
 		// Delete company by employer id
@@ -104,132 +122,71 @@ namespace EmployerService.Domain.Services
 		// Get all companies
 		public async Task<List<CompanyDto>> GetAllCompaniesAsync()
 		{
-			return await _companyRepository.GetAllCompaniesAsync();
+			var companies = await _companyRepository.GetAllCompaniesAsync();
+			var companyDtos = new List<CompanyDto>();
+			foreach (var company in companies)
+			{
+				var companyDto = new CompanyDto(company);
+				companyDtos.Add(companyDto);
+			}
+			return companyDtos;
+		}
+
+		// Get top companies
+		public async Task<List<CompanyDto>> GetTopCompaniesAsync()
+		{
+			var companies = await _companyRepository.GetTopCompaniesAsync();
+			var companyDtos = new List<CompanyDto>();
+			foreach (var company in companies)
+			{
+				var companyDto = new CompanyDto(company);
+				companyDtos.Add(companyDto);
+			}
+			return companyDtos;
 		}
 
 		// Post job by employer id
-		public async Task<ApiResult> PostJobAsync(PostJobRequest request)
+		public async Task<CreateJobResponseDto> PostJobAsync(PostJobRequestDto request)
 		{
-			// Check if employer 
-			var company = await _companyRepository.GetByEmployerIdAsync(request.EmployerId);
-			if (company == null)
+			var result = await _jobService.PostJobAsync(request);
+
+			if (result.Success)
 			{
-				return new ApiResult { IsSuccess = false, ErrorMessage = "Company not found" };
+				return result;
 			}
 
-			var response = new ApiResult();
-			try
-			{
-				var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-				var result = await _httpClient.PostAsync("https://job-service.azurewebsites.net/job/create", content);
-
-				if (result.IsSuccessStatusCode)
-				{
-					// convert response to string
-					response.Data = result.Content;
-					response.IsSuccess = true;
-				}
-				else
-				{
-					response.ErrorMessage = await result.Content.ReadAsStringAsync();
-					response.IsSuccess = false;
-				}
-			}
-			catch (Exception ex)
-			{
-				response.ErrorMessage = ex.Message;
-				response.IsSuccess = false;
-			}
-
-			return response;
+			return new CreateJobResponseDto { Success = false, Message = result.Message };
 		}
 
 		// Get list job by employer id
-		public async Task<ApiResult> GetListJobByEmployerIdAsync(string employerId)
+		public async Task<List<JobDto>> GetListJobByEmployerAsync()
 		{
-			var response = new ApiResult();
-			try
-			{
-				var result = await _httpClient.GetAsync($"https://job-service.azurewebsites.net/job/jobs-by-employer/{employerId}");
-				
-				if (result.IsSuccessStatusCode)
-				{
-					var jsonData = await result.Content.ReadAsStringAsync();
-					var jobs = JsonConvert.DeserializeObject<List<JobDto>>(jsonData);
-					response.Data = jobs;
-					response.IsSuccess = true;
-				}
-				else
-				{
-					response.ErrorMessage = await result.Content.ReadAsStringAsync();
-					response.IsSuccess = false;
-				}
-			}
-			catch (Exception ex)
-			{
-				response.ErrorMessage = ex.Message;
-				response.IsSuccess = false;
-			}
-
-			return response;
+			var result = await _jobService.GetListJobByEmployerAsync();
+			return result;
 		}
 
 		// Update job by employer id
-		public async Task<ApiResult> UpdateJobByEmployerIdAsync(UpdateJobRequest request)
+		public async Task<UpdateJobReponseDto> UpdateJobByEmployerAsync(UpdateJobRequestDto request)
 		{
-			var response = new ApiResult();
-			try
+			var result = await _jobService.UpdateJobByEmployerAsync(request);
+			if (result.Success)
 			{
-				var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-				var result = await _httpClient.PutAsync($"https://job-service.azurewebsites.net/job/update/{request.EmployerId}/{request.JobId}", content);
-
-				if (result.IsSuccessStatusCode)
-				{
-					response.Data = await result.Content.ReadAsStringAsync();
-					response.IsSuccess = true;
-				}
-				else
-				{
-					response.ErrorMessage = await result.Content.ReadAsStringAsync();
-					response.IsSuccess = false;
-				}
+				return result;
 			}
-			catch (Exception ex)
+			else
 			{
-				response.ErrorMessage = ex.Message;
-				response.IsSuccess = false;
-			}
+				return new UpdateJobReponseDto { Success = false, Message = result.Message };
 
-			return response;
+			}
 		}
-		
+
 		// Delete job by employer id
-		public async Task<ApiResult> DeleteJobByEmployerIdAsync(string employerId, string jobId)
+		public async Task<DeleteJobResponseDto> DeleteJobByEmployerAsync(string jobId)
 		{
-			var response = new ApiResult();
-			try
-			{
-				var result = await _httpClient.DeleteAsync($"https://job-service.azurewebsites.net/job/{employerId}/{jobId}");
+			var result = await _jobService.DeleteJobByEmployerAsync(jobId);
+			return result;
+		}
 
-				if (result.IsSuccessStatusCode)
-				{
-					response.Data = await result.Content.ReadAsStringAsync();
-					response.IsSuccess = true;
-				}
-				else
-				{
-					response.ErrorMessage = await result.Content.ReadAsStringAsync();
-					response.IsSuccess = false;
-				}
-			}
-			catch (Exception ex)
-			{
-				response.ErrorMessage = ex.Message;
-				response.IsSuccess = false;
-			}
-
-			return response;
-		}	
-
+		
 	}
 }

@@ -15,9 +15,12 @@ import JobDetail from "@/components/Search/job-detail";
 // Icons
 import { CircleDollarSign, MapPin, Laptop, Filter } from "lucide-react";
 
-const EmployeeViewJobCard = ({jobs}) => {
+const EmployeeViewJobCard = ({jobs,location}) => {
 
-    const isRender = (job) => {
+    const isRender = (job,location) => {
+        if (location !="job-saved")
+            return true
+        
         if (job.isSaved == null)
             return true;
         else return job.isSaved
@@ -26,7 +29,7 @@ const EmployeeViewJobCard = ({jobs}) => {
 <div className="bg-gray-200">
     <ul className="grid grid-cols-4 gap-4">
         {jobs.map((job) => (
-            isRender(job) ? 
+            isRender(job,location) ? 
             (<li
                 key={job.id}
                 onClick={() =>

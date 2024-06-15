@@ -33,6 +33,18 @@ const EmployeeJobSave = () => {
       fetchUserData();
     }, []);
 
+    const isRender = (profileUser) => {
+      const { jobSaved } = profileUser;
+  
+      if (jobSaved.length === 0) {
+          return false;
+      }
+  
+      const hasSavedJobs = jobSaved.some(job => job.isSaved === true);
+      return hasSavedJobs;
+  };
+  
+
     return (
       <div className=" min-h-screen bg-gray-200 w-full">
         <div className="bg-gray-200 w-full">
@@ -46,9 +58,8 @@ const EmployeeJobSave = () => {
 
           <div className="bg-white mt-10 mr-32 ml-32">
               <div className="">
-                {console.log(profileUser)}
-                  {profileUser.jobSaved ? (
-                          <EmployeeViewJobCard jobs={profileUser.jobSaved}/>
+                  {profileUser.jobSaved && isRender(profileUser) ? (
+                          <EmployeeViewJobCard jobs={profileUser.jobSaved} location="job-saved"/>
                   ) : (
                     <div className="flex flex-col h-72 justify-center">
                     <div className="self-center"><img src={images.jobImage} alt="JOB Folder" /></div>
