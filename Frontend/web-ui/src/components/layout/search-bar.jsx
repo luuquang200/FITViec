@@ -16,10 +16,10 @@ import { Button } from "@/components/ui/button";
 import { Search, MapPin } from "lucide-react";
 
 const cities = [
-    { value: "all", label: "All Cities" },
-    { value: "hcm", label: "Ho Chi Minh" },
-    { value: "hn", label: "Ha Noi" },
-    { value: "dn", label: "Da Nang" },
+    { value: "all cities", label: "All Cities" },
+    { value: "ho chi minh", label: "Ho Chi Minh" },
+    { value: "ha noi", label: "Ha Noi" },
+    { value: "da nang", label: "Da Nang" },
     { value: "others", label: "Others" },
 ]
 
@@ -39,7 +39,7 @@ const SearchBar = ({inputCity, inputQuery}) => {
         }
     }
 
-    const [city, setCity] = React.useState(inputCity || "all");
+    const [city, setCity] = React.useState(inputCity || "all cities");
 
     return (
         <div className="mt-8 grid grid-cols-5 gap-x-2">
