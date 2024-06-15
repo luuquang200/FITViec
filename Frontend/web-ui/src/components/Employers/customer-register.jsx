@@ -104,7 +104,8 @@ const CustomerRegister = () => {
                     status: "pending",
                     role: "employer", // role employer
                 });
-                setIsRegistered(true);
+              setIsRegistered(true);
+              registerEmployer(user.accessToken)
                 toast.success(
                     "Registration successful! You'll receive a mail if approved by the administrator",
                 );
@@ -115,7 +116,33 @@ const CustomerRegister = () => {
                 setIsRegistering(false);
             }
         }
-    };
+  };
+  
+  const registerEmployer = async (token) => {
+    try {
+      const response = await fetch(
+        "https://employer-service-otwul2bnna-uc.a.run.app/employer/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token
+          },
+          body: JSON.stringify({
+            "companyName": companyName,
+            "location": workLocation,
+          }), 
+        }
+      )
+      if (response.status === 200) {
+        console.log("Register successfully")
+      } else {
+        console.log("Failed");
+      }
+    } catch (error) {
+      console.log("Error registering employer: ", error);
+    }
+  }
 
     // validate
 

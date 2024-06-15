@@ -25,7 +25,7 @@ import {
     query,
     where,
     getDocs,
-    doc,
+  doc,
     updateDoc,
 } from "firebase/firestore";
 
@@ -34,6 +34,7 @@ const capitalized = (letter) => {
 };
 
 const EmployerManagement = () => {
+
     const [employers, setEmployers] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -117,7 +118,9 @@ const EmployerManagement = () => {
                 const employerRef = doc(db, "users", id);
 
                 // Update the status field
-                await updateDoc(employerRef, { status: "approved" });
+              await updateDoc(employerRef, { status: "approved" });
+              
+
                 toast.success("Approve account employer successfully ! ");
                 setSelectedEmployer(null);
                 // Call getEmployers again to update the list after approval
@@ -130,7 +133,7 @@ const EmployerManagement = () => {
         } else {
             return;
         }
-    };
+  };
 
     const handleReject = async (id) => {
         if (window.confirm("Are you sure you want to reject?")) {

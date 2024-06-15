@@ -164,6 +164,8 @@ const JobList = () => {
         </div>
       </div>
 
+      <div className="min-h-24">
+
       {isLoading ? (
         <div className="flex h-screen items-center justify-center">
           <ClipLoader
@@ -479,7 +481,9 @@ const JobList = () => {
             ))}
           </TableBody>
         </Table>
-      )}
+        )}
+      </div>
+        
     </>
   );
 };
