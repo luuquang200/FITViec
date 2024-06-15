@@ -40,51 +40,84 @@ import { useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
 
+/*
+Android
+Angular
+ASP.NET
+AWS
+Azure
+C#
+C++
+Dart
+Django
+Flutter
+Golang
+iOS
+Java
+JavaScript
+Kotlin
+Laravel
+MongoDB
+.NET
+NodeJS
+PHP
+Python
+ReactJS
+React Native
+Ruby on Rails
+Rust
+SQL
+TypeScript
+UI-UX
+Unity
+VueJS
+ */
+
+const skills = [
+  "Android",
+  "Angular",
+  "ASP.NET",
+  "AWS",
+  "Azure",
+  "C#",
+  "C++",
+  "Dart",
+  "Django",
+  "Flutter",
+  "Golang",
+  "iOS",
+  "Java",
+  "JavaScript",
+  "Kotlin",
+  "Laravel",
+  "MongoDB",
+  ".NET",
+  "NodeJS",
+  "PHP",
+  "Python",
+  "ReactJS",
+  "React Native",
+  "Ruby",
+  "Rust",
+  "SQL",
+  "TypeScript",
+  "Unity",
+  "VueJS",
+]
+
 const menuContent = [
     {
         title: "All Jobs",
         items: [
             {
                 title: "Jobs by Skill",
-                href: "/test",
-                items: [
-                    {
-                        title: "Email link",
-                        href: "/test1",
-                    },
-                    {
-                        title: "Messages",
-                        href: "test2",
-                    },
-                    {
-                        title: "Notes",
-                        href: "test3",
-                    },
-                    {
-                        title: "Email link",
-                        href: "/test1",
-                    },
-                    {
-                        title: "Messages",
-                        href: "test2",
-                    },
-                    {
-                        title: "Notes",
-                        href: "test3",
-                    },
-                    {
-                        title: "Email link",
-                        href: "/test1",
-                    },
-                    {
-                        title: "Messages",
-                        href: "test2",
-                    },
-                    {
-                        title: "Notes",
-                        href: "test3",
-                    },
-                ],
+                href: "#",
+            items: skills.map((skill) => {
+              return {
+                title: skill,
+                href: `/search?keyword=${skill}&city=all%20cities`
+              }
+            })
             },
         ],
     },
