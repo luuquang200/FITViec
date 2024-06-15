@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useAuth } from "../../contexts/authContext";
-
+import { Link } from "react-router-dom";
 // firebase
 import { db } from "@/firebase/firebase";
 import { setDoc, getDoc, doc } from "firebase/firestore";
@@ -69,7 +69,12 @@ const JobDetail = ({ job }) => {
 
                 {/* Action buttons container */}
                 <div className="flex space-x-2 pt-3">
-                    <Button className="flex-1">Apply now</Button>
+                    <Button className="flex-1">
+                        <Link to={`/form-apply-job/${job.id}`} className="button-link flex-1">
+                            Apply now
+                        </Link>
+
+                    </Button>
 
                     <Button
                         variant="icon"
@@ -155,28 +160,9 @@ const JobDetail = ({ job }) => {
                     <div className="space-y-2">
                         <h1 className="text-2xl font-bold">Job description</h1>
 
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Suspendisse tincidunt, arcu at accumsan
-                            tempus, sem libero vehicula ipsum, in venenatis
-                            massa est eu sem. Sed consequat, sem at facilisis
-                            rutrum, libero orci posuere velit, eu suscipit erat
-                            risus eget dolor. Cras et turpis lacus. Quisque
-                            turpis dolor, tincidunt eu consectetur vitae,
-                            vehicula sed sapien. Praesent leo lectus, tincidunt
-                            sit amet sodales sed, ultrices ut diam. Sed tellus
-                            mi, fermentum in mauris at, lobortis efficitur nibh.
-                            Praesent a mauris laoreet mauris rutrum
-                            pellentesque. Suspendisse rhoncus, justo nec ornare
-                            commodo, purus ante fermentum metus, a rutrum odio
-                            justo sed arcu. Aliquam vel congue lectus. In mi
-                            lacus, tristique ut lacus eu, finibus bibendum orci.
-                            Pellentesque venenatis egestas ligula. Vestibulum
-                            lacus velit, cursus at odio a, vehicula dignissim
-                            nisl. Suspendisse sit amet massa maximus, tempus
-                            lorem quis, interdum metus. Sed fringilla elit
-                            vestibulum, finibus dui vel, volutpat lacus.
-                        </p>
+
+                        {job.description}
+
                     </div>
                 </CardContent>
             </ScrollArea>
