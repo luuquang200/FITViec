@@ -10,17 +10,18 @@ import CardBackgroundSVG from "@/assets/bg-top-emp.svg";
 import { ChevronRight } from "lucide-react";
 
 const EmployerCard = ({ employer }) => {
-    const { employerId, companyName, logoUrl, keySkill, location } = employer;
+    const { employerId, companyName, logoUrl, keySkills, location } = employer;
+    const skills = keySkills?.split(",");
 
     return (
         <Link to={`/companies?id=${employerId}`}>
-            <Card className="relative flex cursor-pointer flex-col justify-between bg-muted/20">
+            <Card className="relative flex h-full cursor-pointer flex-col justify-between bg-muted/20">
                 <div className="absolute">
                     <img src={CardBackgroundSVG} alt="Footer image" />
                 </div>
 
                 <CardContent className="px-28 pt-10">
-                    <div className="relative aspect-square cursor-default overflow-hidden rounded-xl bg-white shadow-xl">
+                    <div className="relative aspect-square overflow-hidden rounded-xl bg-white shadow-xl">
                         <img
                             src={logoUrl || "https://placehold.co/300"}
                             alt={companyName}
@@ -35,9 +36,9 @@ const EmployerCard = ({ employer }) => {
                             {companyName}
                         </p>
 
-                        {keySkill?.length > 0 ? (
+                        {skills && (
                             <div className="flex flex-wrap space-x-2 pt-2">
-                                {keySkill.map((skill, index) => (
+                                {skills.map((skill, index) => (
                                     <Badge
                                         key={index}
                                         variant="secondary"
@@ -47,12 +48,12 @@ const EmployerCard = ({ employer }) => {
                                     </Badge>
                                 ))}
                             </div>
-                        ) : null}
+                        )}
                     </div>
                 </CardContent>
 
                 <CardFooter className="flex justify-between bg-muted py-5">
-                    <h1 className="text-sm">{location || "Ho Chi Minh"}</h1>
+                    <h1 className="text-sm">{location || "TP Hồ Chí Minh"}</h1>
 
                     {/* TODO: Add number of available jobs later */}
                     <Button
