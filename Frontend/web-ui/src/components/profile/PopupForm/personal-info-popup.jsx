@@ -259,7 +259,7 @@ const PersonalInfoPopUp = ({ userInfo, onClose }) => {
                                 onBlur={handleBlur}
                                 className={`mt-1 w-full rounded border-2 p-2 outline-none ${errors.name ? "border-red-500" : "focus:border-green-500"}`}
                                 placeholder="Full name"
-                                maxLength="30"
+                                maxLength="50"
                             />
                             {errors.name && (
                                 <p className="mt-1 text-sm text-red-500">
@@ -281,7 +281,7 @@ const PersonalInfoPopUp = ({ userInfo, onClose }) => {
                                 onBlur={handleBlur}
                                 className={`mt-1 w-full rounded border-2 p-2 outline-none ${errors.title ? "border-red-500" : "focus:border-green-500"}`}
                                 placeholder="Title"
-                                maxLength="20"
+                                maxLength="50"
                             />
                             {errors.title && (
                                 <p className="mt-1 text-sm text-red-500">
@@ -305,6 +305,7 @@ const PersonalInfoPopUp = ({ userInfo, onClose }) => {
                                     onBlur={handleBlur}
                                     className={`mt-1 w-full rounded border-2 p-2 outline-none ${errors.email ? "border-red-500" : "focus:border-green-500"}`}
                                     placeholder="Email address"
+                                    maxLength="60"
                                 />
                                 {errors.email && (
                                     <p className="mt-1 text-sm text-red-500">
