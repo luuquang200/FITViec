@@ -42,12 +42,59 @@ import FilterForm from "./filter";
 import { CircleDollarSign, MapPin, Laptop, Filter } from "lucide-react";
 
 const cities = [
-    { value: "all", label: "Vietnam" },
-    { value: "hcm", label: "Ho Chi Minh" },
-    { value: "hn", label: "Ha Noi" },
-    { value: "dn", label: "Da Nang" },
+    { value: "all cities", label: "Vietnam" },
+    { value: "ho chi minh", label: "Ho Chi Minh" },
+    { value: "ha noi", label: "Ha Noi" },
+    { value: "da nang", label: "Da Nang" },
     { value: "others", label: "Others" },
 ];
+const requestWithBody = async (body, options = {}) => {
+    return new Promise((resolve, reject) => {
+        const callback = function (response) {
+            let str = '';
+            response.on('data', function (chunk) {
+                str += chunk;
+            });
+            response.on('end', function () {
+                resolve(JSON.parse(str));
+            });
+        };
+
+        const req = (options.protocol === 'https:' ? https : http).request(options, callback);
+        req.on('error', (e) => {
+            reject(e);
+        });
+        req.write(body);
+        req.end();
+    });
+};
+const toQueryString = (params) => {
+    return Object.keys(params)
+        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]))
+        .join('&');
+};
+const transformData = (data) => {
+    return {
+        id: data.jobId, // Bạn có thể thay đổi ID này theo nhu cầu của bạn
+        title: data.jobTitle,
+        company: {
+            name: data.employerInfo.companyName,
+            type: data.employerInfo.companyType,
+            size: data.employerInfo.companySize
+        },
+        working_model: data.jobType,
+        location: data.jobLocation,
+        // level: "Mid/Senior",  Bạn có thể thêm logic để xác định cấp bậc nếu cần
+        skills: data.jobSkills.split(','),
+        salary: data.jobSalary,
+        description: data.jobDescription,
+        country: data.employerInfo.country,
+        working_days: data.employerInfo.workingDays,
+        overtime_policy: data.employerInfo.overtimePolicy,
+        posted_day: data.postedAt, // Bạn có thể thay đổi ngày này theo nhu cầu của bạn
+        expired_day: "2024-05-03" // Bạn có thể thay đổi ngày này theo nhu cầu của bạn
+    };
+};
 
 const SearchResult = () => {
     const [searchParams] = useSearchParams();
@@ -161,16 +208,42 @@ const SearchResult = () => {
 
     // useEffect() with adding saveJob atrribute to every job in the jobs list
     useEffect(() => {
-        const fetchJobs = async () => {
+        const fetchJobs = async (keyword, city) => {
             try {
-                // Get Jobs from API: https://demo-restful-api-itviec.vercel.app/api/jobs
-                const response = await fetch(
-                    "https://demo-restful-api-itviec.vercel.app/api/jobs",
-                );
-                let data = await response.json();
+                const searchRequest = {
+                    query: keyword,
+                    jobLocation: city
+                };
+                const queryString = toQueryString(searchRequest);
 
+                console.log("Search Request:" + queryString);
+                // Get Jobs from API: https://demo-restful-api-itviec.vercel.app/api/jobs
+                // console.log(JSON.stringify(searchRequest));
+                const response = await fetch(
+                    `https://job-search-service.azurewebsites.net/job-elastic/search`, {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(searchRequest)
+                }
+
+                );
+                //const response = await requestWithBody(body,option);
+                const responseData = await response.json();
+                /*
+                const response = [{"jobId":"c85a01bc-f40c-4673-8fbe-4632fb4f3892","creatorId":"PRIVATE","jobStatus":"approved","employerId":"37619493-fea7-4ed5-ad95-2a75b3dbb624","jobSalary":"10000$","jobTitle":"Team leader","jobLocation":"100 Xuan Thuy Street, Thao Dien Ward, Thu Duc City, Ho Chi Minh","jobType":"Hybrid","postedAt":"13 hours ago","jobSkills":"Java,SQL,C#","jobTopReasons":"Global Company- Develop Your Career & English\nCompetitive Salary, and company profit share\nOnsite opportunities","jobDescription":"<p>About The Role Exciting opportunity for an enthusiastic Java Software Developer with at least 4 years of experience to join our CIS-P Team in Ho Chi Minh City. Take a key role in driving success as you collaborate with our team to provide enterprise CRM solutions to the utilities sector with key customers in Australia, Ireland, the USA and Japan. About You You are an enthusiastic individual with proven experience and strong Java knowledge of J2EE, design patterns, core libraries and frameworks such as Spring, Hibernate and Java messaging frameworks. You possess a curious nature and thrive in diverse technical environments, where your skills in SQL, exposure to DevOps, and experience working in Linux environments are highly valued. You have good command of English and Vietnamese communication with eagerness to work with complicated business requirements, and implementation to technical specifications.</p>","jobResponsibility":"<p>Design, code, and test software as part of the Agile team Update status and technical documents in Jira Troubleshoot and escalate issues Participate in R&amp;D program where we are using Docker, Kafka, Kubernetes</p>","jobRequirement":"<p>Have strong Java knowledge: Java or Java EE (certified). Good English and Vietnamese communication. Knowledge of typical patterns, core libraries and frameworks. Object-Oriented Analysis, Design, and Implementation skills. Have solid SQL Knowledge. Have exposure to DevOps aspects including Bash Script and Perl on Linux. Have good skills in Enterprise Java, including: Spring and Hibernate. Java messaging (e.g., ActiveMQ). Are experienced and comfortable with: Eclipse as the main IDE. Working in an Agile environment (we use JIRA). Has actual experience working with Linux (e.g., Working daily on Linux as the main development environment).</p>","jobBenefit":"Competitive Market Rate Salary - full salary (including SI contribution) during the probation period and 13th-month salary\\nTwice yearly salary review\\nFull participation in the annual Hansen Profit Share Program\\nGreat Leave Options – including 12 days annual leave during Year 1, increasing to 15 days annual leave and 12 days paid sick leave per year).\\nPremium healthcare for employee and dependents (spouse and {all} children and support for parents). Also, free comprehensive annual check-up for employees.","employerInfo":{"companyName":"YAN Corp","companyType":"Product","companySize":"1-20","country":"Việt Nam","workingDays":"Monday - Friday","overtimePolicy":"Yes","companyOverview":"Global","keySkills":"JS,Java,Python","whyLoveWorkingHere":"Innovative culture and cutting-edge projects /n Innovative culture and cutting-edge projects","logoUrl":"https://employer-service-otwul2bnna-uc.a.run.app/uploads/36f2001f-aebd-445d-9b6a-987d9f12f7b1.jpg","location":"TP Hồ Chí Minh","workType":"Remote","image":"https://employer-service-otwul2bnna-uc.a.run.app/uploads/f9876d12-0654-4aff-97e6-c01c231a83ef.jpeg"}}]
+                const responseData = response;*/
+                console.log("Response Data");
+                console.log(responseData);
+                // Sử dụng map để chuyển đổi dữ liệu
+                let data = responseData.map(item => transformData(item)); ///await response.json();
+                console.log("Map Data");
+                console.log(data);
+                /*
                 // Filter jobs by city and keyword
-                if (city !== "all") {
+                if (city !== "all cities") {
                     data = data.filter((job) =>
                         job.location.toLowerCase().includes(city),
                     );
@@ -179,13 +252,15 @@ const SearchResult = () => {
                     data = data.filter((job) =>
                         job.title.toLowerCase().includes(keyword),
                     );
-                }
+                }*/
 
                 // Add isSaved attribute to jobs
                 const updatedData = await addIsSavedAttribute(
                     data,
                     currentUser,
                 );
+                console.log("Update Data");
+                console.log(updatedData);
                 setJobs(updatedData);
                 setFirstJobs(updatedData);
                 if (!selectedJob && updatedData.length > 0)
@@ -195,7 +270,7 @@ const SearchResult = () => {
             }
         };
 
-        fetchJobs();
+        fetchJobs(keyword, city);
     }, [city, keyword, currentUser, selectedJob]);
     const addIsSavedAttribute = async (jobs, currentUser) => {
         try {
@@ -300,7 +375,7 @@ const SearchResult = () => {
                                                 {/* Job title */}
                                                 <CardTitle>
                                                     <Link
-                                                        to={`/job-detail?id=${job.id}`}
+                                                        to={`/job-detail/${job.id}`}
                                                     >
                                                         {job.title}
                                                     </Link>
