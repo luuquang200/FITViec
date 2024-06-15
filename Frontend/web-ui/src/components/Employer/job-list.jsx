@@ -17,7 +17,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -58,7 +57,7 @@ const JobList = () => {
           setSearchResults(data);
         });
       } else {
-
+        toast.error("An error occurred while trying to fetch the job list. Please try again")
       }
     } catch {
       console.log("Error");

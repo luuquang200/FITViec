@@ -19,8 +19,10 @@
 import React from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useAuth } from "@/contexts/authContext";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { toast } from "react-toastify";
 
 const JobPost = () => {
   const {
@@ -28,16 +30,39 @@ const JobPost = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const {currentUser} = useAuth();
   const [jobDescription, setJobDescription] = useState("");
   const [jobResponsibility, setJobResponsibility] = useState("");
   const [jobRequirements, setJobRequirements] = useState("");
 
   const onSubmit = (data) => {
-    data.job_description = jobDescription;
-    data.job_responsibility = jobResponsibility;
-    data.job_requirements = jobRequirements;
+    data.jobDescription = jobDescription;
+    data.jobResponsibility = jobResponsibility;
+    data.jobRequirement = jobRequirements;
     console.log(data);
+    postJob(data);
   };
+
+  const postJob = async (data) => {
+    try {
+      const response = await fetch(
+      "https://employer-service-otwul2bnna-uc.a.run.app/employer/post-job", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: currentUser?.accessToken,
+        },
+        body: JSON.stringify(data),
+      });
+      if (response.status === 200) {
+        toast.success("Job posted successfully");
+      } else {
+        toast.error("Failed to post job");
+      }
+    } catch (error) {
+      toast.error("Error: ", error);
+    }
+  }
 
   return (
     <>
@@ -50,7 +75,7 @@ const JobPost = () => {
             <input
               type="text"
               id="job_title"
-              {...register("job_title", { required: true })}
+              {...register("jobTitle", { required: true })}
               className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px] focus:outline-green-200 focus:outline focus:outline-solid"
               placeholder=" "
             />
@@ -61,7 +86,7 @@ const JobPost = () => {
               Job Title
               <span className="text-red-500 ml-1">*</span>
             </label>
-            {errors.job_title && (
+            {errors.jobTitle && (
               <span className="px-3 text-red-600">This field is required</span>
             )}
           </div>
@@ -70,7 +95,7 @@ const JobPost = () => {
             <input
               type="text"
               id="job_location"
-              {...register("job_location", { required: true })}
+              {...register("jobLocation", { required: true })}
               className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
               placeholder=" "
             />
@@ -81,7 +106,7 @@ const JobPost = () => {
               Job Location
               <span className="text-red-500 ml-1">*</span>
             </label>
-            {errors.job_location && (
+            {errors.jobLocation && (
               <span className="px-3 text-red-600">This field is required</span>
             )}
           </div>
@@ -89,7 +114,7 @@ const JobPost = () => {
             <input
               type="text"
               id="job_type"
-              {...register("job_type", { required: true })}
+              {...register("jobType", { required: true })}
               className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
               placeholder=" "
             />
@@ -100,7 +125,7 @@ const JobPost = () => {
               Job Type
               <span className="text-red-500 ml-1">*</span>
             </label>
-            {errors.job_type && (
+            {errors.jobType && (
               <span className="px-3 text-red-600">This field is required</span>
             )}
           </div>
@@ -108,7 +133,7 @@ const JobPost = () => {
             <input
               type="text"
               id="job_salary"
-              {...register("job_salary", { required: true })}
+              {...register("jobSalary", { required: true })}
               className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
               placeholder=" "
             />
@@ -119,7 +144,7 @@ const JobPost = () => {
               Job Salary
               <span className="text-red-500 ml-1">*</span>
             </label>
-            {errors.job_salary && (
+            {errors.jobSalary && (
               <span className="px-3 text-red-600">This field is required</span>
             )}
           </div>
@@ -128,7 +153,7 @@ const JobPost = () => {
             <input
               type="text"
               id="job_skills"
-              {...register("job_skills", { required: true })}
+              {...register("jobSkills", { required: true })}
               className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid"
               placeholder=" "
             />
@@ -139,7 +164,7 @@ const JobPost = () => {
               Job Skills
               <span className="text-red-500 ml-1">*</span>
             </label>
-            {errors.job_skills && (
+            {errors.jobSkills && (
               <span className="px-3 text-red-600">This field is required</span>
             )}
           </div>
@@ -150,7 +175,7 @@ const JobPost = () => {
               rows={3}
               type="text"
               id="job_top_reasons"
-              {...register("job_top_reasons", { required: true })}
+              {...register("jobTopReasons", { required: true })}
               className="peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px]  focus:outline-green-200 focus:outline focus:outline-solid whitespace-pre-wrap"
               placeholder=" "
             />
@@ -161,7 +186,7 @@ const JobPost = () => {
               Job Top Reasons
               <span className="text-red-500 ml-1">*</span>
             </label>
-            {errors.job_top_reasons && (
+            {errors.jobTopReasons && (
               <span className="px-3 text-red-600">This field is required</span>
             )}
           </div>
@@ -171,7 +196,7 @@ const JobPost = () => {
               rows={5}
               type="text"
               id="job_benefits"
-              {...register("job_benefits", { required: true })}
+              {...register("jobBenefit", { required: true })}
               className="whitespace-pre-wrap peer block w-full border border-gray-300 rounded-lg px-3 pt-6 pb-2 focus:outline-[4px] focus:outline-green-200 focus:outline focus:outline-solid"
               placeholder=" "
             />
@@ -182,7 +207,7 @@ const JobPost = () => {
               Job Benefits
               <span className="text-red-500 ml-1">*</span>
             </label>
-            {errors.job_benefits && (
+            {errors.jobBenefit && (
               <span className="px-3 text-red-600">This field is required</span>
             )}
           </div>

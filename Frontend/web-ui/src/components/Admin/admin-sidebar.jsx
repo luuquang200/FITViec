@@ -3,6 +3,9 @@ import { User, Briefcase, LayoutDashboard } from "lucide-react";
 
 import { useAuth } from "@/contexts/authContext";
 
+const defaultAvt =
+        "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png";
+
 const AdminSidebar = ({ onTabChange }) => {
     const { currentUser } = useAuth();
     const [activeTab, setActiveTab] = useState("user-management");
@@ -23,7 +26,7 @@ const AdminSidebar = ({ onTabChange }) => {
         <div className="min-h-screen w-[25%] bg-gray-100 p-6 text-gray-900 shadow-lg">
             <div className="mb-8 flex items-center">
                 <img
-                    src={currentUser?.photoURL}
+                    src={currentUser?.photoURL ? currentUser.photoURL : defaultAvt}
                     alt="Avatar"
                     className="mr-3 h-12 w-12 rounded-full border-2 border-gray-300"
                 />

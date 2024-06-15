@@ -26,7 +26,7 @@ public class JobController {
   public String service() {
     return "Hello job-search service";
   }
-  @GetMapping("/search")
+  @PostMapping("/search")
   public ResponseEntity<List<Job>> SearchJob(@RequestBody SearchRequest request) throws IOException {
     System.out.println(request.query);
     return ResponseEntity.ok(this.service.Search(request));
@@ -47,22 +47,22 @@ public class JobController {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
   }
-  @GetMapping("/jobs-by-skill")
+  @PostMapping("/jobs-by-skill")
   public ResponseEntity<List<Job>> GetJobsBySkill(@RequestBody GetDataRequest skillName) throws IOException {
     System.out.println(skillName.value);
     return ResponseEntity.ok(this.service.GetJobsByOneField(FilterBy.JOB_SKILLS, skillName.value));
   }
-  @GetMapping("/jobs-by-title")
+  @PostMapping("/jobs-by-title")
   public ResponseEntity<List<Job>> GetJobsByTitle(@RequestBody GetDataRequest jobTitle) throws IOException {
     System.out.println(jobTitle.value);
     return ResponseEntity.ok(this.service.GetJobsByOneField(FilterBy.JOB_TITLE, jobTitle.value));
   }
-  @GetMapping("/jobs-by-company")
+  @PostMapping("/jobs-by-company")
   public ResponseEntity<List<Job>> GetJobsByCompany(@RequestBody GetDataRequest companyName) throws IOException {
     System.out.println(companyName.value);
     return ResponseEntity.ok(this.service.GetJobsByOneField(FilterBy.COMPANY, companyName.value));
   }
-  @GetMapping("/jobs-by-location")
+  @PostMapping("/jobs-by-location")
   public ResponseEntity<List<Job>> GetJobsByLocation(@RequestBody GetDataRequest jobLocation) throws IOException {
     System.out.println(jobLocation.value);
     return ResponseEntity.ok(this.service.GetJobsByOneField(FilterBy.LOCATION, jobLocation.value));
