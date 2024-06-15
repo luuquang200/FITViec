@@ -26,6 +26,7 @@ import {
     where,
     getDocs,
     doc,
+    getDoc,
     updateDoc,
 } from "firebase/firestore";
 
@@ -115,9 +116,16 @@ const EmployerManagement = () => {
             try {
                 // Create a reference to the document
                 const employerRef = doc(db, "users", id);
+                // Get company name & worklocation
+                const userDoc = await getDoc(doc(db, "users", id));
+                const userData = userDoc.exists() ? userDoc.data() : {};
+
+                // WorkLocation & companyName
+                // userData.workLocation & userData.company
 
                 // Update the status field
                 await updateDoc(employerRef, { status: "approved" });
+
                 toast.success("Approve account employer successfully ! ");
                 setSelectedEmployer(null);
                 // Call getEmployers again to update the list after approval
@@ -138,12 +146,12 @@ const EmployerManagement = () => {
             try {
                 // Create a reference to the document
                 const employerRef = doc(db, "users", id);
-
                 // Update the status field
                 await updateDoc(employerRef, { status: "rejected" });
                 toast.success("Reject account employer successfully ! ");
                 setSelectedEmployer(null);
                 // Call getEmployers again to update the list after approval
+
                 getEmployers();
             } catch (error) {
                 toast.error("Error rejecting employer: ", error);
