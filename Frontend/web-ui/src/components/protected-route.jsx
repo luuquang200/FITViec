@@ -1,10 +1,14 @@
+/*
+ * This component is used to protect routes from unauthorized access.
+ * It checks if the user is logged in and if the user has the required role to access the route.
+ */
+
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
-import { toast } from "react-toastify";
 
 const ProtectedRoute = ({ children, allowedRole = "none" }) => {
-    const { userLoggedIn, currentUser } = useAuth();
+    const { currentUser } = useAuth();
 
     if (currentUser?.role !== allowedRole) {
         if (currentUser?.role === "admin") {
