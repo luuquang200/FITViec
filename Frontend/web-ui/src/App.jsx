@@ -1,6 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 
 // Components
+import ScrollToTop from "@/components/layout/scroll-to-top";
+import ProtectedRoute from "@/components/protected-route";
+
 import HomePage from "@/components/pages/home-page";
 
 import Header from "@/components/layout/header";
@@ -36,13 +39,13 @@ import EmployeeJobApplied from "./components/Employee/employee-job-applied";
 import ProfileEmployer from "./components/profile/profile-employer";
 import CompanyDetailPage from "./components/pages/company-detail-page";
 
-import ProtectedRoute from "@/components/protected-route";
-
 function App() {
     return (
         <AuthProvider>
             <ToastContainerNotification />
 
+            <ScrollToTop />
+            
             <Header />
             <div className="h-[88px]" />
 
@@ -69,7 +72,7 @@ function App() {
                 <Route path="/sign_up" element={<SignUp />} />
 
                 <Route path="/search" element={<SearchResult />} />
-                
+
                 <Route path="/companies" element={<CompanyDetailPage />} />
 
                 <Route
@@ -81,7 +84,7 @@ function App() {
                     path="/job-detail/:jobId"
                     element={<JobDetailGuestPage />}
                 />
-                
+
                 <Route
                     path="/form-apply-job/:jobId"
                     element={<FormApplyJob />}
@@ -174,7 +177,6 @@ function App() {
                     path="/settings"
                     element={
                         <ProtectedRoute allowedRole="user">
-                            {" "}
                             <SettingsAccount />
                         </ProtectedRoute>
                     }

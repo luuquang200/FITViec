@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
+import CompanyInfo from "@/components/pages/company-detail-page/conpany-info";
 
 // Assets
 import ClipLoader from "react-spinners/ClipLoader";
@@ -130,6 +131,11 @@ const CompanyDetailPage = () => {
                                     logoUrl ||
                                     "https://employer-service-otwul2bnna-uc.a.run.app/uploads/282d4f21-57c1-4fff-b4b2-2a883a59ad99.jpg"
                                 }
+                                // Fallback to default logo if the image is not found
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = "/logo-default.webp";
+                                }}
                                 alt={companyName}
                                 className="aspect-square w-44 rounded-xl"
                             />
@@ -192,6 +198,7 @@ const CompanyDetailPage = () => {
                                 </div>
                             ) : (
                                 <div className="space-y-6">
+                                    {/* TODO: switch to company-info component */}
                                     <Card>
                                         <CardHeader>
                                             <CardTitle>
@@ -324,7 +331,7 @@ const CompanyDetailPage = () => {
                         </div>
 
                         {/* Job openings */}
-                        <div className="col-span-4">
+                        <div className="sticky top-[76px] col-span-4">
                             {isFetchingJobs && (
                                 <div className="flex items-center justify-center py-4">
                                     <ClipLoader
@@ -344,8 +351,8 @@ const CompanyDetailPage = () => {
 
                             {!isFetchingJobs && (
                                 <ScrollArea className="mt-6">
-                                    {jobs.map((job) => (
-                                        <Card className="mb-4">
+                                    {jobs.map((job, index) => (
+                                        <Card key={index} className="mb-4">
                                             <CardHeader>
                                                 {/* Posted date */}
                                                 <p className="text-sm text-gray-500">
