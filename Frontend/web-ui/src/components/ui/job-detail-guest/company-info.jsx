@@ -6,8 +6,12 @@ function CompanyInfoSection({job_detail}) {
           <article className="company-card">
               <header className="company-header">
                   <img
-                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/e47c4b93b4d4f47b986be54c2cb34896b91d806b8eb5fa5384bf432953b26567?apiKey=1293b2add2d347908b4e11760098fdbe&"
-                      alt={job_detail?.employerInfo?.logoUrl}
+                      src={
+                            job_detail?.employerInfo?.logoUrl
+                     
+                                || "https://cdn.builder.io/api/v1/image/assets/TEMP/e47c4b93b4d4f47b986be54c2cb34896b91d806b8eb5fa5384bf432953b26567?apiKey=1293b2add2d347908b4e11760098fdbe&"
+                        }
+                      alt="company-logo"
                       className="company-logo"
                   />
                   <div className="company-header-info">
@@ -196,7 +200,7 @@ function CompanyInfoSection({job_detail}) {
 }
 
 CompanyInfoSection.propTypes = {
-  job_detail: PropTypes.object.isRequired,
+    job_detail: PropTypes.object.isRequired,
 };
 
 export default CompanyInfoSection;
