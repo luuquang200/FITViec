@@ -41,6 +41,7 @@ const JobDetail = ({ job }) => {
     if (!job) {
         return null;
     }
+    console.log(job?.employerInfo?.logoUrl);
 
     return (
         <Card className="sticky top-[76px]">
@@ -53,6 +54,11 @@ const JobDetail = ({ job }) => {
                                 ? job?.employerInfo?.logoUrl
                                 : "https://employer-service-otwul2bnna-uc.a.run.app/uploads/282d4f21-57c1-4fff-b4b2-2a883a59ad99.jpg"
                         }
+                        // Fallback to default logo if the image is not found
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "/logo-default.webp";
+                        }}
                         alt="Company logo"
                         className="aspect-square rounded-lg object-contain sm:w-24"
                     />
@@ -86,7 +92,6 @@ const JobDetail = ({ job }) => {
                         className="text-primary"
                         onClick={handleLiked}
                     >
-                        {/* <Heart className={isLiked && "fill-current"} /> */}
                         <Heart
                             className={
                                 job.isSaved != null && job.isSaved
@@ -165,7 +170,7 @@ const JobDetail = ({ job }) => {
                     <div className="space-y-2">
                         <h1 className="text-2xl font-bold">Job description</h1>
 
-                        {job.description}
+                        <div className="space-y-2" dangerouslySetInnerHTML={{ __html: job.description }} />
                     </div>
                 </CardContent>
             </ScrollArea>
