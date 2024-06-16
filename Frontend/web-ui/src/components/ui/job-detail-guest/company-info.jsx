@@ -1,50 +1,70 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-function CompanyInfoSection({job_detail}) {
-  return (
-    <>
-      <article className="company-card">
-        <header className="company-header">
-          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e47c4b93b4d4f47b986be54c2cb34896b91d806b8eb5fa5384bf432953b26567?apiKey=1293b2add2d347908b4e11760098fdbe&" alt={job_detail?.employerInfo?.logoUrl} className="company-logo" />
-          <div className="company-header-info">
-            <h2 className="company-name">{job_detail?.employerInfo?.companyName}</h2>
-            <a href="#" className="company-link">
-              <div>View company</div>
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/32a56c793b7a187bfb978ef5618af22dd9123dcdd096fddd829bcaeb4bce5e99?apiKey=1293b2add2d347908b4e11760098fdbe&" alt="Arrow icon" className="arrow-icon" />
-            </a>
-          </div>
-        </header>
-        <p className="company-description">
-          {job_detail?.employerInfo?.companyOverview}
-        </p>
-        <div className="company-model">
-          <div className="company-model-label">Company type</div>
-          <div className="company-model-value">{job_detail?.employerInfo?.companyType}</div>
-        </div>
-        <div className="company-info-item">
-          <div className="company-info-label">Company size</div>
-          <div className="company-info-value">{job_detail?.employerInfo?.companySize}</div>
-        </div>
-        <div className="company-info-item">
-          <div className="company-info-label">Country</div>
-          <div className="company-info-value">
-            <div>{job_detail?.employerInfo?.country}</div>
-          </div>
-        </div>
-        <div className="company-info-item">
-          <div className="company-info-label">Working Days</div>
-          <div className="company-info-value">{job_detail?.employerInfo?.workingDays}</div>
-        </div>
-        <div className="company-info-item">
-          <div className="company-info-label">Overtime policy</div>
-          <div className="company-info-value">{job_detail?.employerInfo?.overtimePolicy}</div>
-        </div>
-        <div className="expand-container">
-        </div>
-        
-      </article>
+function CompanyInfoSection({ job_detail }) {
+    return (
+        <>
+            <article className="company-card">
+                <header className="company-header">
+                    <img
+                        src={
+                            job_detail?.employerInfo?.logoUrl
+                                ? job_detail?.employerInfo?.logoUrl
+                                : "https://cdn.builder.io/api/v1/image/assets/TEMP/e47c4b93b4d4f47b986be54c2cb34896b91d806b8eb5fa5384bf432953b26567?apiKey=1293b2add2d347908b4e11760098fdbe&"
+                        }
+                        alt="company-logo"
+                        className="company-logo h-auto w-auto rounded object-contain p-2"
+                    />
+                    <div className="company-header-info">
+                        <h2 className="company-name">
+                            {job_detail?.employerInfo?.companyName}
+                        </h2>
+                        <a href="#" className="company-link">
+                            <div>View company</div>
+                            <img
+                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/32a56c793b7a187bfb978ef5618af22dd9123dcdd096fddd829bcaeb4bce5e99?apiKey=1293b2add2d347908b4e11760098fdbe&"
+                                alt="Arrow icon"
+                                className="arrow-icon"
+                            />
+                        </a>
+                    </div>
+                </header>
+                <p className="company-description">
+                    {job_detail?.employerInfo?.companyOverview}
+                </p>
+                <div className="company-model">
+                    <div className="company-model-label">Company type</div>
+                    <div className="company-model-value">
+                        {job_detail?.employerInfo?.companyType}
+                    </div>
+                </div>
+                <div className="company-info-item">
+                    <div className="company-info-label">Company size</div>
+                    <div className="company-info-value">
+                        {job_detail?.employerInfo?.companySize}
+                    </div>
+                </div>
+                <div className="company-info-item">
+                    <div className="company-info-label">Country</div>
+                    <div className="company-info-value">
+                        <div>{job_detail?.employerInfo?.country}</div>
+                    </div>
+                </div>
+                <div className="company-info-item">
+                    <div className="company-info-label">Working Days</div>
+                    <div className="company-info-value">
+                        {job_detail?.employerInfo?.workingDays}
+                    </div>
+                </div>
+                <div className="company-info-item">
+                    <div className="company-info-label">Overtime policy</div>
+                    <div className="company-info-value">
+                        {job_detail?.employerInfo?.overtimePolicy}
+                    </div>
+                </div>
+                <div className="expand-container"></div>
+            </article>
 
-      <style >{`
+            <style>{`
         .company-card {
           border-radius: 8px;
           box-shadow: 0 6px 32px 0 rgba(0, 0, 0, 0.08);
@@ -169,12 +189,12 @@ function CompanyInfoSection({job_detail}) {
           height: 50px;
         }
       `}</style>
-    </>
-  );
+        </>
+    );
 }
 
 CompanyInfoSection.propTypes = {
-  job_detail: PropTypes.object.isRequired,
+    job_detail: PropTypes.object.isRequired,
 };
 
 export default CompanyInfoSection;

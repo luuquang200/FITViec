@@ -48,7 +48,11 @@ const JobDetail = ({ job }) => {
                 {/* "Company logo", "job title", "company name", & "salary" container */}
                 <div className="flex items-center space-x-4">
                     <img
-                        src="https://placehold.co/300"
+                        src={
+                            job?.employerInfo?.logoUrl
+                                ? job?.employerInfo?.logoUrl
+                                : "https://employer-service-otwul2bnna-uc.a.run.app/uploads/282d4f21-57c1-4fff-b4b2-2a883a59ad99.jpg"
+                        }
                         alt="Company logo"
                         className="aspect-square rounded-lg object-contain sm:w-24"
                     />
