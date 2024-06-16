@@ -1,26 +1,18 @@
 import React, { useEffect, useState } from "react";
 
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 // Components
-import Container from "@/components/layout/container";
-import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardHeader,
-    CardFooter,
-    CardTitle,
-    CardDescription,
-    CardContent,
-} from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
 import CompanyInfo from "@/components/pages/company-detail-page/conpany-info";
+import JobOpening from "@/components/pages/company-detail-page/job-openings";
+import CompanyHeading from "@/components/pages/company-detail-page/company-heading";
+
+import Container from "@/components/layout/container";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Assets
 import ClipLoader from "react-spinners/ClipLoader";
-import { MapPin, Briefcase, CircleDollarSign, Laptop } from "lucide-react";
 
 const CompanyDetailPage = () => {
     const [searchParams] = useSearchParams();
@@ -30,6 +22,8 @@ const CompanyDetailPage = () => {
 
     const [isFetchingJobs, setIsFetchingJobs] = useState(false);
     const [jobs, setJobs] = useState([]);
+
+    const [isScrolling, setIsScrolling] = useState(false);
 
     const companyId = searchParams.get("id");
 
@@ -63,20 +57,7 @@ const CompanyDetailPage = () => {
     );
 
     // Destructure the company details
-    const {
-        companyName,
-        companyType,
-        companySize,
-        country,
-        workingDays,
-        overtimePolicy,
-        companyOverview,
-        keySkills,
-        whyLoveWorkingHere,
-        logoUrl,
-        location,
-        workType,
-    } = companyDetail || {};
+    const { companyName } = companyDetail || {};
 
     // Fetch jobs by company
     useEffect(() => {
@@ -111,6 +92,12 @@ const CompanyDetailPage = () => {
         }
     }, [companyDetail]);
 
+    useEffect(() => {
+        window.addEventListener("scroll", () => {
+            window.scrollY > 180 ? setIsScrolling(true) : setIsScrolling(false);
+        });
+    });
+
     return (
         <>
             {/* Heading section: company logo, company name, location, number of job openings */}
@@ -124,61 +111,14 @@ const CompanyDetailPage = () => {
                         />
                     </div>
                 ) : (
-                    <Container className="text-background">
-                        <div className="flex space-x-6">
-                            <img
-                                src={
-                                    logoUrl ||
-                                    "https://employer-service-otwul2bnna-uc.a.run.app/uploads/282d4f21-57c1-4fff-b4b2-2a883a59ad99.jpg"
-                                }
-                                // Fallback to default logo if the image is not found
-                                onError={(e) => {
-                                    e.target.onerror = null;
-                                    e.target.src = "/logo-default.webp";
-                                }}
-                                alt={companyName}
-                                className="aspect-square w-44 rounded-xl"
+                    <>
+                        <Container className="text-background">
+                            <CompanyHeading
+                                companyDetail={companyDetail}
+                                jobOpenings={jobs.length}
                             />
-
-                            <div className="flex flex-col space-y-2">
-                                <h1 className="text-2xl font-semibold">
-                                    {companyName}
-                                </h1>
-
-                                <div className="flex items-center space-x-4 text-sm">
-                                    <div className="flex items-center space-x-2">
-                                        <MapPin className="h-5 w-5" />
-
-                                        <p>{location}</p>
-                                    </div>
-
-                                    {jobs.length > 0 && (
-                                        <div className="flex items-center space-x-2">
-                                            <Briefcase className="h-5 w-5" />
-
-                                            <p>
-                                                {jobs.length} job opening
-                                                {jobs.length >= 2 ? "s" : ""}
-                                            </p>
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className="flex space-x-2 pt-4">
-                                    <Button>Follow</Button>
-
-                                    <Button
-                                        variant="secondary"
-                                        onClick={() =>
-                                            toast("Feature coming soon!")
-                                        }
-                                    >
-                                        Write review
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
-                    </Container>
+                        </Container>
+                    </>
                 )}
             </div>
 
@@ -198,134 +138,9 @@ const CompanyDetailPage = () => {
                                 </div>
                             ) : (
                                 <div className="space-y-6">
-                                    {/* TODO: switch to company-info component */}
-                                    <Card>
-                                        <CardHeader>
-                                            <CardTitle>
-                                                General information
-                                            </CardTitle>
-                                        </CardHeader>
-
-                                        <hr className="mx-6 mb-6 border-dashed" />
-
-                                        <CardContent className="grid grid-cols-3 grid-rows-2 gap-4">
-                                            <div>
-                                                <CardDescription>
-                                                    Company type
-                                                </CardDescription>
-
-                                                <p>{companyType || "N/A"}</p>
-                                            </div>
-
-                                            <div>
-                                                <CardDescription>
-                                                    Company industry
-                                                </CardDescription>
-
-                                                <p>N/A</p>
-                                            </div>
-
-                                            <div>
-                                                <CardDescription>
-                                                    Company size
-                                                </CardDescription>
-
-                                                <p>{companySize || "N/A"}</p>
-                                            </div>
-
-                                            <div>
-                                                <CardDescription>
-                                                    Country
-                                                </CardDescription>
-
-                                                <p>{country || "N/A"}</p>
-                                            </div>
-
-                                            <div>
-                                                <CardDescription>
-                                                    Working days
-                                                </CardDescription>
-
-                                                <p>{workingDays || "N/A"}</p>
-                                            </div>
-
-                                            <div>
-                                                <CardDescription>
-                                                    Overtime policy
-                                                </CardDescription>
-
-                                                <p>{overtimePolicy || "N/A"}</p>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-
-                                    <Card>
-                                        <CardHeader>
-                                            <CardTitle>
-                                                Company overview
-                                            </CardTitle>
-                                        </CardHeader>
-
-                                        <hr className="mx-6 mb-6 border-dashed" />
-
-                                        <CardContent
-                                            dangerouslySetInnerHTML={{
-                                                __html: companyOverview,
-                                            }}
-                                        />
-                                    </Card>
-
-                                    <Card>
-                                        <CardHeader>
-                                            <CardTitle>
-                                                Our key skills
-                                            </CardTitle>
-                                        </CardHeader>
-
-                                        <hr className="mx-6 mb-6 border-dashed" />
-
-                                        <CardContent>
-                                            <div className="space-x-1">
-                                                {keySkills
-                                                    ?.split(",")
-                                                    .map((skill) => (
-                                                        <Badge
-                                                            key={skill}
-                                                            variant="outline"
-                                                            className="text-sm font-normal"
-                                                        >
-                                                            {skill}
-                                                        </Badge>
-                                                    ))}
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-
-                                    <Card>
-                                        <CardHeader>
-                                            <CardTitle>
-                                                Why you'll love working here
-                                            </CardTitle>
-                                        </CardHeader>
-
-                                        <hr className="mx-6 mb-6 border-dashed" />
-
-                                        <CardContent
-                                            dangerouslySetInnerHTML={{
-                                                __html: whyLoveWorkingHere,
-                                            }}
-                                        />
-                                    </Card>
-
-                                    <Card>
-                                        <CardHeader>
-                                            <CardTitle>Location</CardTitle>
-                                        </CardHeader>
-
-                                        <hr className="mx-6 mb-6 border-dashed" />
-
-                                        <CardContent>{location}</CardContent>
-                                    </Card>
+                                    <CompanyInfo
+                                        companyDetail={companyDetail}
+                                    />
                                 </div>
                             )}
                         </div>
@@ -352,90 +167,7 @@ const CompanyDetailPage = () => {
                             {!isFetchingJobs && (
                                 <ScrollArea className="mt-6">
                                     {jobs.map((job, index) => (
-                                        <Card key={index} className="mb-4">
-                                            <CardHeader>
-                                                {/* Posted date */}
-                                                <p className="text-sm text-gray-500">
-                                                    Posted {job.postedAt}
-                                                </p>
-
-                                                {/* Job title */}
-                                                <CardTitle>
-                                                    <Link
-                                                        to={`/job-detail/${job.jobId}`}
-                                                    >
-                                                        {job.jobTitle}
-                                                    </Link>
-                                                </CardTitle>
-
-                                                {/* Company name */}
-                                                <p className="text-base">
-                                                    {job.company?.name}
-                                                </p>
-
-                                                {/* Salary */}
-                                                <p className="flex space-x-3 text-green-600">
-                                                    <CircleDollarSign />
-
-                                                    <p>{job.jobSalary}</p>
-                                                </p>
-                                            </CardHeader>
-
-                                            <hr className="mx-6 mb-6 border-dashed" />
-
-                                            <CardContent>
-                                                <CardDescription className="flex items-center space-x-2">
-                                                    <Laptop className="h-5 w-5" />
-
-                                                    <p className="text-foreground">
-                                                        {job.jobType}
-                                                    </p>
-                                                </CardDescription>
-
-                                                <CardDescription className="flex items-center space-x-2">
-                                                    <MapPin />
-
-                                                    <p className="line-clamp-1 text-foreground hover:line-clamp-none">
-                                                        {job.jobLocation}
-                                                    </p>
-                                                </CardDescription>
-
-                                                {/* Skills section */}
-                                                <div className="space-x-1 space-y-1 pt-2">
-                                                    {job.jobSkills
-                                                        .split(",")
-                                                        .map((skill) => (
-                                                            <Badge
-                                                                key={skill}
-                                                                variant="outline"
-                                                                className="text-sm font-normal"
-                                                            >
-                                                                {skill}
-                                                            </Badge>
-                                                        ))}
-                                                </div>
-                                            </CardContent>
-
-                                            <hr className="mx-6 mb-6 border-dashed" />
-
-                                            <CardContent>
-                                                <ul className="list-inside list-disc">
-                                                    {job.jobBenefit
-                                                        .replace(/\\n/g, "\n")
-                                                        .split("\n")
-                                                        .map(
-                                                            (
-                                                                benefit,
-                                                                index,
-                                                            ) => (
-                                                                <li key={index}>
-                                                                    {benefit}
-                                                                </li>
-                                                            ),
-                                                        )}
-                                                </ul>
-                                            </CardContent>
-                                        </Card>
+                                        <JobOpening key={index} job={job} />
                                     ))}
                                 </ScrollArea>
                             )}

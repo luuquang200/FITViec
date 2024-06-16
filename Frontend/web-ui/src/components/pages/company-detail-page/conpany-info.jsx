@@ -1,9 +1,19 @@
 import React from "react";
 
+// Components
+import {
+    Card,
+    CardHeader,
+    CardFooter,
+    CardTitle,
+    CardDescription,
+    CardContent,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
 const CompanyInfo = ({ companyDetail }) => {
     // Destructure the company details
     const {
-        companyName,
         companyType,
         companySize,
         country,
@@ -12,9 +22,7 @@ const CompanyInfo = ({ companyDetail }) => {
         companyOverview,
         keySkills,
         whyLoveWorkingHere,
-        logoUrl,
         location,
-        workType,
     } = companyDetail || {};
 
     return (
@@ -92,7 +100,7 @@ const CompanyInfo = ({ companyDetail }) => {
                             <Badge
                                 key={skill}
                                 variant="outline"
-                                className="text-sm font-normal"
+                                className="text-base font-normal"
                             >
                                 {skill}
                             </Badge>
