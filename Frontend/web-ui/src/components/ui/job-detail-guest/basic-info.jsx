@@ -1,51 +1,50 @@
-import {useState} from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 // Basic info
 const Gallery = ({ job_detail }) => {
-  const [selectedImage, setSelectedImage] = useState(null);
-  return (
-    <div className="bg-white p-6 rounded-b-md shadow-md">
-        <div className="flex justify-center ">
-            <div  className="flex-none mr-4">
-              <img
-                src={job_detail?.employerInfo.image}
-                alt={job_detail?.employerInfo.companyName}
-                className="cursor-pointer max-w-[300px] h-[184px]"
-                onClick={() => setSelectedImage(job_detail?.employerInfo.image)}
-              />
-            </div>
-        </div>
-        {selectedImage && (
-            <div
-            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
-            onClick={() => setSelectedImage(null)} // Đóng modal khi nhấp ra ngoài
-            >
-                <div className="relative"> 
-                
-                <img
-                    src={selectedImage}
-                    alt="Selected Image"
-                    className="h-[50vh] object-contain "
-                    onClick={(e) => e.stopPropagation()} 
-                />
-                
-                <button
-                    onClick={() => setSelectedImage(null)}
-                    className="absolute top-0 right-0 p-2 bg-black bg-opacity-25 "
-                >
-                    X
-                </button>
+    const [selectedImage, setSelectedImage] = useState(null);
+    return (
+        <div className="rounded-b-md bg-white p-6 shadow-md">
+            <div className="flex justify-center ">
+                <div className="mr-4 flex-none">
+                    <img
+                        src={job_detail?.employerInfo.logoUrl}
+                        alt={job_detail?.employerInfo.companyName}
+                        className="h-[184px] max-w-[300px] cursor-pointer object-contain"
+                        onClick={() =>
+                            setSelectedImage(job_detail?.employerInfo.logoUrl)
+                        }
+                    />
                 </div>
-
             </div>
-        )}
-      
-    </div>
-  );
+            {selectedImage && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
+                    onClick={() => setSelectedImage(null)} // Đóng modal khi nhấp ra ngoài
+                >
+                    <div className="relative">
+                        <img
+                            src={selectedImage}
+                            alt="Selected Image"
+                            className="h-[50vh] object-contain "
+                            onClick={(e) => e.stopPropagation()}
+                        />
+
+                        <button
+                            onClick={() => setSelectedImage(null)}
+                            className="absolute right-0 top-0 bg-black bg-opacity-25 p-2 "
+                        >
+                            X
+                        </button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 };
 
 Gallery.propTypes = {
-  job_detail: PropTypes.object.isRequired,
+    job_detail: PropTypes.object.isRequired,
 };
 
 function IconText({ iconSrc, text, alt }) {
@@ -58,11 +57,10 @@ function IconText({ iconSrc, text, alt }) {
 }
 
 IconText.propTypes = {
-  iconSrc: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
-  alt: PropTypes.string,
+    iconSrc: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired,
+    alt: PropTypes.string,
 };
-
 
 function SkillTags() {
     const skills = ["Flutter", "React Native", "Dart"];
@@ -81,21 +79,22 @@ function SkillTags() {
     );
 }
 
-
-
-function JobDetails({job_detail}) {
+function JobDetails({ job_detail }) {
     return (
         <article className="job-details">
-            <Gallery job_detail={job_detail}/>
+            <Gallery job_detail={job_detail} />
             <div className="job-info">
                 <IconText
                     iconSrc="https://cdn.builder.io/api/v1/image/assets/TEMP/c0626a6a4a2acda85275ab5536f06c95177df1a626adecf3aaca0e4d6ce3e6f2?apiKey=1293b2add2d347908b4e11760098fdbe&"
                     text={job_detail?.jobLocation}
                     alt="Location icon"
                 />
-                
-                <IconText  iconSrc="https://cdn.builder.io/api/v1/image/assets/TEMP/6d831fdaf31e8169acfb119810b46f9bf0bba65340e3dda6252b5f6ef449a66b?apiKey=1293b2add2d347908b4e11760098fdbe&" text={job_detail?.jobType} alt="Office icon" />
-                
+
+                <IconText
+                    iconSrc="https://cdn.builder.io/api/v1/image/assets/TEMP/6d831fdaf31e8169acfb119810b46f9bf0bba65340e3dda6252b5f6ef449a66b?apiKey=1293b2add2d347908b4e11760098fdbe&"
+                    text={job_detail?.jobType}
+                    alt="Office icon"
+                />
             </div>
             <SkillTags />
         </article>
@@ -103,12 +102,12 @@ function JobDetails({job_detail}) {
 }
 
 JobDetails.propTypes = {
-  job_detail: PropTypes.object.isRequired,
+    job_detail: PropTypes.object.isRequired,
 };
-function BasicInfo( {job_detail}) {
+function BasicInfo({ job_detail }) {
     return (
         <>
-            <JobDetails job_detail={job_detail}/>
+            <JobDetails job_detail={job_detail} />
 
             <style>{`
           .job-details {
@@ -232,6 +231,6 @@ function BasicInfo( {job_detail}) {
 }
 
 BasicInfo.propTypes = {
-  job_detail: PropTypes.object.isRequired,
+    job_detail: PropTypes.object.isRequired,
 };
 export default BasicInfo;

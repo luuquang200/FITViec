@@ -46,8 +46,8 @@ const JobDetailGuestPage = () => {
   const [jobData, setJobData] = useState(null);
   const { currentUser}  = useAuth();
   const navigate  = useNavigate();
-  console.log("currentUser: ", currentUser);
-  //Call API get job infor
+  
+  // Call API get job info
   const fetchJobData = async (jobId) => {
     setIsLoading(true);
     try {

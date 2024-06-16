@@ -41,7 +41,7 @@ const termHeadings = [
 const Footer = () => {
     return (
         <footer className="relative mt-auto bg-linear-gradient text-sm">
-            <div className="absolute bottom-0 right-0">
+            <div className="absolute bottom-0 right-0 -z-10">
                 <img src={FooterImg} alt="Footer image" />
             </div>
 

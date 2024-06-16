@@ -31,7 +31,6 @@ const JobDetail = ({ job }) => {
     const [reload, setReload] = useState(0);
     // const [isLike, setisLike] = useState(false); => use job.isSaved props instead of use isLike with useState
 
-
     const handleLiked = () => {
         job.isSaved = !job.isSaved;
         StoreSavedJob(job, currentUser, job.isSaved);
@@ -49,7 +48,11 @@ const JobDetail = ({ job }) => {
                 {/* "Company logo", "job title", "company name", & "salary" container */}
                 <div className="flex items-center space-x-4">
                     <img
-                        src="https://placehold.co/300"
+                        src={
+                            job?.employerInfo?.logoUrl
+                                ? job?.employerInfo?.logoUrl
+                                : "https://employer-service-otwul2bnna-uc.a.run.app/uploads/282d4f21-57c1-4fff-b4b2-2a883a59ad99.jpg"
+                        }
                         alt="Company logo"
                         className="aspect-square rounded-lg object-contain sm:w-24"
                     />
@@ -70,10 +73,12 @@ const JobDetail = ({ job }) => {
                 {/* Action buttons container */}
                 <div className="flex space-x-2 pt-3">
                     <Button className="flex-1">
-                        <Link to={`/form-apply-job/${job.id}`} className="button-link flex-1">
+                        <Link
+                            to={`/form-apply-job/${job.id}`}
+                            className="button-link flex-1"
+                        >
                             Apply now
                         </Link>
-
                     </Button>
 
                     <Button
@@ -160,9 +165,7 @@ const JobDetail = ({ job }) => {
                     <div className="space-y-2">
                         <h1 className="text-2xl font-bold">Job description</h1>
 
-
                         {job.description}
-
                     </div>
                 </CardContent>
             </ScrollArea>

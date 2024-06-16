@@ -1,7 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 
 // Components
-import HomePage from "@/components/HomePage";
+import ScrollToTop from "@/components/layout/scroll-to-top";
+import ProtectedRoute from "@/components/protected-route";
+
+import HomePage from "@/components/pages/home-page";
 
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
@@ -34,16 +37,18 @@ import SettingsAccount from "./components/Authentications/settingsAccount";
 import EmployeeJobRecent from "./components/Employee/employee-job-recent";
 import EmployeeJobApplied from "./components/Employee/employee-job-applied";
 import ProfileEmployer from "./components/profile/profile-employer";
-
-import ProtectedRoute from "@/components/protected-route";
+import CompanyDetailPage from "./components/pages/company-detail-page";
 
 function App() {
     return (
         <AuthProvider>
             <ToastContainerNotification />
 
+            <ScrollToTop />
+            
             <Header />
             <div className="h-[88px]" />
+
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route
@@ -63,25 +68,33 @@ function App() {
                     }
                 />
 
+                <Route path="/sign_in" element={<SignIn />} />
+                <Route path="/sign_up" element={<SignUp />} />
+
+                <Route path="/search" element={<SearchResult />} />
+
+                <Route path="/companies" element={<CompanyDetailPage />} />
+
                 <Route
                     path="/cv-detail/:applicationId"
                     element={<CVViewer />}
                 />
-                <Route path="/sign_in" element={<SignIn />} />
-                <Route path="/sign_up" element={<SignUp />} />
+
                 <Route
                     path="/job-detail/:jobId"
                     element={<JobDetailGuestPage />}
                 />
+
                 <Route
                     path="/form-apply-job/:jobId"
                     element={<FormApplyJob />}
                 ></Route>
-                <Route path="/search" element={<SearchResult />} />
+
                 <Route
                     path="/job-detail-guest"
                     element={<JobDetailGuestPage />}
                 />
+
                 <Route
                     path="/profile-cv"
                     element={
@@ -106,6 +119,7 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+
                 <Route
                     path="/my-jobs/"
                     element={
@@ -130,6 +144,7 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+
                 <Route
                     path="/verify_email"
                     element={
@@ -141,6 +156,7 @@ function App() {
 
                 <Route path="/forgot_password" element={<ForgotPassword />} />
                 <Route path="/account_action" element={<AccountAction />} />
+
                 <Route path="/for-employers" element={<HomeEmployer />} />
                 <Route path="/customer/login" element={<CustomerLogin />} />
                 <Route
@@ -156,16 +172,17 @@ function App() {
                         </ProtectedRouteVerify>
                     }
                 />
+
                 <Route
                     path="/settings"
                     element={
                         <ProtectedRoute allowedRole="user">
-                            {" "}
                             <SettingsAccount />
                         </ProtectedRoute>
                     }
                 />
             </Routes>
+
             <Footer />
         </AuthProvider>
     );

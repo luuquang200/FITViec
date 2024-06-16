@@ -1,26 +1,33 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "@/contexts/authContext";
 
 // Components
 import Container from "@/components/layout/container";
 import EmployerCard from "@/components/employer-card";
 
+// Assets
+import ClipLoader from "react-spinners/ClipLoader";
+
 const TopEmployerSection = () => {
-    const { currentUser } = useAuth();
+    const [isFetchingEmployers, setIsFetchingEmployers] = useState(false);
     const [employers, setEmployers] = useState([]);
 
     useEffect(() => {
         const fetchTopEmployers = async () => {
+            setIsFetchingEmployers(true);
+
             try {
                 const response = await fetch(
-                    `https://employer-service-otwul2bnna-uc.a.run.app/employer/get-top`,
+                    "https://employer-service-otwul2bnna-uc.a.run.app/employer/get-top",
                 );
                 let data = await response.json();
-                console.log(data.data);
 
                 setEmployers(data.data);
+
+                setIsFetchingEmployers(false);
             } catch (error) {
                 console.error(error);
+
+                setIsFetchingEmployers(false);
             }
         };
 
@@ -33,8 +40,10 @@ const TopEmployerSection = () => {
                 Top Employers
             </h1>
 
-            {employers.length === 0 ? (
-                <p>Fetching Top Employers...</p>
+            {isFetchingEmployers ? (
+                <div className="flex items-center justify-center py-4">
+                    <ClipLoader color="red" size={100} speedMultiplier={1} />
+                </div>
             ) : (
                 <div className="grid grid-cols-3 gap-6">
                     {employers.map((employer, index) => (

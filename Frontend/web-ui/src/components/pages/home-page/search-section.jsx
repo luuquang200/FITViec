@@ -2,19 +2,10 @@ import { Link } from "react-router-dom";
 
 // Components
 import Container from "@/components/layout/container";
-import SearchBar from "./search-bar";
+import SearchBar from "@/components/layout/search-bar";
 import { Badge } from "@/components/ui/badge";
 
-const trendingNow = [
-    "Java",
-    "ReactJS",
-    ".NET",
-    "Tester",
-    "PHP",
-    "Business Analyst",
-    "NodeJS",
-    "Manager",
-];
+const trendingNow = ["Java", "NodeJS", "SQL", "Spring Boot"];
 
 const SearchSection = () => {
     return (

@@ -20,7 +20,7 @@ const ProfileContent = ({
                     color="rgba(239, 68, 68, 1)"
                     size={40}
                     speedMultiplier={1}
-                    className="mt-4 "
+                    className="mt-4"
                 />
             </div>
         );
@@ -38,8 +38,8 @@ const ProfileContent = ({
                         </button>
                     </div>
 
-                    <div className=" flex flex-row px-6 py-4">
-                        <p className=" font-base text-base text-slate-700">
+                    <div className="flex flex-row px-6 py-4">
+                        <p className="font-base text-base text-slate-700">
                             {coverLetter}
                         </p>
                     </div>
@@ -60,8 +60,8 @@ const ProfileContent = ({
                         </button>
                     </div>
 
-                    <div className=" flex flex-row px-6 py-4">
-                        <p className=" font-base text-base text-slate-700">
+                    <div className="flex flex-row px-6 py-4">
+                        <p className="font-base text-base text-slate-700">
                             {aboutMe}
                         </p>
                     </div>

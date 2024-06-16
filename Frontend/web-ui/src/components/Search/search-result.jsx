@@ -51,17 +51,20 @@ const cities = [
 const requestWithBody = async (body, options = {}) => {
     return new Promise((resolve, reject) => {
         const callback = function (response) {
-            let str = '';
-            response.on('data', function (chunk) {
+            let str = "";
+            response.on("data", function (chunk) {
                 str += chunk;
             });
-            response.on('end', function () {
+            response.on("end", function () {
                 resolve(JSON.parse(str));
             });
         };
 
-        const req = (options.protocol === 'https:' ? https : http).request(options, callback);
-        req.on('error', (e) => {
+        const req = (options.protocol === "https:" ? https : http).request(
+            options,
+            callback,
+        );
+        req.on("error", (e) => {
             reject(e);
         });
         req.write(body);
@@ -70,8 +73,11 @@ const requestWithBody = async (body, options = {}) => {
 };
 const toQueryString = (params) => {
     return Object.keys(params)
-        .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]))
-        .join('&');
+        .map(
+            (key) =>
+                encodeURIComponent(key) + "=" + encodeURIComponent(params[key]),
+        )
+        .join("&");
 };
 const transformData = (data) => {
     return {
@@ -80,19 +86,19 @@ const transformData = (data) => {
         company: {
             name: data.employerInfo.companyName,
             type: data.employerInfo.companyType,
-            size: data.employerInfo.companySize
+            size: data.employerInfo.companySize,
         },
         working_model: data.jobType,
         location: data.jobLocation,
         // level: "Mid/Senior",  Bạn có thể thêm logic để xác định cấp bậc nếu cần
-        skills: data.jobSkills.split(','),
+        skills: data.jobSkills.split(","),
         salary: data.jobSalary,
         description: data.jobDescription,
         country: data.employerInfo.country,
         working_days: data.employerInfo.workingDays,
         overtime_policy: data.employerInfo.overtimePolicy,
         posted_day: data.postedAt, // Bạn có thể thay đổi ngày này theo nhu cầu của bạn
-        expired_day: "2024-05-03" // Bạn có thể thay đổi ngày này theo nhu cầu của bạn
+        expired_day: "2024-05-03", // Bạn có thể thay đổi ngày này theo nhu cầu của bạn
     };
 };
 
@@ -106,6 +112,8 @@ const SearchResult = () => {
     const [jobs, setJobs] = useState([]);
     const [firstjobs, setFirstJobs] = useState([]);
     const [selectedJob, setSelectedJob] = useState(null);
+    const [isFilterFormOpen, setisFilterFormOpen] = useState(false);
+
     // const [isSelectedJobSave, setIsSelectedJobSave] = useState(false);
 
     const { currentUser } = useAuth();
@@ -113,11 +121,14 @@ const SearchResult = () => {
     const [filters, setFilters] = useState(null);
 
     const handleApplyFilters = (newFilters) => {
-        console.log('Applied Filters:', newFilters);
+        console.log("Applied Filters:", newFilters);
+        setSelectedJob(null);
         setFilters(newFilters);
-
+        setisFilterFormOpen(false);
         // Apply filters to your data or state
     };
+
+    const handleFilterForm = () => setisFilterFormOpen(true);
     /*
     const ApplyFiltersToJobs = () => {
         if (filters) {
@@ -158,14 +169,20 @@ const SearchResult = () => {
 
         let filteredJobs = firstjobs;
         if (filters.selectedLevel) {
-            filteredJobs = firstjobs.filter(job =>
-                filters.selectedLevel.some(level => job.level.includes(level))
+            filteredJobs = firstjobs.filter(
+                (job) =>
+                    job.level &&
+                    filters.selectedLevel.some((level) =>
+                        job.level.includes(level),
+                    ),
             );
         }
 
         if (filters.selectedWorkingModel) {
-            filteredJobs = firstjobs.filter(job =>
-                filters.selectedWorkingModel.some(workingModel => job.working_model.includes(workingModel))
+            filteredJobs = firstjobs.filter((job) =>
+                filters.selectedWorkingModel.some((workingModel) =>
+                    job.working_model.includes(workingModel),
+                ),
             );
         }
 
@@ -175,7 +192,7 @@ const SearchResult = () => {
         ApplyFiltersToJobs();
     }, [filters]);
     const handleResetFilters = () => {
-        console.log('Filters reset');
+        console.log("Filters reset");
         setFilters(null);
         // Reset filters in your data or state
     };
@@ -212,7 +229,7 @@ const SearchResult = () => {
             try {
                 const searchRequest = {
                     query: keyword,
-                    jobLocation: city
+                    jobLocation: city,
                 };
                 const queryString = toQueryString(searchRequest);
 
@@ -220,15 +237,15 @@ const SearchResult = () => {
                 // Get Jobs from API: https://demo-restful-api-itviec.vercel.app/api/jobs
                 // console.log(JSON.stringify(searchRequest));
                 const response = await fetch(
-                    `https://job-search-service.azurewebsites.net/job-elastic/search`, {
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json",
-                        'Accept': 'application/json'
+                    `https://job-search-service.azurewebsites.net/job-elastic/search`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Accept: "application/json",
+                        },
+                        body: JSON.stringify(searchRequest),
                     },
-                    body: JSON.stringify(searchRequest)
-                }
-
                 );
                 //const response = await requestWithBody(body,option);
                 const responseData = await response.json();
@@ -238,7 +255,7 @@ const SearchResult = () => {
                 console.log("Response Data");
                 console.log(responseData);
                 // Sử dụng map để chuyển đổi dữ liệu
-                let data = responseData.map(item => transformData(item)); ///await response.json();
+                let data = responseData.map((item) => transformData(item)); ///await response.json();
                 console.log("Map Data");
                 console.log(data);
                 /*
@@ -271,7 +288,7 @@ const SearchResult = () => {
         };
 
         fetchJobs(keyword, city);
-    }, [city, keyword, currentUser, selectedJob]);
+    }, [city, keyword, currentUser]);
     const addIsSavedAttribute = async (jobs, currentUser) => {
         try {
             const jobsWithIsSaved = await Promise.all(
@@ -323,9 +340,11 @@ const SearchResult = () => {
                         </h1>
 
                         {/* Filter button */}
+
                         <Dialog>
                             <DialogTrigger>
                                 <Button
+                                    onClick={handleFilterForm}
                                     variant="outline"
                                     className="hover:text- border-primary bg-none font-bold text-primary"
                                 >
@@ -333,17 +352,23 @@ const SearchResult = () => {
                                     Filter
                                 </Button>
                             </DialogTrigger>
+                            {isFilterFormOpen ? (
+                                <DialogContent className="w-full">
+                                    <DialogHeader>
+                                        <DialogTitle>
+                                            <div>Filter</div>
+                                            <hr></hr>
+                                        </DialogTitle>
+                                    </DialogHeader>
 
-                            <DialogContent className="w-full">
-                                <DialogHeader >
-                                    <DialogTitle>
-                                        <div>Filter</div>
-                                        <hr></hr>
-                                    </DialogTitle>
-                                </DialogHeader>
-
-                                <FilterForm onApply={handleApplyFilters} onReset={handleResetFilters} />
-                            </DialogContent>
+                                    <FilterForm
+                                        onApply={handleApplyFilters}
+                                        onReset={handleResetFilters}
+                                    />
+                                </DialogContent>
+                            ) : (
+                                ""
+                            )}
                         </Dialog>
                     </div>
 
@@ -359,73 +384,80 @@ const SearchResult = () => {
                                             handleListItemClick(job.id)
                                         }
                                     >
-                                        <Card
-                                            // Conditional styling for the selected card
-                                            className={
-                                                selectedJob.id === job.id &&
-                                                selectedJobClassName
-                                            }
-                                        >
-                                            <CardHeader>
-                                                {/* Posted date */}
-                                                <p className="text-sm text-gray-500">
-                                                    Posted on {job.posted_day}
-                                                </p>
-
-                                                {/* Job title */}
-                                                <CardTitle>
-                                                    <Link
-                                                        to={`/job-detail/${job.id}`}
-                                                    >
-                                                        {job.title}
-                                                    </Link>
-                                                </CardTitle>
-
-                                                {/* Company name */}
-                                                <p className="text-base">
-                                                    {job.company?.name}
-                                                </p>
-
-                                                {/* Salary */}
-                                                <p className="flex space-x-3 text-green-600">
-                                                    <CircleDollarSign />
-                                                    <div>{job.salary}</div>
-                                                </p>
-                                            </CardHeader>
-
-                                            <hr className="mx-6 mb-6 border-dashed" />
-
-                                            <CardContent>
-                                                <CardDescription className="flex items-center space-x-2">
-                                                    <Laptop className="h-5 w-5" />
-
-                                                    <p className="text-foreground">
-                                                        {job.working_model}
+                                        {selectedJob != null ? (
+                                            <Card
+                                                // Conditional styling for the selected card
+                                                className={
+                                                    selectedJob.id === job.id &&
+                                                    selectedJobClassName
+                                                }
+                                            >
+                                                <CardHeader>
+                                                    {/* Posted date */}
+                                                    <p className="text-sm text-gray-500">
+                                                        Posted on{" "}
+                                                        {job.posted_day}
                                                     </p>
-                                                </CardDescription>
 
-                                                <CardDescription className="flex items-center space-x-2">
-                                                    <MapPin className="h-5 w-5" />
-
-                                                    <p className="text-foreground">
-                                                        {job.location}
-                                                    </p>
-                                                </CardDescription>
-
-                                                {/* Skills section */}
-                                                <div className="space-x-1 space-y-1 pt-2">
-                                                    {job.skills.map((skill) => (
-                                                        <Badge
-                                                            key={skill}
-                                                            variant="outline"
-                                                            className="text-sm font-normal"
+                                                    {/* Job title */}
+                                                    <CardTitle>
+                                                        <Link
+                                                            to={`/job-detail/${job.id}`}
                                                         >
-                                                            {skill}
-                                                        </Badge>
-                                                    ))}
-                                                </div>
-                                            </CardContent>
-                                        </Card>
+                                                            {job.title}
+                                                        </Link>
+                                                    </CardTitle>
+
+                                                    {/* Company name */}
+                                                    <p className="text-base">
+                                                        {job.company?.name}
+                                                    </p>
+
+                                                    {/* Salary */}
+                                                    <p className="flex space-x-3 text-green-600">
+                                                        <CircleDollarSign />
+                                                        <div>{job.salary}</div>
+                                                    </p>
+                                                </CardHeader>
+
+                                                <hr className="mx-6 mb-6 border-dashed" />
+
+                                                <CardContent>
+                                                    <CardDescription className="flex items-center space-x-2">
+                                                        <Laptop className="h-5 w-5" />
+
+                                                        <p className="text-foreground">
+                                                            {job.working_model}
+                                                        </p>
+                                                    </CardDescription>
+
+                                                    <CardDescription className="flex items-center space-x-2">
+                                                        <MapPin className="h-5 w-5" />
+
+                                                        <p className="text-foreground">
+                                                            {job.location}
+                                                        </p>
+                                                    </CardDescription>
+
+                                                    {/* Skills section */}
+                                                    <div className="space-x-1 space-y-1 pt-2">
+                                                        {job.skills.map(
+                                                            (skill) => (
+                                                                <Badge
+                                                                    key={skill}
+                                                                    variant="outline"
+                                                                    className="text-sm font-normal"
+                                                                >
+                                                                    {skill}
+                                                                </Badge>
+                                                            ),
+                                                        )}
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        ) : (
+                                            ""
+                                        )}
                                     </li>
                                 ))}
                             </ul>
