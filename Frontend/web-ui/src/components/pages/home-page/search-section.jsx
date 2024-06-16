@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 // Components
 import Container from "@/components/layout/container";
-import SearchBar from "./search-bar";
+import SearchBar from "@/components/layout/search-bar";
 import { Badge } from "@/components/ui/badge";
 
 const trendingNow = [

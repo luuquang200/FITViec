@@ -23,7 +23,10 @@ const EmployerCard = ({ employer }) => {
                 <CardContent className="px-28 pt-10">
                     <div className="relative aspect-square overflow-hidden rounded-xl bg-white shadow-xl">
                         <img
-                            src={logoUrl || "https://placehold.co/300"}
+                            src={
+                                logoUrl ||
+                                "https://employer-service-otwul2bnna-uc.a.run.app/uploads/282d4f21-57c1-4fff-b4b2-2a883a59ad99.jpg"
+                            }
                             alt={companyName}
                             className="aspect-square w-full object-contain"
                         />
