@@ -23,7 +23,7 @@ const CompanyHeading = ({ companyDetail, jobOpenings }) => {
                     e.target.src = "/logo-default.webp";
                 }}
                 alt={companyName}
-                className="aspect-square w-44 rounded-xl object-cover"
+                className="aspect-square w-44 rounded-xl object-contain"
             />
 
             <div className="flex flex-col space-y-2">
