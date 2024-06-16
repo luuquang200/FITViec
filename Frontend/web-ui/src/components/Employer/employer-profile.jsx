@@ -32,8 +32,10 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { ClipLoader } from "react-spinners";
 
-import { db } from "../../firebase/firebase";
+import { db, storage } from "../../firebase/firebase";
 import { doc, updateDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { v4 } from "uuid";
 
 const companyTypeData = [
     { value: "IT Product", label: "IT Product" },
@@ -177,33 +179,39 @@ const EmployerProfile = () => {
     };
 
     const handleFileChange = async (event) => {
-      updateLogo(event.target.files[0]);
+        const file = event.target.files[0];
+        if (!file) return;
+        // Check file extension
+        const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
+        const extension = file.name.split(".").pop().toLowerCase();
+        if (!allowedExtensions.includes(extension)) {
+            toast.error("Oops! Please attach an image file (jpg, jpeg, png, gif).");
+            return;
+        }
+        // Check file size (in bytes)
+        const maxSize = 3 * 1024 * 1024; // 3MB
+        if (file.size > maxSize) {
+            toast.error("Oops! Please attach a file size exceeds the limit of 3MB.");
+            return;
+        }
+        updateLogo(file);
     };
 
-    const updateLogo = async (data) => {
-      const formData = new FormData();
-      formData.append("file", data);
-
+    const updateLogo = async (file) => {
+        if (!file) return;
+        const v4Id = v4(); // Generate a unique v4 value
+        // Create a file name for both Firestore and Storage
+        const fileName = `${file.name}_${v4Id}`;
+        const fileRef = ref(storage, `cvs/${fileName}`);
         try {
-            const response = await fetch(
-                `https://employer-service-otwul2bnna-uc.a.run.app/images/upload`,
-                {
-                    method: "POST",
-                    headers: {
-                        Authorization: currentUser?.accessToken,
-                    },
-                    body: formData,
-                },
-            );
-
-            if (response.status === 200) {
-                const data = await response.json();
-                setLogoUrl(data?.url);
-            } else {
-                toast.error("Failed to convert file to link");
-            }
+            // Upload file to Storage
+            await uploadBytes(fileRef, file);
+            const newUrl = await getDownloadURL(fileRef);
+            // This should trigger a re-render and show the uploaded file
+            setLogoUrl(newUrl); 
         } catch (error) {
-            toast.error("Error:", error);
+            console.error("Error uploading file:", error);
+            toast.error("Failed to upload CV");
         }
     };
 
