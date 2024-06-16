@@ -3,8 +3,8 @@ import { useAuth } from "@/contexts/authContext";
 import { useNavigate } from "react-router-dom";
 
 // Components
-import SearchSection from "@/components/layout/search-section";
-import TopEmployerSection from "@/components/layout/top-employer-section";
+import SearchSection from "@/components/pages/home-page/search-section";
+import TopEmployerSection from "@/components/pages/home-page/top-employer-section";
 import UserProFileSection from "@/components/layout/user-profile-section";
 
 function HomePage() {
