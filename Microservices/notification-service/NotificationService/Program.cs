@@ -13,7 +13,7 @@ builder.Services.AddGrpc();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-	options.ListenAnyIP(8081);
+	options.ListenAnyIP(1004);
 	options.ListenAnyIP(8585, listenOptions =>
 	{
 		listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
