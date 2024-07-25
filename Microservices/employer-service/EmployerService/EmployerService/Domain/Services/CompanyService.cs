@@ -14,6 +14,7 @@ namespace EmployerService.Domain.Services
 		Task<CreateEmployerResult> CreateEmployerAsync(CreateEmployerRequest request);
 		Task<UpdateEmployerResult> UpdateEmployerAsync(UpdateEmployerRequest request);
 		Task<CompanyDto> GetCompanyByEmployerAsync();
+		Task<CompanyDto> GetCompanyByIdAsync(string companyId);
 		Task DeleteCompanyAsync(string companyId);
 		Task<List<CompanyDto>> GetAllCompaniesAsync();
 		Task<List<CompanyDto>> GetTopCompaniesAsync();
@@ -68,7 +69,7 @@ namespace EmployerService.Domain.Services
 			// Save to database
 			await _companyRepository.AddAsync(company);
 
-			return new CreateEmployerResult { IsSuccess = true, EmployerId = employerId, CompanyId = companyId };
+			return new CreateEmployerResult { IsSuccess = true, EmployerId = companyId };
 		}
 
 		// Update company by employer id
@@ -108,8 +109,19 @@ namespace EmployerService.Domain.Services
 			if (company == null)
 			{
 				 return null;
-			 }
+			}
 
+			return new CompanyDto(company);
+		}
+
+		// Get company by company id
+		public async Task<CompanyDto> GetCompanyByIdAsync(string companyId)
+		{
+			var company = await _companyRepository.GetByIdAsync(companyId);
+			if (company == null)
+			{
+				return new CompanyDto();
+			}
 			return new CompanyDto(company);
 		}
 

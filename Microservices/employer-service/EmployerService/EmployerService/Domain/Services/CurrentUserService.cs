@@ -16,12 +16,16 @@
 
 		public string? GetUserId()
 		{
-			return _httpContextAccessor.HttpContext?.Items["UserId"] as string;
+			//return _httpContextAccessor.HttpContext?.Items["UserId"] as string;
+			// generate random user id
+			return Guid.NewGuid().ToString();
 		}
 
 		public string? GetToken()
 		{
-			return _httpContextAccessor.HttpContext?.Items["Token"] as string;
+			//return _httpContextAccessor.HttpContext?.Items["Token"] as string;
+			// generate random token
+			return Guid.NewGuid().ToString();
 		}
 	}
 

@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace EmployerService.Migrations
+namespace EmployerService.Migrations.Shard2MasterDb
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240611112552_CreateDb")]
-    partial class CreateDb
+    [DbContext(typeof(Shard2MasterDbContext))]
+    [Migration("20240623080646_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
