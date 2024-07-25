@@ -1,7 +1,3 @@
-Here's the updated README file for your FIT-VIEC project:
-
----
-
 # FIT-VIEC
 
 FIT-VIEC is an advanced online platform designed to connect employers and candidates within the IT sector. This project leverages a modern tech stack to ensure scalability, maintainability, and efficient communication between services.
@@ -71,6 +67,6 @@ We welcome contributions to improve FIT-VIEC. To contribute, please follow these
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 
-## Video Demo
+## Demo Video
 
 Check out our demo video [here](https://www.youtube.com/watch?v=25YLD0cvaMk).
