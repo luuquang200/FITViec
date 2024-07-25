@@ -17,5 +17,6 @@ WORKDIR /app
 # Copy the SSL certificate
 COPY certs /app/certs
 
+# Copy the app
 COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet", "EmployerService.dll"]

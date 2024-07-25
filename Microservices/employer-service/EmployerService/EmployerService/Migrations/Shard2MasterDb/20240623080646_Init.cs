@@ -2,9 +2,9 @@
 
 #nullable disable
 
-namespace EmployerService.Migrations
+namespace EmployerService.Migrations.Shard2MasterDb
 {
-    public partial class CreateDb : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

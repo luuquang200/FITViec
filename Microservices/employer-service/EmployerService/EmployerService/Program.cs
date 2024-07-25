@@ -14,10 +14,10 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Change HTTP port
-builder.WebHost.ConfigureKestrel(options =>
-{
-	options.ListenAnyIP(1003); // HTTP port
-});
+//builder.WebHost.ConfigureKestrel(options =>
+//{
+//	options.ListenAnyIP(8080); // HTTP port
+//});
 
 // Add services to the container.
 builder.Services.AddControllers().AddJsonOptions(x =>
@@ -27,10 +27,39 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 var certPath = Path.Combine(builder.Environment.ContentRootPath, "certs", "DigiCertGlobalRootCA.crt.pem");
 
 // Configure the DbContext with MySQL using Pomelo
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//{
+//	var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//	options.UseMySql(connectionString.Replace("certs/DigiCertGlobalRootCA.crt.pem", certPath), new MySqlServerVersion(new Version(8, 0, 28)));
+//});
+
+// Configure Shard1 Master DbContext (not user certPath)
+builder.Services.AddDbContext<Shard1MasterDbContext>(options =>
 {
-	var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-	options.UseMySql(connectionString.Replace("certs/DigiCertGlobalRootCA.crt.pem", certPath), new MySqlServerVersion(new Version(8, 0, 28)));
+	var connectionString = builder.Configuration.GetConnectionString("Shard1Master");
+	options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 28)));
+});
+
+
+// Configure Shard1 ReadOnly DbContext
+builder.Services.AddDbContext<Shard1ReadOnlyDbContext>(options =>
+{
+	var connectionString = builder.Configuration.GetConnectionString("Shard1ReadOnly");
+	options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 28)));
+});
+
+// Configure Shard2 Master DbContext
+builder.Services.AddDbContext<Shard2MasterDbContext>(options =>
+{
+	var connectionString = builder.Configuration.GetConnectionString("Shard2Master");
+	options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 28)));
+});
+
+// Configure Shard2 ReadOnly DbContext
+builder.Services.AddDbContext<Shard2ReadOnlyDbContext>(options =>
+{
+	var connectionString = builder.Configuration.GetConnectionString("Shard2ReadOnly");
+	options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 28)));
 });
 
 // Initialize Firebase Admin SDK
@@ -132,7 +161,7 @@ app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMiddleware<FirebaseAuthenticationMiddleware>();
+//app.UseMiddleware<FirebaseAuthenticationMiddleware>();
 app.MapControllers();
 
 app.Run();

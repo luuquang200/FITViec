@@ -1,9 +1,7 @@
 ﻿using EmployerService.Domain.Dto;
 using EmployerService.Domain.DTO;
-using EmployerService.Domain.Entities;
 using EmployerService.Domain.Services;
 using EmployerService.Shared.Dto;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployerService.API.Controllers
@@ -61,8 +59,21 @@ namespace EmployerService.API.Controllers
             return Ok(company);
         }
 
-        // delete company by company id
-        [Route("delete")]
+		[Route("get-by-id")]
+		[HttpGet]
+        public async Task<IActionResult> GetCompanyById(string employerId)
+        {
+			var company = await _employerService.GetCompanyByIdAsync(employerId);
+			if (company == null)
+            {
+				return NotFound();
+			}
+
+			return Ok(company);
+		}
+
+		// delete company by company id
+		[Route("delete")]
         [HttpDelete]
         public async Task DeleteCompany(string companyId)
         {

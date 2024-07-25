@@ -26,6 +26,7 @@ namespace EmployerService.API.Middlewares
 			{
 				"/uploads",
 				"/employer/get-top",
+				"/employer/test"
 			};
 
 			if (excludedPaths.Any(path!.Contains))
